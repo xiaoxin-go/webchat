@@ -1,0 +1,323 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+html{
+  height: 100%;
+}
+body{
+  height:100%;
+  overflow: hidden;
+}
+#app{
+  height: 100%;
+}
+ul,li{
+  list-style: none;
+}
+#left, #center{
+  float: left;
+  height: 100%;
+}
+#right{
+  height: 100%;
+  margin-left: 380px;
+}
+
+#left{
+  width: 80px;
+  background-color: black;
+  border: none;
+}
+#center{
+  width: 300px;
+}
+#right{
+  width: 74%;
+  background: #eeeeff;
+  padding: 6px;
+}
+
+/* 菜单按钮样式 */
+.menu-item{
+  height: 80px;
+  line-height: 80px;
+  color: #aaaaaa;
+}
+.menu-item:hover{
+  color: white;
+  background: #333333;
+  cursor: pointer;
+}
+.menu-item.active{
+  color: white;
+  background: #222222;
+  border-left: 4px solid blue;
+}
+
+/* 用户头像样式 */
+.user{
+  width: 100%;
+  height: 100px;
+  padding: 20px;
+}
+.user img{
+  width: 100%;
+  border-radius: 3px;
+}
+.user img:hover{
+  cursor: pointer;
+}
+.ivu-tooltip-popper{
+  top: 100px;
+}
+
+/* 搜索框样式 */
+.search{
+  height: 60px;
+  line-height: 60px;
+  padding: 0 30px;
+  border-bottom: 1.5px solid #f1f1f1;
+}
+
+.center-item:hover, .chat-item:hover{
+  background: #eeeeee;
+  cursor: pointer;
+}
+
+.create-group, .chat-item{
+  height: 70px;
+}
+
+
+/* 创建群组头像 */
+.create-group-img, .chat-img{
+  width: 70px;
+  height: 70px;
+  padding: 15px;
+  float: left;
+  border-radius:4px;
+}
+.create-group-img>img, .chat-img>img{
+  width: 40px;
+  height: 40px;
+  border-radius:4px;
+}
+
+/* 创建群组文件 */
+.create-group-text, .chat-text{
+  float: left;
+  height: 70px;
+  line-height: 70px;
+  font-size: 14px;
+}
+
+/*  群聊列表字体样式 */
+.group-title, .chat-title{
+  padding: 20px 0 10px 20px;
+  color: #ccc;
+  font-size: 14px;
+  text-align: left;
+}
+
+/*  群组选中样式 */
+.chat-item.active, .center-item.active{
+  background: #eeeeff;
+}
+
+.group-body, .friend-body, .chat-body{
+  position: absolute;
+  top: 180.8px;
+  bottom: 0;
+  width: 300px;
+  overflow-y: scroll;
+}
+.friend-body{
+  top: 250.8px;
+}
+.chat-body{
+  top: 60px;
+}
+
+/*  自定义模态框样式 */
+.my-modal .ivu-modal{
+  width: 400px;
+}
+
+.my-modal .my-modal-input{
+  margin: 30px;
+  border-bottom: 1.5px solid #ccc;
+}
+
+.my-modal .my-modal-input input{
+  border: none;
+  width: 220px;
+  height: 30px;
+  outline: none;
+  padding-left: 5px;
+  font-size: 16px;
+}
+.my-modal-text{
+  margin: 20px;
+  font-size: 14px;
+}
+
+/*--------  用户头像样式 -------*/
+.user-info{
+  position: absolute;
+  left: 75px;
+  width: 80px;
+  top: 57px;
+  z-index: 100;
+  border-radius: 3px;
+  background: #ffffff;
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  box-shadow: 0 2px 10px rgba(0,0,0,.3);
+  overflow: hidden;
+}
+.user-info ul{
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  box-shadow: 0 2px 10px rgba(0,0,0,.3);
+}
+.user-info ul li{
+  height: 25px;
+  line-height: 25px;
+}
+.user-info ul li:hover{
+  background: #eeeeee;
+  cursor: pointer;
+}
+
+.user-text{
+  height: 26px;
+  line-height: 26px;
+  font-size: 14px;
+  color: bisque;
+}
+
+/*----------  右边消息栏样式  -------------*/
+#right>div{
+  position: relative;
+  background: #ffffff;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  box-shadow: 0 1px 5px rgba(0,0,0,.3);
+}
+.right-body{
+  overflow-y: scroll;
+  position: absolute;
+  width: 100%;
+  bottom: 140px;
+  top: 80px;
+}
+
+.right-body.new-friend{
+  bottom:0;
+}
+
+.right-title{
+  height: 76px;
+  line-height: 76px;
+  text-align: left;
+  font-size: 24px;
+  border-bottom: 1.5px solid #ccc;
+  padding-left: 30px;
+  color: black;
+}
+
+.right-foot{
+  width: 100%;
+  height: 140px;
+  border-top: 1px solid #ccc;
+  position: absolute;
+  bottom: 0;
+}
+/* 发送消息框 */
+.send-message{
+  width:100%;
+  height:66px;
+  overflow-y:auto;
+  resize:none;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+/* 发送按钮 */
+.send-button{
+  text-align: right;
+  padding-right: 20px;
+}
+.message-file{
+  margin-right: 10px;
+}
+
+/*表情样式图标*/
+.message-file:hover{
+  cursor: pointer;
+  color: royalblue;
+}
+
+/*  消息样式  */
+.message-item, .message-item-self{
+  height: 70px;
+  padding: 0 15px;
+}
+.message-item-self{
+  text-align: right;
+}
+
+/*------------  好友申请样式 ------------*/
+.new-friend-item{
+  border-bottom: 1.3px solid #ccc;
+  margin-left: 10px;
+  margin-right: 80px;
+}
+.new-friend-body{
+  height: 100px;
+  line-height: 100px;
+}
+.new-friend-text{
+  float: left;
+  height: 100px;
+  line-height: 100px;
+  font-size: 14px;
+}
+.new-friend-text>span{
+  color: #cc99ff;
+  margin-right: 10px;
+}
+.new-friend-button{
+  float: right;
+}
+.new-friend-message{
+  height: 36px;
+  text-align: left;
+  padding-left: 72px;
+  color: #999999;
+}
+
+/*----------  登录和注册页面样式  -------------*/
+.login-body {
+  width: 400px;
+  margin: auto;
+}
+.login-text{
+  display: inline-block;
+  width: 80px;
+  text-align: right;
+}
+.login-input{
+  width: 250px;
+  display: inline-block;
+}
+.login-group{
+  margin:20px 0;
+}
+
+@media screen and (max-width:1480px){
+
+}
+
+
