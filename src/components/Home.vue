@@ -390,6 +390,19 @@
     </Modal>
 
     <!-- 修改备注模态框 -->
+    <Modal
+      v-model="edit_remark_modal"
+      @on-cancel="modalCancel"
+      title="修改昵称"
+      class-name="my-modal" width="400px">
+      <div class="my-modal-input">
+        <input type="text" placeholder="请输入新昵称" v-model="new_remark_name">
+      </div>
+      <div slot="footer">
+        <Button type="text" size="large" @click="modalCancel">取消</Button>
+        <Button type="primary" size="large" @click="editRemarkName">确定</Button>
+      </div>
+    </Modal>
 
     <!--  删除好友模态框 -->
     <Modal
@@ -449,6 +462,7 @@
         chat_setting_show: null,       // 用户设置
         del_friend_modal: false,       // 删除好友
         edit_remark_modal: false,      // 修改备注
+        new_remark_name: '',            // 新备注名
 
         // 用户消息列表
         message_data:{
@@ -813,6 +827,25 @@
           this.friend_active = 0;
         }
 
+      },
+
+      // 修改备注名
+      async editRemarkName(){
+        let remark_name = this.new_remark_name.trim();
+        if(!remark_name){this.$Message.warning('备注名不能为空！'); return}
+        let json_data = {
+          friend_name: this.select_chat.username,
+          new_remark_name: remark_name
+        }
+        let resp = await updateRemarkName(json_data);
+        if(resp.state === 1){
+          let index = this.friend_list(this.select_chat);
+          this.select_chat.remark_name = remark_name;
+          this.friend_list.indexOf(index,1,this.select_chat);
+        }else{
+          this.$Message.warning('修改发生异常')
+        }
+        this.edit_remark_modal = false;
       },
 
 
