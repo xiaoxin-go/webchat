@@ -60,7 +60,7 @@
                 <img :src="chat.logo">
               </div>
               <div class="chat-text">
-                {{ chat.name }}
+                {{ chat.remark_name }}
               </div>
             </div>
           </template>
@@ -134,7 +134,7 @@
                 <img :src="friend.logo">
               </div>
               <div class="chat-text">
-                {{ friend.name }}
+                {{ friend.remark_name }}
               </div>
             </div>
           </template>
@@ -174,20 +174,22 @@
       <!--    用户聊天界面    -->
       <div v-else>
         <div class="right-title">
-          <span>{{select_chat_name}}</span>
+          <span>{{select_chat.remark_name}}</span>
           <div class="right-title-settings">
-            <div v-if="select_chat_type==='group'" class="right-title-setting" @click="group_add_modal=true">
+            <div v-if="select_chat.type==='group'" class="right-title-setting" @click="group_add_modal=true">
               <Icon type="md-add" />
             </div>
-            <div v-if="select_chat_name" class="right-title-setting" @click="setting_active=!setting_active">
+            <div v-if="select_chat.username" class="right-title-setting" @click="changeSettingShow">
               <Icon type="md-cog" />
             </div>
           </div>
         </div>
-        <div class="right-body">
-          <template v-for="message in message_data[select_chat_name]">
-            <template v-if="message.name === nickname">
-              <div class="message-item-self">
+        <div>
+          <div :class="chat_setting_show?'right-main-show':'right-main'">
+            <div class="right-body">
+              <template v-for="message in message_data[select_chat.name]">
+                <template v-if="message.name === nickname">
+                  <div class="message-item-self">
                 <span style="display: inline-block;">
                   <div class="chat-text" v-html="message.message">
                     <!--{{ message.message }}-->
@@ -196,46 +198,68 @@
                     <img :src="message.logo">
                   </div>
                 </span>
-              </div>
+                  </div>
 
-            </template>
-            <template v-else>
-              <div class="message-item">
-                <div class="chat-img">
-                  <img :src="message.logo">
-                </div>
-                <div class="chat-text" v-html="message.message">
-                  <!--{{ message.message }}-->
-                </div>
-              </div>
-            </template>
+                </template>
+                <template v-else>
+                  <div class="message-item">
+                    <div class="chat-img">
+                      <img :src="message.logo">
+                    </div>
+                    <div class="chat-text" v-html="message.message">
+                      <!--{{ message.message }}-->
+                    </div>
+                  </div>
+                </template>
 
-          </template>
-        </div>
-
-        <div class="right-foot">
-          <!-- 表情和图片选择 -->
-          <div style="text-align: left;height: 32px;line-height: 32px;padding-left: 20px;">
-            <Icon class="message-file" type="ios-happy-outline" size="24" @click="emoji_active=!emoji_active"/>
-            <div class="emoji" v-show="emoji_active">
-              <template v-for="emoji in emoji_list">
-                  <img :src="'/static/images/emoji/' + emoji.url" :alt="emoji.name" @click="clickEmoji(emoji)">
               </template>
             </div>
-            <Icon class="message-file" type="md-images" size="24" @click="clickImage"/>
-            <input type="file" id="send-image" style="display: none;" @change="sendImage">
+
+            <div class="right-foot">
+              <!-- 表情和图片选择 -->
+              <div style="text-align: left;height: 32px;line-height: 32px;padding-left: 20px;">
+                <Icon class="message-file" type="ios-happy-outline" size="24" @click="emoji_active=!emoji_active"/>
+                <div class="emoji" v-show="emoji_active">
+                  <template v-for="emoji in emoji_list">
+                    <img :src="'/static/images/emoji/' + emoji.url" :alt="emoji.name" @click="clickEmoji(emoji)">
+                  </template>
+                </div>
+                <Icon class="message-file" type="md-images" size="24" @click="clickImage"/>
+                <input type="file" id="send-image" style="display: none;" @change="sendImage">
+              </div>
+              <!-- 消息输入框 -->
+              <div style="padding: 3px 0 0 20px;">
+                <div contentEditable="true" id="send-message" class="send-message"  @input="changeMessage" v-html="send_message"></div>
+                <!--<Edit v-model="send_message"></Edit>-->
+              </div>
+              <!-- 发送消息按钮 -->
+              <div class="send-button">
+                <Button @click="sendMessage" type="primary">发送</Button>
+              </div>
+
+            </div>
           </div>
-          <!-- 消息输入框 -->
-          <div style="padding: 3px 0 0 20px;">
-            <div contentEditable="true" id="send-message" class="send-message"  @input="changeMessage" v-html="send_message"></div>
-            <!--<Edit v-model="send_message"></Edit>-->
+          <div v-show="chat_setting_show==='group'" class="settings-show">
+            <div class="settings-group">
+
+            </div>
           </div>
-          <!-- 发送消息按钮 -->
-          <div class="send-button">
-            <Button @click="sendMessage" type="primary">发送</Button>
+          <div v-show="chat_setting_show==='chat'" class="settings-show">
+            <div class="settings-chat">
+              <img :src="logo" alt="">
+              <p>{{select_chat.nickname}}</p>
+              <p class="username">ID: {{select_chat.username}}</p>
+            </div>
+            <div class="settings-chat-item" @click="edit_remark_modal=true">
+              <span>修改备注</span><span class="settings-chat-item-icon"><Icon type="ios-arrow-forward" size="22"/></span>
+            </div>
+            <div class="settings-chat-item" @click="del_friend_modal=true">
+              删除好友
+            </div>
           </div>
 
         </div>
+
       </div>
 
     </div>
@@ -365,12 +389,28 @@
       </div>
     </Modal>
 
+    <!-- 修改备注模态框 -->
+
+    <!--  删除好友模态框 -->
+    <Modal
+      v-model="del_friend_modal"
+      @on-cancel="modalCancel"
+      title="删除好友"
+      class-name="my-modal" width="400px">
+      <div class="my-modal-text">
+        <span>您确定删除好友 <span style="color: #cc99ff;">{{select_chat.name}}</span> 吗？</span>
+      </div>
+      <div slot="footer">
+        <Button type="text" size="large" @click="modalCancel">取消</Button>
+        <Button type="primary" size="large" @click="delFriend">确定</Button>
+      </div>
+    </Modal>
   </div>
 
 </template>
 
 <script>
-  import {uploadLogo, updateUser, groupAdd} from '../api/index.js';
+  import {uploadLogo, updateUser, groupAdd, delFriend} from '../api/index.js';
   import Edit from '../base/EditDiv.vue';
 
   export default {
@@ -380,6 +420,7 @@
       return {
         user_data: {},
         nickname: 'xiaoxin',
+        username: 'xiaoxin',
 
         active: 'message',    // 选中菜单
         logo: '/static/images/index.png',    // 默认logo
@@ -397,14 +438,17 @@
         new_password_re: '',
 
         /*--------  用户消息相关属性  --------*/
-        select_chat_name: '',            // 当前选择聊天对象
-        select_chat_type: '',           // 当前选择聊天类型，群组或者单聊
+        select_chat: {},            // 当前选择聊天对象
         send_message: '',               // 发送消息内容
         chat_active: null,              //
         send_image: null,               // 选择发送图片
         emoji_active: false,            // 表情包
         group_add_modal: false,         // 群组添加成员模态框
         setting_active: false,          // 用户设置框
+
+        chat_setting_show: null,       // 用户设置
+        del_friend_modal: false,       // 删除好友
+        edit_remark_modal: false,      // 修改备注
 
         // 用户消息列表
         message_data:{
@@ -419,8 +463,8 @@
 
         // 聊天列表
         chat_list:[
-          {'name': 'test', 'logo': '/static/images/index.png', 'type': 'group', },
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
+          {'username': 'test', 'logo': '/static/images/index.png', 'type': 'group', 'remark_name': 'test'},
+          {'username': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat', 'remark_name': 'xiaoxin'},
         ],
 
         // 表情包
@@ -552,18 +596,18 @@
 
         // 好友列表
         friend_list:[
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
-          {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat'},
+          {'username': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin1', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin2', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin3', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin4', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin5', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin6', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin7', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin8', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin9', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin10', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+          {'username': 'xiaoxin11', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
         ]
       }
     },
@@ -576,13 +620,14 @@
         this.$router.push('/login')
       }
     },
+    /*****************************************    方法区    ******************************************/
     methods:{
       /*------------        菜单相关方法           ------------------*/
       toMessage(){
         this.active = 'message';
         this.new_friend_active = false;
         this.chat_active = 0;
-        this.select_chat_name = this.chat_list[0].name
+        this.select_chat = this.chat_list[0]
       },
 
       toChat(){
@@ -608,8 +653,7 @@
       // 选中群组
       changeGroup(index){
         this.group_active = index;
-        this.select_chat_name = this.group_list[index].name;
-        this.select_chat_type = this.group_list[index].type;
+        this.select_chat = this.group_list[index];
         this.new_friend_active = false;
       },
 
@@ -636,7 +680,7 @@
       // 群组添加好友
       async groupAdd(){
         let json_data = {
-          chat_name: this.select_chat_name,
+          chat_name: this.select_chat.name,
           friend_list: this.select_friend_list
         }
         let resp = await groupAdd(json_data);
@@ -653,7 +697,7 @@
           'logo': '/static/images/index.png',
           'message': this.send_message
         };
-        this.message_data[this.select_chat_name].push(data)
+        this.message_data[this.select_chat.name].push(data)
         this.send_message = '';
         let div = document.getElementById('right-body');
         div.scrollTop = div.scrollHeight;
@@ -683,8 +727,7 @@
       // 选中消息
       changeChat(index){
         this.chat_active = index;
-        this.select_chat_name = this.chat_list[index].name;
-        this.select_chat_type = this.chat_list[index].type;
+        this.select_chat = this.chat_list[index];
         this.new_friend_active = false;
       },
 
@@ -742,6 +785,35 @@
         }
       },
 
+      // 点击设置和添加按钮
+      changeSettingShow(){
+        this.chat_setting_show = this.chat_setting_show===this.select_chat.type?null:this.select_chat.type
+      },
+
+      // 删除好友
+      async delFriend(){
+        let json_data = {
+          user_id: this.user_data.id,
+          friend_name: this.select_chat.name
+        }
+        //let resp = await delFriend(json_data);
+        let resp = {state:1}
+        if (resp.state === 1){
+          let index = this.friend_list.indexOf(this.select_chat);
+          this.friend_list.splice(index,1)
+          this.$Message.success('好友删除成功！')
+        }else{
+          this.$Message.warning('删除好友发生异常')
+        }
+        this.del_friend_modal = false;
+        this.select_chat = this.friend_list[0];
+        if(this.active==='message'){
+          this.chat_active = 0;
+        }else if(this.active === 'friend'){
+          this.friend_active = 0;
+        }
+
+      },
 
 
       /*------------------         好友列表相关方法        ----------------------*/
@@ -755,8 +827,7 @@
       changeFriend(index){
         this.new_friend_active = false;
         this.friend_active = index;
-        this.select_chat_name = this.friend_list[index].name;
-        this.select_chat_type = this.friend_list[index].type;
+        this.select_chat = this.friend_list[index]
       },
 
       // 添加好友

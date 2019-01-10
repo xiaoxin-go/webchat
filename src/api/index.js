@@ -35,3 +35,8 @@ export let updateUser =(data) =>{
 export let groupAdd =(data)=>{
   return axios.put('/group_add', data)
 }
+
+// 删除好友
+export let delFriend =(data) =>{
+  return axios.delete('/del_friend', data)
+}
