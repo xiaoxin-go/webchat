@@ -217,6 +217,7 @@ ul,li{
   bottom:0;
 }
 
+/*  消息标题 */
 .right-title{
   height: 76px;
   line-height: 76px;
@@ -227,6 +228,119 @@ ul,li{
   color: black;
 }
 
+/* 消息标题按钮 */
+.right-title-settings{
+  display: inline-block;
+  float: right;
+  margin-right: 10px;
+}
+
+.right-title-setting{
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  color: white;
+  background: darkblue;
+  text-align: center;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+.right-title-setting:hover{
+  cursor: pointer;
+}
+
+/* 群组添加好友模态框样式 */
+.group-add-modal .ivu-modal-body{
+  padding: 0 16px;
+  height: 380px;
+}
+
+/* 群组添加好友 */
+.group-add-item{
+  height: 70px;
+}
+.group-add-item:hover{
+  background: #eeeeee;
+}
+/* 群组添加好友列表 */
+.friend-list, .select-friend-list{
+  width: 49%;
+  display: inline-block;
+  height: 380px;
+  overflow-y: auto;
+}
+
+/*    滚动条样式   */
+.friend-list::-webkit-scrollbar,.select-friend-list::-webkit-scrollbar,
+.chat-body::-webkit-scrollbar,.right-body::-webkit-scrollbar,.group-body::-webkit-scrollbar{
+  width: 7px;
+}
+.friend-list::-webkit-scrollbar-thumb,.select-friend-list::-webkit-scrollbar-thumb,
+.chat-body::-webkit-scrollbar-thumb,.right-body::-webkit-scrollbar-thumb, .group-body::-webkit-scrollbar-thumb{
+  background-color: #f1f1f1;
+  border-radius: 7px;
+}
+.friend-list::-webkit-scrollbar-track,.select-friend-list::-webkit-scrollbar-track,
+.chat-body::-webkit-scrollbar-track,.right-body::-webkit-scrollbar-track,.group-body::-webkit-scrollbar-track{
+  background:#fff;
+}
+/* 当前选中好友 */
+.select-friend-list{
+  border-left: 1px solid #ccc;
+}
+.select-friend-list .friend-list-input{
+  background:#ccc;
+}
+.select-friend-list .friend-list-input:hover{
+  cursor: pointer;
+  background: #aaa;
+}
+.select-friend-list .friend-list-input>i {
+  position: relative;
+  top: -2px;
+  left: -2px;
+}
+.select-friend-list-title{
+  height: 30px;
+  line-height: 30px;
+  padding-left: 15px;
+  color: #888;
+}
+/* 选中和未选中样式 */
+.friend-list-input{
+  float: right;
+  height: 20px;
+  width: 20px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  line-height: 20px;
+  position: relative;
+  top: 24px;
+  right: 12px;
+  color: white;
+  background-color: white;
+}
+.friend-list-input.select{
+  background-color: limegreen;
+}
+.friend-list-input>i{
+  position: relative;
+  top: -3px;
+  left: -4px;
+}
+.select-friend-item{
+  height: 70px;
+}
+
+/* 好友过滤搜索框 */
+.group-add-search{
+  padding: 0 10px 0 15px;
+  height: 36px;
+  line-height: 36px;
+}
+
+
 .right-foot{
   width: 100%;
   height: 140px;
@@ -234,6 +348,12 @@ ul,li{
   position: absolute;
   bottom: 0;
 }
+/*  显示表情样式 */
+.chat-text>img{
+  position: relative;
+  top: 8px;
+}
+
 /* 发送消息框 */
 .send-message{
   width:100%;
@@ -243,6 +363,7 @@ ul,li{
   border: none;
   outline: none;
   font-size: 14px;
+  text-align: left;
 }
 /* 发送按钮 */
 .send-button{
@@ -257,6 +378,25 @@ ul,li{
 .message-file:hover{
   cursor: pointer;
   color: royalblue;
+}
+
+/*  表情弹出框样式 */
+.emoji{
+  position: absolute;
+  height: 120px;
+  width: 336px;
+  border: 1px solid #ccc;
+  top: -123px;
+  overflow-y: auto;
+  padding: 8px;
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  box-shadow: 0 1px 2px rgba(0,0,0,.3);
+}
+.emoji>img{
+  margin: 0 3px;
+}
+.emoji>img:hover{
+  cursor: pointer;
 }
 
 /*  消息样式  */

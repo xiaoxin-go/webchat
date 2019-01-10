@@ -30,3 +30,8 @@ export let uploadLogo =(data) =>{
 export let updateUser =(data) =>{
   return axios.put('/user', data)
 };
+
+// 群组添加好友
+export let groupAdd =(data)=>{
+  return axios.put('/group_add', data)
+}
