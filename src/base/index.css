@@ -522,4 +522,118 @@ ul,li{
 
 }
 
+/************************************   手机端样式   ************************************/
+.wap-main{
+  width: 100%;
+  height: 100%;
+}
+
+.wap-main-title{
+  height: 60px;
+  line-height: 60px;
+  background: #333;
+  color: #ffffff;
+  font-size: 20px;
+}
+.wap-main-title .text{
+  display: inline-block;
+  padding-left: 10px;
+}
+.wap-main-title .more{
+  float: right;
+  padding-right: 10px;
+}
+.wap-create-group-modal{
+  position: absolute;
+  box-shadow: 0 0 10px #ddd;
+  top: 60px;
+  right: 0;
+  color: #333;
+  font-size: 16px;
+  width: 50%;
+  text-align: left;
+}
+.wap-create-group-modal li{
+  height: 46px;
+  line-height: 46px;
+  padding-left: 10px;
+}
+.wap-create-group-modal li:active{
+  background: #eee;
+}
+
+
+.wap-main-body{
+  position: absolute;
+  top: 60px;
+  bottom: 60px;
+  width: 100%;
+}
+.wap-main-body-friend{
+  text-align: center;
+  background: #fafafa;
+  height: 100%;
+}
+.wap-main-body-friend-search{
+  height: 60px;
+  line-height: 60px;
+  padding: 0 6px;
+}
+.wap-main-body-friend-title{
+  padding: 20px 0;
+  background: #fff;
+}
+.wap-main-body-friend-title>div{
+  display: inline-block;
+  width: 33%;
+}
+.wap-main-body-friend-title>div>div>img{
+  width: 50px;
+}
+.wap-main-body-friend-title>div>p{
+  font-size: 14px;
+  padding-top: 5px;
+  color: #666;
+}
+.wap-main-body-friend-new{
+  float: left;
+  border-right: 1px solid #eee;
+}
+.wap-main-body-friend-group{
+
+}
+.wap-main-body-friend-add{
+  float: right;
+  border-left: 1px solid #eee;
+}
+
+
+
+.wap-main-bottom{
+  height: 60px;
+  -webkit-box-shadow: 0 1px 1px #ccc;
+  box-shadow: 0 0 1px #ccc;
+  background: #f4f4f4;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: #333333;
+}
+
+.wap-main-bottom li{
+  display: inline-block;
+  padding-top: 4px;
+}
+.wap-main-bottom-chat{
+  float: left;
+  margin-left: 30px;
+}
+.wap-main-bottom-my{
+  float: right;
+  margin-right: 30px;
+}
+.wap-main-bottom .active{
+  color: #444fff;
+}
+
 

@@ -43,25 +43,25 @@
       // 登录函数
       async login () {
         if (!this.username.trim()) {
-          this.$Message.warning('用户名不能为空')
+          this.$Message.warning('用户名不能为空');
           return
         }
         if (!this.password.trim()) {
-          this.$Message.warning('用户密码不能为空')
+          this.$Message.warning('用户密码不能为空');
           return
         }
         let json_data = {
           username: this.username.trim(),
           password: this.password.trim()
-        }
+        };
         if (this.username === 'xiaoxin' && this.password === 'xiaoxin') {
-          this.$User.setName('xiaoxin')
-          this.$router.push('/')
+          this.$User.setName('xiaoxin');
+          this.$router.push('/');
           return
         }
-        let resp = await Login(json_data)
+        let resp = await Login(json_data);
         if (resp.state === 1) {
-          this.$Message.success('用户登录成功')
+          this.$Message.success('用户登录成功');
           this.$router.push('/')
         } else if (resp.state === 2) {
           this.$Message.warning('用户名或密码错误')

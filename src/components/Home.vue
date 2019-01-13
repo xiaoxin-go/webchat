@@ -239,11 +239,29 @@
 
             </div>
           </div>
+          <!--  用户组设置栏 -->
           <div v-show="chat_setting_show==='group'" class="settings-show">
             <div class="settings-group">
-
+              <div class="group-pople">
+                <p>群成员</p>
+                <div class="group-logo">
+                  <img src="" alt="">
+                </div>
+                <p>所有成员</p>
+              </div>
+              <div>
+                群组名称
+              </div>
+              <div>
+                禁言
+              </div>
+              <div>
+                解散群
+              </div>
             </div>
           </div>
+
+          <!--  单聊设置栏  -->
           <div v-show="chat_setting_show==='chat'" class="settings-show">
             <div class="settings-chat">
               <img :src="logo" alt="">
