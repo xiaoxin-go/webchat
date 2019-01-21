@@ -552,6 +552,8 @@ ul,li{
   font-size: 16px;
   width: 50%;
   text-align: left;
+  z-index: 100;
+  background: #fff;
 }
 .wap-create-group-modal li{
   height: 46px;
@@ -568,6 +570,9 @@ ul,li{
   top: 60px;
   bottom: 60px;
   width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: #fafafa;
 }
 .wap-main-body-friend{
   text-align: center;
@@ -580,7 +585,7 @@ ul,li{
   padding: 0 6px;
 }
 .wap-main-body-friend-title{
-  padding: 20px 0;
+  padding: 12px 0;
   background: #fff;
 }
 .wap-main-body-friend-title>div{
@@ -588,7 +593,7 @@ ul,li{
   width: 33%;
 }
 .wap-main-body-friend-title>div>div>img{
-  width: 50px;
+  width: 40px;
 }
 .wap-main-body-friend-title>div>p{
   font-size: 14px;
@@ -611,8 +616,7 @@ ul,li{
 
 .wap-main-bottom{
   height: 60px;
-  -webkit-box-shadow: 0 1px 1px #ccc;
-  box-shadow: 0 0 1px #ccc;
+  border-top: 1px solid #ccc;
   background: #f4f4f4;
   position: absolute;
   bottom: 0;
@@ -633,7 +637,94 @@ ul,li{
   margin-right: 30px;
 }
 .wap-main-bottom .active{
-  color: #444fff;
+  color: #02df82;
 }
 
+/*  好友界面好友列表样式  */
+.wap-main-body-friend-body{
+  padding-top: 10px;
+}
+.wap-main-body-friend-body .chat-item{
+  height: 50px;
+  padding-left: 5px;
+  background: #fff;
+}
+.wap-main-body-friend-body .chat-item:active, .wap-main-body-message .chat-item:active{
+  background: #f1f1f1;
+}
+.wap-main-body-friend-body .chat-img{
+  width: 50px;
+  height: 50px;
+  padding: 8px;
+}
+.wap-main-body-friend-body .chat-img>img{
+  width: 36px;
+  height: 36px;
+}
+
+.wap-main-body-friend-body .chat-text, .wap-main-body-message .chat-text{
+  height: 50px;
+  line-height: 50px;
+  float: none;
+  text-align: left;
+  width: 100%;
+  margin-left: 65px;
+  color: black;
+}
+.wap-main-body-friend-body .chat-text, .wap-main-body-message .chat-text{
+  border-bottom: 1px solid #eee;
+}
+
+/*  聊天列表样式  */
+.wap-main-body-message .chat-item{
+  height: 60px;
+  background: #fff;
+  padding-left: 5px;
+}
+.wap-main-body-message .chat-img{
+  width: 60px;
+  height: 60px;
+  padding: 10px;
+}
+.wap-main-body-message .chat-img>img{
+  width: 40px;
+  height: 40px;
+}
+.wap-main-body-message .chat-text{
+  height: 60px;
+  line-height: 60px;
+  margin-left: 70px;
+}
+.wap-main-body-setting{
+  background: #fafafa;
+}
+.wap-main-body-setting-logo-img>img{
+  width: 50px;
+  height: 50px;
+}
+.wap-main-body-setting-logo{
+  height: 70px;
+  line-height: 70px;
+  margin: 10px 0;
+  background: #fff;
+}
+.wap-main-body-setting-logo-img{
+  height: 70px;
+  line-height: 70px;
+  float: left;
+  padding: 10px;
+}
+.wap-main-body-setting-logo-text{
+  float: left;
+  height: 70px;
+}
+.wap-main-body-setting-logo-text-name{
+  height: 35px;
+  line-height: 45px;
+  text-align: left;
+}
+.wap-main-body-setting-logo-text-id{
+  height: 30px;
+  line-height: 30px;
+}
 
