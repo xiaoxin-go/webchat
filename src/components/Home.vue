@@ -441,7 +441,7 @@
 </template>
 
 <script>
-  import {uploadLogo, updateUser, groupAdd, delFriend} from '../api/index.js';
+  import {uploadLogo, updateUser, addGroup, delFriend} from '../api/index.js';
   import Edit from '../base/EditDiv.vue';
 
   export default {
@@ -714,7 +714,7 @@
         let json_data = {
           chat_name: this.select_chat.name,
           friend_list: this.select_friend_list
-        }
+        };
         let resp = await groupAdd(json_data);
         if (resp.state === 1){
           this.chat_list.push(this.select_friend_list);
@@ -729,7 +729,7 @@
           'logo': '/static/images/index.png',
           'message': this.send_message
         };
-        this.message_data[this.select_chat.name].push(data)
+        this.message_data[this.select_chat.name].push(data);
         this.send_message = '';
         let div = document.getElementById('right-body');
         div.scrollTop = div.scrollHeight;
