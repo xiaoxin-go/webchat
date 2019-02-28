@@ -121,9 +121,9 @@ export let deleteChat =(data)=>{
   return axios.delete('/chat')
 };
 
-/*------------------  好友消息管理接口 ----------------*/
+/*------------------  好友消息管理接口  ----------------*/
 
 // 获取好友消息
 export let getChatMessage =(data) =>{
-  return axios.get('/chat_message')
+  return axios.get('/chat_message', data)
 };

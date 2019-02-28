@@ -758,19 +758,25 @@ ul,li{
   height: 100%;
   background: #fafafa;
   overflow: hidden;
+  z-index: 100;
 }
-.wap-main-chat-title{
+.wap-main-chat-title, .wap-main-friend-title{
   height: 36px;
   line-height: 36px;
   border-bottom: 1px solid #ddd;
   text-align: left;
   padding: 0 6px;
 }
+.wap-main-friend-title{
+  border-bottom: none;
+  background:#ffffff;
+}
+
 .wap-main-chat-title-name{
   font-size: 14px;
   margin-left: 8px;
 }
-.wap-main-chat-title-more{
+.wap-main-chat-title-more, .wap-main-friend-title-more{
   float: right;
   margin-right: 5px;
 }
@@ -796,11 +802,14 @@ ul,li{
   display: inline-block;
   vertical-align: top;
   width: 20em;
+}
+.wap-main-chat .wap-chat-text>span{
   background: #ececec;
   border-radius: 2px;
   padding: 3px;
   box-shadow: 0 2px 3px rgba(0,0,0,.2);
 }
+
 .wap-main-chat .create-group-img>img,.wap-main-chat .wap-chat-img>img{
   width: 30px;
   height: 30px;
@@ -829,9 +838,63 @@ ul,li{
   top: 90px;
   color: aqua;
 }
-.frame-div{
+.frame-div, .wap-main-friend, .wap-main-group{
   position: absolute;
   width: 100%;
   top: 0;
   height: 100%;
+  background:#f4f4f4;
+  z-index: 10;
+}
+/*  好友资料页面样式 */
+.wap-main-friend-body{
+  background:#ffffff;
+  padding-top: 10px;
+  text-align: left;
+  padding-bottom: 30px;
+}
+
+.wap-main-friend-logo>img{
+  height: 60px;
+  width: 60px;
+  border-radius: 3px;
+}
+.wap-main-friend-logo{
+  margin: 0 15px;
+}
+.wap-main-friend-info, .wap-main-friend-logo{
+  display:inline-block;
+  vertical-align: top;
+}
+.wap-main-friend-remark{
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+}
+.wap-main-friend-nickname{
+  color: #888888;
+  margin-top: 5px;
+}
+.wap-main-friend-bottom{
+  background: #ffffff;
+  margin-top: 20px;
+}
+.wap-main-friend-bottom>div{
+  height: 40px;
+  line-height: 40px;
+}
+.wap-main-friend-update-remark,.wap-main-friend-sendmessage{
+  border-bottom: 1px solid #eeeeee;
+  width: 98%;
+  margin: auto;
+}
+.wap-main-friend-delete{
+   margin: 0 2px;
+ }
+.wap-my-modal{
+  width: 300px!important;
+  margin: auto;
+}
+.wap-my-modal-text{
+  padding: 5px 0 5px 15px;
 }

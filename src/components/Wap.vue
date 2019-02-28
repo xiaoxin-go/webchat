@@ -46,12 +46,33 @@
           <!-- 好友 -->
           <div class="wap-main-body-friend-body">
             <template v-for="(friend, index) in friend_list">
-              <div class="chat-item" @click="changeFriend(index)">
+              <div class="chat-item" @click="clickFriend(index)">
                 <div class="chat-img">
                   <img :src="friend.logo">
                 </div>
                 <div class="chat-text">
                   {{ friend.remark_name }}
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!--   群聊界面  -->
+        <div class="wap-main-body-friend" v-if="active==='group'">
+          <div class="wap-main-body-friend-search">
+            <Input search placeholder="搜索" size="large"/>
+          </div>
+
+          <!-- 好友 -->
+          <div class="wap-main-body-friend-body">
+            <template v-for="(group, index) in group_list">
+              <div class="chat-item" @click="changeChat('group' + group.id, group.name)">
+                <div class="chat-img">
+                  <img :src="group.logo">
+                </div>
+                <div class="chat-text">
+                  {{ group.name }}
                 </div>
               </div>
             </template>
@@ -163,7 +184,8 @@
               <div class="wap-chat-img">
                 <img :src="message.logo">
               </div>
-              <div class="wap-chat-text" v-html="message.message">
+              <div class="wap-chat-text">
+                <span v-html="message.message"></span>
               </div>
             </div>
           </template>
@@ -202,6 +224,67 @@
       <a href="http://www.51job.com"></a>
       <!--<iframe src="http://www.youku.com" frameborder="0" style="width: 100%; height: 100%;background: #fafafa;"></iframe>-->
     </div>
+
+    <!--  点击好友，好友资料页面 -->
+    <div class="wap-main-friend" v-if="active_friend">
+      <div class="wap-main-friend-title">
+        <span class="wap-main-friend-title-back" @click="active_friend=false">
+          <Icon type="ios-arrow-back" size="18"/>
+        </span>
+      </div>
+
+      <div class="wap-main-friend-body">
+          <div class="wap-main-friend-logo">
+            <img :src="select_friend.logo" alt="">
+          </div>
+          <div class="wap-main-friend-info">
+            <p class="wap-main-friend-remark">{{select_friend.remark_name}}</p>
+            <p class="wap-main-friend-nickname">昵称：{{select_friend.nickname}}</p>
+          </div>
+      </div>
+      <div class="wap-main-friend-bottom">
+        <div class="wap-main-friend-update-remark" @click="edit_remark_modal=true">修改备注</div>
+        <div class="wap-main-friend-sendmessage" @click="changeChat('friend' + select_friend.id, select_friend.remark_name)">发消息</div>
+        <div class="wap-main-friend-delete"><Button long type="error" @click="del_friend_modal=true">删除好友</Button></div>
+      </div>
+    </div>
+
+    <!--  点击群组，群组资料页面  -->
+    <div class="wap-main-group" v-if="active_group">
+
+    </div>
+
+    <!--  删除好友模态框 -->
+    <Modal
+      v-model="del_friend_modal"
+      @on-cancel="modalCancel"
+      title="删除好友"
+      class-name="wap-my-modal">
+      <div class="wap-my-modal-text">
+        <span>您确定删除好友 <span style="color: #cc99ff;">{{select_friend.remark_name}}</span> 吗？</span>
+      </div>
+      <div slot="footer">
+        <Button type="text" @click="modalCancel">取消</Button>
+        <Button type="primary" @click="delFriend">确定</Button>
+      </div>
+    </Modal>
+    <!-- 退出群组，模态框 -->
+
+    <!--  修改备注模态框 -->
+    <Modal
+      v-model="edit_remark_modal"
+      @on-cancel="modalCancel"
+      title="删除好友"
+      class-name="wap-my-modal">
+      <div class="wap-my-modal-text">
+        <Input placeholder="请输入备注名称" autofocus v-model="new_remark_name"/>
+      </div>
+      <div slot="footer">
+        <Button type="text" @click="modalCancel">取消</Button>
+        <Button type="primary" @click="editRemark">确定</Button>
+      </div>
+    </Modal>
+
   </div>
 
 </template>
@@ -216,7 +299,7 @@
       return {
         active: 'message',   //  显示页面，{'message': 聊天界面， 'friend': 通讯录界面, 'setting': 设置页面}
         user_data: {
-          logo: '/static/images/index.png',
+          logo: '/static/images/mv1.png',
           nickname: 'xiaoxin',
           username: 'xiaoxin',
           type: 0
@@ -224,7 +307,7 @@
         nickname: 'xiaoxin',
         username: 'xiaoxin',
 
-        logo: '/static/images/index.png',    // 默认logo
+        logo: '/static/images/mv1.png',    // 默认logo
         search_value: '',     // 搜索框内容
         user_info: false,
         change_nickname_modal: false,   // 修改昵称模态框
@@ -246,7 +329,10 @@
 
         /* ------     群组相关属性    ------- */
         // 当前选择群组
-        group_active: '',
+        select_group: null,
+
+        // 点击某个群组
+        active_group: false,
 
         //创建群组模态框
         create_group_modal: false,
@@ -256,16 +342,14 @@
 
         // 群组列表
         group_list: [
-          {'name': 'test', 'logo': '/static/images/test.jpg', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
+          {'id': 1, 'name': 'test', 'logo': '/static/images/test.jpg', 'type': 'group'},
+          {'id': 2, 'name': 'test1', 'logo': '/static/images/mv1.jpg', 'type': 'group'},
+          {'id': 3, 'name': 'test2', 'logo': '/static/images/mv2.png', 'type': 'group'},
+          {'name': 'test3', 'logo': '/static/images/mv3.jpg', 'type': 'group'},
+          {'name': 'test4', 'logo': '/static/images/mv4.jpg', 'type': 'group'},
+          {'name': 'test5', 'logo': '/static/images/mv5.jpeg', 'type': 'group'},
+          {'name': 'test6', 'logo': '/static/images/mv2.png', 'type': 'group'},
+          {'name': 'test7', 'logo': '/static/images/mv1.jpg', 'type': 'group'},
         ],
 
         // 过滤列表
@@ -283,6 +367,10 @@
         friend_active: '',
         // 添加好友模态框
         add_friend_modal: false,
+
+        del_friend_modal: false,       // 删除好友
+        edit_remark_modal: false,      // 修改备注
+        new_remark_name: '',            // 新备注名
 
         // 接受好友申请模态框
         new_friend_accept_modal: false,
@@ -316,90 +404,33 @@
         // 好友列表
         friend_list: [
           {
+            'id': 1,
             'username': 'xiaoxin',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
+            'logo': '/static/images/mv1.jpg',
+            'type': 'friend',
+            'nickname': 'xiaoxin1',
+            'remark_name': 'xiaoxin2'
           },
           {
+            'id': 2,
             'username': 'xiaoxin1',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
+            'logo': '/static/images/mv2.png',
+            'type': 'friend',
+            'nickname': 'xiaoxin2',
+            'remark_name': 'xiaoxin3'
           },
           {
+            'id': 3,
             'username': 'xiaoxin2',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
-          },
-          {
-            'username': 'xiaoxin3',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
-          },
-          {
-            'username': 'xiaoxin4',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
-          },
-          {
-            'username': 'xiaoxin5',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
-          },
-          {
-            'username': 'xiaoxin6',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
-          },
-          {
-            'username': 'xiaoxin7',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
-          },
-          {
-            'username': 'xiaoxin8',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
-          },
-          {
-            'username': 'xiaoxin9',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
-          },
-          {
-            'username': 'xiaoxin10',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
-          },
-          {
-            'username': 'xiaoxin11',
-            'logo': '/static/images/index.png',
-            'type': 'chat',
-            'nickname': 'xiaoxin',
-            'remark_name': 'xiaoxin'
+            'logo': '/static/images/mv3.jpg',
+            'type': 'friend',
+            'nickname': 'xiaoxin3',
+            'remark_name': 'xiaoxin3'
           },
         ],
+
+        active_friend: false,   // 点击某个好友
+        select_friend: {},    // 当前选择好友
 
 
         /* ------     用户相关属性    ------- */
@@ -412,9 +443,7 @@
         setting_active: false,          // 用户设置框
 
         chat_setting_show: null,       // 用户设置
-        del_friend_modal: false,       // 删除好友
-        edit_remark_modal: false,      // 修改备注
-        new_remark_name: '',            // 新备注名
+
 
         // 用户消息列表
         message_data: {
@@ -424,7 +453,7 @@
             {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello', 'add_time': '8:52'},
             {'name': 'test3', 'logo': '/static/images/index.png', 'message': 'hello', 'add_time': '8:53'},
           ],
-          chat2: [
+          friend2: [
             {'id': 2, 'name': 'admin', 'logo': '/static/images/admin.jpg', 'message': 'hello', 'add_time': '8:50'},
             {'id': 1, 'name': 'xiaoxin', 'logo': '/static/images/xiaoxin.jpg', 'message': 'hello', 'add_time': '8:51'},
             {'id': 2, 'name': 'admin', 'logo': '/static/images/admin.jpg', 'message': 'hello', 'add_time': '8:52'},
@@ -443,7 +472,7 @@
         // 聊天列表
         chat_list: [
           {'id': 1, 'name': 'test', 'logo': '/static/images/admin.jpg', 'type': 'group', 'chat_id': 1},
-          {'id': 2, 'name': 'xiaoxin', 'logo': '/static/images/xiaoxin.jpg', 'type': 'chat', 'chat_id': 2},
+          {'id': 2, 'name': 'xiaoxin', 'logo': '/static/images/xiaoxin.jpg', 'type': 'friend', 'chat_id': 2},
         ],
 
         // 当前聊天名称
@@ -521,6 +550,22 @@
         this.active = 'friend'
       },
 
+      // 点击某个好友
+      clickFriend(index){
+        this.select_friend = this.friend_list[index];
+        this.active_friend = true;
+      },
+
+      // 点击给好友发消息
+      clickSendMessage(){
+
+      },
+
+      // 点击修改好友备注名
+      clickUpdateRemark(){
+
+      },
+
       // 跳转到群组页面
       toGroup() {
         this.active = 'group'
@@ -543,6 +588,7 @@
 
       // 进入聊天页面
       changeChat(chat_id, name) {
+        this.active_friend = false;
         this.chat_active = true;
         this.chat_active_name = name;
         this.chat_active_id = chat_id;
@@ -603,6 +649,29 @@
           this.logo = resp.logo;        // 返回的是头像路径
         }
       },
+      // 删除好友
+      delFriend(){
+        this.del_friend_modal = false;
+        this.$Message.success('好友删除成功！')
+      },
+
+      // 取消模态框函数
+      modalCancel(){
+        this.del_friend_modal = false;
+        this.edit_remark_modal = false;
+      },
+
+      // 修改好友备注
+      editRemark(){
+        if (!this.new_remark_name || !this.new_remark_name.trim()){
+          this.$Message.warning('备注不能为空！');
+          return
+        }
+        this.select_friend.remark_name = this.new_remark_name;
+        this.edit_remark_modal = false;
+        this.$Message.success('备注修改成功')
+      },
+
       // 聊天滚动条在最底部
       scrollAuto(){
         this.$nextTick(() => {
