@@ -1,5 +1,6 @@
 <template>
   <div>
+    <input type="file" id="send-image" style="display: none;" @change="uploadImage">
     <div class="wap-main">
       <div class="wap-main-title">
         <div class="text" @click="click_chatroom_modal=!click_chatroom_modal">
@@ -7,8 +8,8 @@
           <Icon type="md-arrow-dropdown" size="24"/>
           <div class="wap-create-group-modal" v-show="click_chatroom_modal">
             <ul>
-              <li>创建群组</li>
-              <li>添加好友</li>
+              <li @click="create_group_modal=true">创建群组</li>
+              <li @click="add_friend_active=true">添加好友</li>
             </ul>
           </div>
         </div>
@@ -202,7 +203,6 @@
             </template>
           </div>
           <Icon class="message-file" type="md-images" size="22" @click="clickImage"/>
-          <input type="file" id="send-image" style="display: none;" @change="sendImage">
         </div>
         <div style="float: left;width: 68%; left: 3px;">
           <div contentEditable="true" id="send-message" class="send-message" @input="changeMessage"
@@ -254,6 +254,24 @@
 
     </div>
 
+    <!--  点击添加好友，搜索好友页面  -->
+    <!--  点击创建群组，创建群组模态框  -->
+    <Modal
+      v-model="create_group_modal"
+      @on-cancel="modalCancel"
+      title="创建群组"
+      class-name="wap-my-modal">
+      <div class="wap-my-modal-text">
+        <Icon class="message-file" type="ios-add-circle-outline" size="100" @click="clickImage"/>
+        <img :src="new_group_logo" alt="" @click="clickImage">
+        <Input placeholder="请输入群组名称" width=100 autofocus v-model="new_group_name"/>
+      </div>
+      <div slot="footer">
+        <Button type="text" @click="modalCancel">取消</Button>
+        <Button type="primary" @click="createGroup">确定</Button>
+      </div>
+    </Modal>
+
     <!--  删除好友模态框 -->
     <Modal
       v-model="del_friend_modal"
@@ -281,7 +299,7 @@
       </div>
       <div slot="footer">
         <Button type="text" @click="modalCancel">取消</Button>
-        <Button type="primary" @click="editRemark">确定</Button>
+        <Button type="primary" @click="createGroup">确定</Button>
       </div>
     </Modal>
 
@@ -290,6 +308,10 @@
 </template>
 
 <script>
+  import {addFriend, addGroup, addGroupUser, getChat, getChatMessage, getFriend,
+    getGroup, getGroupUser, getUser, getUserInfo, deleteChat, deleteGroup,
+    deleteGroupUser, deleteUser ,delFriend, updateFriend, updateGroup,
+    updateGroupUser, updateUser, uploadLogo} from '../api/index.js'
   export default {
     name: "Wap",
     mounted() {
@@ -297,6 +319,9 @@
     },
     data() {
       return {
+        // 公共logo
+        common_logo: '',
+
         active: 'message',   //  显示页面，{'message': 聊天界面， 'friend': 通讯录界面, 'setting': 设置页面}
         user_data: {
           logo: '/static/images/mv1.png',
@@ -333,12 +358,6 @@
 
         // 点击某个群组
         active_group: false,
-
-        //创建群组模态框
-        create_group_modal: false,
-
-        // 创建群组名称
-        new_group_name: '',
 
         // 群组列表
         group_list: [
@@ -537,17 +556,32 @@
 
         // 第三方网站
         active_frame: null,
+
+
+        /*--------   创建群组属性   -------*/
+        //创建群组模态框
+        create_group_modal: false,
+        // 创建群组名称
+        new_group_name: '',
+        new_group_logo: '',
+
+        /*--------   添加好友属性   -------*/
+        add_friend_active: false,
+
+
       }
     },
     methods: {
       // 跳转到消息页面
       toMessage() {
         this.active = 'message';
+        this.getChat();
       },
 
       // 跳转到好友页面
       toFriend() {
-        this.active = 'friend'
+        this.active = 'friend';
+        this.getFriend();
       },
 
       // 点击某个好友
@@ -568,18 +602,49 @@
 
       // 跳转到群组页面
       toGroup() {
-        this.active = 'group'
+        this.active = 'group';
+        this.getGroup();
       },
 
       // 跳转到个人设置
       toSetting() {
-        this.active = 'setting'
+        this.active = 'setting';
+      },
+
+      // 获取聊天消息
+      async getChat(){
+        let resp = await getChat();
+        if(resp.code === 200){
+          this.chat_list = resp.data;
+        }else{
+          this.$Message.error(resp.message)
+        }
+      },
+
+      // 获取好友列表
+      async getFriend(){
+        let resp = await getFriend();
+        if(resp.code === 200){
+          this.friend_list = resp.data;
+        }else{
+          this.$Message.error(resp.message)
+        }
+      },
+
+      // 获取群组列表
+      async getGroup(){
+        let resp = await getGroup();
+        if(resp.code === 200){
+          this.group_list = resp.data;
+        }else{
+          this.$Message.error(resp.message);
+        }
       },
 
       // 获取个人信息
       async getInfo() {
         let resp = await getUserInfo();
-        if (resp.state === 1) {
+        if (resp.code === 200) {
           this.user_data = resp.data;
         } else {
           this.$Message.warning(resp.message)
@@ -634,19 +699,15 @@
       },
 
       // 发送图片
-      async sendImage(){
-        this.$Message.warning('......');
+      async uploadImage(){
         let input = document.getElementById('send-image');
         let file = input.files[0];
-        console.log(file.type);
-        console.log(file);
-        return;
         let formData = new FormData();
         formData.append('file', file);
         let resp = await uploadLogo(formData);
         console.log(resp);
-        if (resp.state === 1){
-          this.logo = resp.logo;        // 返回的是头像路径
+        if (resp.code === 200){
+          this.common_logo = resp.logo;        // 返回的是头像路径
         }
       },
       // 删除好友
@@ -659,6 +720,8 @@
       modalCancel(){
         this.del_friend_modal = false;
         this.edit_remark_modal = false;
+        this.create_group_modal = false;
+        this.add_friend_active = false;
       },
 
       // 修改好友备注
@@ -670,6 +733,26 @@
         this.select_friend.remark_name = this.new_remark_name;
         this.edit_remark_modal = false;
         this.$Message.success('备注修改成功')
+      },
+
+      // 创建群组
+      async createGroup(){
+        if(!this.new_group_name || !this.new_group_name.trim()){
+          this.$Message.warning('群组名称不能为空！');
+          return
+        }
+        let json_data = {
+          'group_name': this.new_group_name,
+          'group_logo': this.new_group_logo
+        };
+        let resp = await addGroup(json_data);
+        if (resp.code === 200){
+          this.$Message.success('群组创建成功！');
+          this.create_group_modal = false;
+          this.getGroup();
+        }else{
+          this.$Message.error(resp.message);
+        }
       },
 
       // 聊天滚动条在最底部
@@ -696,6 +779,21 @@
           range.select();
         }
       },
+
+    /*------------------  socketio交互 -----------------*/
+     send(data){
+       console.log('send.......');
+       this.$socket.emit('message', 'data')
+     }
+
+    },
+    sockets:{
+      connect: function(){
+        console.log('socket connected')
+      },
+      message: function(){
+        console.log('返回' + val)
+      }
     },
     filters: {
       getMessage(data) {
