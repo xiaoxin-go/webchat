@@ -5,9 +5,16 @@
       <p slot="title">用户登录</p>
 
       <div class="login-group">
-        <span class="login-text">用户名：</span>
+        <span class="login-text">用户账号：</span>
         <div class="login-input">
           <Input type="text" v-model="username" width="auto"/>
+        </div>
+      </div>
+
+      <div class="login-group">
+        <span class="login-text">用户昵称：</span>
+        <div class="login-input">
+          <Input type="text" v-model="nickname" width="auto"/>
         </div>
       </div>
 
@@ -39,37 +46,37 @@
 </template>
 
 <script>
-  import {Login} from '../api/index.js'
+  import {Login, Register} from '../api/index.js'
   export default {
     name: 'Login',
-    components: {Chat},
     data() {
       return {
         username: '',
         password: '',
-        repassword: ''
+        repassword: '',
+        nickname: ''
       }
     },
     methods:{
-      // 登录函数
-      async login(){
+      // 用户注册
+      async register(){
         if(!this.username.trim()){this.$Message.warning('用户名不能为空'); return}
+        if(!this.nickname.trim()){this.$Message.warning('用户昵称不能为空'); return}
         if(!this.password.trim()){this.$Message.warning('用户密码不能为空'); return}
         if(!this.repassword.trim()){this.$Message.warning('请重复密码'); return}
         if(this.password.trim() !== this.repassword.trim()){this.$Message.warning('两次密码不一致'); return}
 
         let json_data = {
           username: this.username.trim(),
+          nickname: this.nickname.trim(),
           password: this.password.trim()
-        }
-        let resp = await Login(json_data);
-        if(resp.state===1){
-          this.$Message.success('用户注册成功')
+        };
+        let resp = await Register(json_data);
+        if(resp.code === 200){
+          this.$Message.success('用户注册成功');
           this.$router.push('/')
-        }else if(resp.state===2){
-          this.$Message.warning('用户已存在')
         }else{
-          this.$Message.error('发生未知错误')
+          this.$Message.error(resp.message)
         }
       },
 

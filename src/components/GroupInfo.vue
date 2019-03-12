@@ -1,78 +1,29 @@
 <template>
     <div class="wap-main">
-      <input type="file" id="send-image" style="display: none;" @change="uploadImage">
-      <!---------------------  聊天窗口  ------------------->
-      <div class="wap-main-chat" v-if="chat_active">
-        <div class="wap-main-chat-title">
-        <span class="wap-main-chat-title-back" @click="chat_active=false">
+      <!--  点击群组，群组资料页面  -->
+      <div class="wap-main-group" v-if="active_group">
+        <div class="wap-add-friend-title">
+        <span class="wap-main-chat-title-back" @click="active_group=false">
           <Icon type="ios-arrow-back" size="18"/>
         </span>
           <span class="wap-main-chat-title-name">
-          {{ chat_active_name }}
-        </span>
-          <span class="wap-main-chat-title-more">
-          <Icon type="ios-more" size="20" @click="chatMore(chat_active)"/>
+          聊天信息({{group_list.length}})
         </span>
         </div>
-        <!--  聊天body  -->
-        <div class="wap-main-chat-body" id="chat-body">
-          <template v-for="message in message_data[chat_active_id]">
-            <template v-if="message.name === nickname">
-              <div class="message-item-self">
-                <div class="wap-chat-text">
-                  <span v-html="message.message" style="text-align: left;display: inline-block;"></span>
-                </div>
-                <div class="wap-chat-img">
-                  <img :src="message.logo">
-                </div>
-              </div>
-
-            </template>
-            <template v-else>
-              <div class="message-item">
-                <div class="wap-chat-img">
-                  <img :src="message.logo">
-                </div>
-                <div class="wap-chat-text">
-                  <span v-html="message.message"></span>
-                </div>
-              </div>
-            </template>
-
-          </template>
-        </div>
-        <!--输入框-->
-        <div class="wap-main-chat-bottom">
-          <div style="text-align: left;height: 30px;line-height: 30px;padding-left: 5px; float: left;">
-            <Icon class="message-file" type="ios-happy-outline" size="22" @click="emoji_active=!emoji_active"/>
-            <div class="emoji" v-show="emoji_active">
-              <template v-for="emoji in emoji_list">
-                <img :src="'/static/images/emoji/' + emoji.url" :alt="emoji.name" @click="clickEmoji(emoji)">
-              </template>
+        <div class="wap-group-info">
+          <div v-for="group in group_list">
+            <div class="wap-group-info-logo">
+              <img :src="group.logo" alt="">
             </div>
-            <Icon class="message-file" type="md-images" size="22" @click="clickImage"/>
+            <div class="wap-group-info-name">
+              {{group.name}}
+            </div>
           </div>
-          <div style="float: left;width: 68%; left: 3px;">
-            <div contentEditable="true" id="send-message" class="send-message" @input="changeMessage"
-                 v-html="send_message"></div>
-          </div>
-
-          <Button @click="sendMessage" size="small" type="primary" style="float: left; left: 3px;">发送</Button>
-
-        </div>
-        <div class="frame-btn" @click="active_frame=true">
-          <Icon type="logo-vimeo" size="20"/>
         </div>
       </div>
 
-      <!--  第三方广告页面  -->
-      <div v-if="active_frame" class="frame-div">
-        <div @click="active_frame=false" style="position: absolute; color: #57a3f3;top: 20px; left: 2px;">
-          <Icon type="ios-undo" size="20"/>
-        </div>
-        <!--<a href="http://www.51job.com"></a>-->
-        <iframe src="http://www.baidu.com" frameborder="0" style="width: 100%; height: 100%;background: #fafafa;"></iframe>
-      </div>
+      <!-- 退出群组，模态框 -->
+
     </div>
 
 </template>

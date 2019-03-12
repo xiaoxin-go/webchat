@@ -1,6 +1,6 @@
 export default {
-  name: null,
-  setName(newName){
-    this.name = newName;
+  user: null,
+  setUser(user){
+    this.user = user;
   }
 }

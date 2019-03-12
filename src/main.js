@@ -14,6 +14,7 @@ Vue.use(iView);
 Vue.use(VueSocketio, socketio('http://127.0.0.1:5000'));
 
 Vue.config.productionTip = false;
+Vue.prototype.$Server = 'http://127.0.0.1:5000';
 Vue.prototype.$User = User;
 /* eslint-disable no-new */
 new Vue({

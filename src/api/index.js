@@ -111,6 +111,10 @@ export let deleteGroupUser =(data) =>{
 };
 
 /*-------------  聊天管理接口 ------------*/
+// 添加聊天列表
+export let addChat =(data)=>{
+  return axios.post('/chat', data);
+};
 
 // 获取聊天列表
 export let getChat =()=>{
