@@ -64,7 +64,7 @@ export let updateFriend = (data) =>{
 };
 
 // 删除好友
-export let delFriend =(data) =>{
+export let deleteFriend =(data) =>{
   return axios.delete(`${url_version}/friend`, data)
 };
 

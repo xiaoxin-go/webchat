@@ -57,7 +57,7 @@
         if (this.username === 'xiaoxin' && this.password === 'xiaoxin') {
           this.$User.setUser({
             logo: '/static/images/mv1.jpg',
-              nickname: 'xiaoxin',
+            nickname: 'xiaoxin',
             username: 'xiaoxin',
             type: 0
           });

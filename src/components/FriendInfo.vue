@@ -19,25 +19,56 @@
         </div>
         <div class="wap-main-friend-bottom">
           <div class="wap-main-friend-update-remark" @click="edit_remark_modal=true">修改备注</div>
-          <div class="wap-main-friend-sendmessage" @click="toChat(frieno)">发消息</div>
+          <div class="wap-main-friend-sendmessage" @click="changeChat(friend)">发消息</div>
           <div class="wap-main-friend-delete"><Button long type="error" @click="del_friend_modal=true">删除好友</Button></div>
         </div>
       </div>
 
-      <!-- 退出群组，模态框 -->
+      <!--  删除好友模态框 -->
+      <Modal
+        v-model="del_friend_modal"
+        @on-cancel="del_friend_modal=false"
+        title="删除好友"
+        class-name="wap-my-modal">
+        <div class="wap-my-modal-text">
+          <span>您确定删除好友 <span style="color: #cc99ff;">{{friend.remark_name}}</span> 吗？</span>
+        </div>
+        <div slot="footer">
+          <Button type="text" @click="del_friend_modal=false">取消</Button>
+          <Button type="primary" @click="delFriend">确定</Button>
+        </div>
+      </Modal>
+
+      <!--  修改备注模态框 -->
+      <Modal
+        v-model="edit_remark_modal"
+        @on-cancel="edit_remark_modal=false"
+        title="修改备注"
+        class-name="wap-my-modal">
+        <div class="wap-my-modal-text">
+          <Input placeholder="请输入备注名称" autofocus v-model="new_remark_name"/>
+        </div>
+        <div slot="footer">
+          <Button type="text" @click="edit_remark_modal=false">取消</Button>
+          <Button type="primary" @click="editRemark">确定</Button>
+        </div>
+      </Modal>
 
     </div>
 
 </template>
 
 <script>
-    export default {
-        name: "WapChat",
+   import {updateFriend, deleteFriend} from "../api";
+
+   export default {
+        name: "FriendInfo",
       mounted() {
-        if(!this.$User.name){
+        if(!this.$User.user){
           this.$router.push('/login')
+        }else{
+          this.friend = this.$route.params.friend
         }
-        this.friend = this.$route.params.friend
       },
       created(){
 
@@ -52,10 +83,53 @@
         return {
           friend:{},
           del_friend_modal: null,
+          edit_remark_modal: null,
+          new_remark_name: null,
         }
       },
       methods:{
+        // 更新好友资料
+        async editRemark(){
+          if(!this.new_remark_name || !this.new_remark_name.trim()){
+            this.$Message.warning('备注名不能为空！');
+            return
+          }
+          let json_data = {
+            friend_id: this.friend.id,
+            remark: this.new_remark_name
+          };
+          let resp = await updateFriend(json_data);
+          if(resp.code === 200){
+            friend.remark_name = this.remark_name;
+            this.edit_remark_modal = false;
+          }else{
+            this.$Message.warning(resp.message);
+          }
+        },
 
+        // 删除好友
+        async delFriend(){
+          let json_data = {
+            friend_id: this.friend.id
+          };
+          let resp = await deleteFriend(json_data);
+          if (resp.state === 200){
+            this.$Message.success('好友删除成功');
+            this.$router.push('/friend');
+          }else{
+            this.$Message.error(resp.message)
+          }
+        },
+
+        // 进入聊天页面
+        changeChat(friend) {
+          this.$router.push({
+            name: 'Chat',
+            params:{
+              chat: friend
+            }
+          })
+        },
       },
       sockets:{
         connect: function(){

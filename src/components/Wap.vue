@@ -21,7 +21,7 @@
         <!---------------------------  聊天界面  -------------------------->
         <div class="wap-main-body-message">
           <template v-for="chat in chat_list">
-            <div class="chat-item" @click="changeChat(chat.type + chat.chat_id, chat.name)">
+            <div class="chat-item" @click="changeChat(chat.id)">
               <div class="chat-img">
                 <img :src="chat.logo">
               </div>
@@ -126,7 +126,7 @@
 
       // 进入聊天页面
       changeChat(chat_id) {
-        this.$router.push(`/chat/${chat_id}`)
+        this.$router.push({path: '/chat/', query:{id: chat_id}})
       },
 
     },

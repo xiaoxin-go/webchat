@@ -2,22 +2,22 @@
     <div class="wap-main">
       <input type="file" id="send-image" style="display: none;" @change="uploadImage">
       <!---------------------  聊天窗口  ------------------->
-      <div class="wap-main-chat" v-if="chat_active">
+      <div class="wap-main-chat">
         <div class="wap-main-chat-title">
-        <span class="wap-main-chat-title-back" @click="chat_active=false">
+        <span class="wap-main-chat-title-back" @click="$router.push('/')">
           <Icon type="ios-arrow-back" size="18"/>
         </span>
           <span class="wap-main-chat-title-name">
-          {{ chat_active_name }}
+          {{ chat_data.name }}
         </span>
           <span class="wap-main-chat-title-more">
-          <Icon type="ios-more" size="20" @click="chatMore(chat_active)"/>
+          <Icon type="ios-more" size="20" @click="chatMore(chat_data)"/>
         </span>
         </div>
         <!--  聊天body  -->
         <div class="wap-main-chat-body" id="chat-body">
-          <template v-for="message in message_data[chat_active_id]">
-            <template v-if="message.name === nickname">
+          <template v-for="message in message_data[chat_id]">
+            <template v-if="message.name === $User.user.nickname">
               <div class="message-item-self">
                 <div class="wap-chat-text">
                   <span v-html="message.message" style="text-align: left;display: inline-block;"></span>
@@ -78,18 +78,31 @@
 </template>
 
 <script>
-    export default {
+  import {addChat, uploadLogo} from "../api";
+
+  export default {
         name: "WapChat",
       mounted() {
-        if(!this.$User.name){
+          console.log('chat....');
+        if(!this.$User.user){
           this.$router.push('/login')
         }else{
-
-          this.getChat();
+          // 如果chat存在，则是从群组跳转过来，否则，是从message跳转过来
+          let chat = this.$route.params.chat;
+          // 从群组跳转过来，需要添加到聊天页面，后面判断是否存在该聊天，若存在，则更新聊天时间
+          // 并返回该聊天消息
+          if(chat){
+            //this.addChat(chat)
+          }else{
+            this.chat_id = this.$route.query.id;
+            this.chat_data = this.message_data[this.chat_id];
+          }
+          this.scrollAuto();
         }
       },
       data(){
         return {
+          chat_id: null,
           chat_data: {},
           send_message: '',               // 发送消息内容
           send_image: null,               // 选择发送图片
@@ -191,7 +204,7 @@
             'logo': '/static/images/xiaoxin.jpg',
             'message': this.send_message
           };
-          this.message_data[this.chat_active_id].push(data);
+          this.message_data[this.chat_id].push(data);
           this.send_message = '';
           // let div = document.getElementById('chat-body');
           // div.scrollTop = div.scrollHeight;
@@ -203,8 +216,7 @@
           let resp = await addChat(chat_obj);
           console.log(resp);
           if(resp.code === 200){
-            this.chat_list.unshift(resp.data);
-            this.chat_active = true;
+            this.message_data = resp.data;
           }else{
             this.$Message.warning(resp.message);
           }
@@ -212,7 +224,7 @@
 
         // 聊天更多信息
         chatMore(){
-
+          this.$router.push('/group_info');
         },
 
         // 点击表情

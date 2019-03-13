@@ -54,7 +54,7 @@
               好友
             </p>
           </li>
-          <li @click="toGroup" class="active" style="width: 23%;">
+          <li class="active" style="width: 23%;">
             <div>
               <Icon type="ios-people" size="34"/>
             </div>

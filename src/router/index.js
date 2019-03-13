@@ -9,6 +9,7 @@ export default new Router({
     {path:'/user',component:()=>import('../components/User.vue'),name:'User'},
     {path:'/friend',component:()=>import('../components/Friend.vue'),name:'Friend'},
     {path:'/group',component:()=>import('../components/Group.vue'),name:'Group'},
+    {path:'/chat',component:()=>import('../components/Chat.vue'),name:'Chat'},
     {path:'/friend_info',component:()=>import('../components/FriendInfo.vue'),name:'FriendInfo'},
     {path:'/friend_add',component:()=>import('../components/FriendAdd.vue'),name:'FriendAdd'},
     {path:'/group_info',component:()=>import('../components/GroupInfo.vue'),name:'GroupInfo'},

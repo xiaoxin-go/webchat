@@ -108,7 +108,26 @@
         this.$router.push('/group')
       },
 
+      // 选择图片
+      clickImage(){
+        document.getElementById('send-image').click();
+      },
 
+      // 发送图片
+      async uploadImage(){
+        let input = document.getElementById('send-image');
+        let file = input.files[0];
+        let formData = new FormData();
+        formData.append('file', file);
+        let resp = await uploadLogo(formData);
+        console.log(resp);
+        if (resp.code === 200){
+          this.common_logo = resp.data.url;        // 返回的是头像路径
+        }
+        if(this.create_group_modal){
+          this.new_group_logo =  this.$Server + this.common_logo;
+        }
+      },
 
       // 退出登录
       async Logout(){
