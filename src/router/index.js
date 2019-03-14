@@ -12,7 +12,7 @@ export default new Router({
     {path:'/chat',component:()=>import('../components/Chat.vue'),name:'Chat'},
     {path:'/friend_info',component:()=>import('../components/FriendInfo.vue'),name:'FriendInfo'},
     {path:'/friend_add',component:()=>import('../components/FriendAdd.vue'),name:'FriendAdd'},
-    {path:'/group_info',component:()=>import('../components/GroupInfo.vue'),name:'GroupInfo'},
+    {path:'/group_info/:id',component:()=>import('../components/GroupInfo.vue'),name:'GroupInfo'},
     {path:'/group_add',component:()=>import('../components/GroupAdd.vue'),name:'GroupAdd'},
     {path:'/login',component:()=>import('../components/Login.vue'),name:'Login'},
     {path:'/register',component:()=>import('../components/Register.vue'),name:'Register'},

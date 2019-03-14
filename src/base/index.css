@@ -11,6 +11,7 @@ body{
 }
 #app{
   height: 100%;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 }
 ul,li{
   list-style: none;
@@ -846,106 +847,4 @@ ul,li{
   height: 100%;
   background:#f4f4f4;
   z-index: 10;
-}
-/*  好友资料页面样式 */
-.wap-main-friend-body{
-  background:#ffffff;
-  padding-top: 10px;
-  text-align: left;
-  padding-bottom: 30px;
-}
-
-.wap-main-friend-logo>img{
-  height: 60px;
-  width: 60px;
-  border-radius: 3px;
-}
-.wap-main-friend-logo{
-  margin: 0 15px;
-}
-.wap-main-friend-info, .wap-main-friend-logo{
-  display:inline-block;
-  vertical-align: top;
-}
-.wap-main-friend-remark{
-  font-size: 20px;
-  font-weight: bold;
-  color: #000;
-}
-.wap-main-friend-nickname{
-  color: #888888;
-  margin-top: 5px;
-}
-.wap-main-friend-bottom{
-  background: #ffffff;
-  margin-top: 20px;
-}
-.wap-main-friend-bottom>div{
-  height: 40px;
-  line-height: 40px;
-}
-.wap-main-friend-update-remark,.wap-main-friend-sendmessage{
-  border-bottom: 1px solid #eeeeee;
-  width: 98%;
-  margin: auto;
-}
-.wap-main-friend-delete{
-   margin: 0 2px;
- }
-.wap-my-modal{
-  width: 300px!important;
-  margin: auto;
-}
-.wap-my-modal-text{
-  padding: 0 20px;
-  text-align: center;
-}
-.wap-my-modal-text>img{
-  width: 100px;
-  height: 100px;
-}
-.wap-add-friend-title{
-  height: 50px;
-  line-height: 50px;
-  text-align: left;
-  font-weight: bold;
-}
-.ivu-divider-inner-text{
-  color: #666;
-}
-
-.wap-add-friend-info .wap-main-friend-body{
-  padding-bottom: 0;
-}
-
-/*   群组详情样式  */
-.wap-group-info-title{
-  text-align: left;
-  height: 40px;
-  line-height: 40px;
-}
-.wap-group-info{
-  background: #fff;
-  padding: 5px;
-  text-align: left;
-}
-
-.wap-group-info-item{
-  display: inline-block;
-  width: 20%;
-  padding: 8px;
-  text-align: center;
-}
-.wap-group-info-logo{
-
-}
-.wap-group-info-logo>img{
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-}
-.wap-group-info-name{
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
 }

@@ -92,8 +92,8 @@
 
         // 聊天列表
         chat_list: [
-          {'id': 1, 'name': 'test', 'logo': '/static/images/admin.jpg', 'type': 'group', 'chat_id': 1},
-          {'id': 2, 'name': 'xiaoxin', 'logo': '/static/images/xiaoxin.jpg', 'type': 'friend', 'chat_id': 2},
+          {'id': 1, 'name': 'test', 'logo': '/static/images/admin.jpg', 'type': 'group', 'chat_obj_id': 1},
+          {'id': 2, 'name': 'xiaoxin', 'logo': '/static/images/xiaoxin.jpg', 'type': 'friend', 'chat_obj_id': 2},
         ],
 
       }

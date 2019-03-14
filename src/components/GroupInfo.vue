@@ -1,6 +1,6 @@
 <template>
     <div class="wap-main">
-      <!--  点击群组，群组资料页面  -->
+      <!--  点击群聊，群聊资料页面  -->
       <div class="wap-main-group">
         <div class="wap-group-info-title">
         <span class="wap-main-chat-title-back" @click="$router.go(-1)">
@@ -19,18 +19,63 @@
               {{user.name}}
             </div>
           </div>
+          <template v-if="group_user.type < 2">
+            <div class="wap-group-info-item" style="width: 19%;" @click="addGroupUser">
+              <div class="wap-group-info-logo">
+                <img src="../../static/images/add.jpg" alt="">
+              </div>
+              <div class="wap-group-info-name">
+                <p>&nbsp;</p>
+              </div>
+            </div>
+            <div class="wap-group-info-item" style="width: 19%;" @click="delGroupUser">
+              <div class="wap-group-info-logo">
+                <img src="../../static/images/sub.jpg" alt="">
+              </div>
+              <div class="wap-group-info-name">
+                <p>&nbsp;</p>
+              </div>
+            </div>
+          </template>
+        </div>
+        <div class="wap-group-info-info">
+          <div>
+            <div class="wap-group-info-group-name" @click="edit_group_modal">
+              群聊名称 <span>{{group.name}}<Icon type="ios-arrow-forward" size="16"/></span>
+            </div>
+          </div>
+          <div>
+            <div class="wap-group-info-group-info">
+              群公告 <p>{{group.info}}</p>
+              <span>
+              <Icon type="ios-arrow-forward" size="16"/>
+            </span>
+            </div>
+          </div>
+          <div>
+            <div class="wap-group-info-group-name" @click="">
+              群管理 <span><Icon type="ios-arrow-forward" size="16"/></span>
+            </div>
+          </div>
+        </div>
+        <div class="wap-group-info-delete" @click="clickDeleteGroup('delete')" v-if="group_user.type === 0">
+          删除群聊
+        </div>
+        <div class="wap-group-info-delete" @click="clickDeleteGroup('quit')" v-else>
+          退出群聊
         </div>
       </div>
 
-      <!-- 退出群组，模态框 -->
+
+      <!-- 退出群聊，模态框 -->
       <!--  删除好友模态框 -->
       <Modal
         v-model="del_group_modal"
         @on-cancel="del_group_modal=false"
-        title="删除好友"
+        :title="del_group_title"
         class-name="wap-my-modal">
         <div class="wap-my-modal-text">
-          <span>您确定删除好友 <span style="color: #cc99ff;">{{group.remark_name}}</span> 吗？</span>
+          <span>{{del_group_message}}</span>
         </div>
         <div slot="footer">
           <Button type="text" @click="del_group_modal=false">取消</Button>
@@ -58,7 +103,7 @@
 </template>
 
 <script>
-  import {updateGroup, deleteGroup} from "../api";
+  import {getGroup, updateGroup, deleteGroup} from "../api";
 
   export default {
         name: "WapChat",
@@ -66,21 +111,33 @@
         if(!this.$User.user){
           this.$router.push('/login')
         }else{
-
+          let group_id = this.$route.params.id;
+          this.getGroup(group_id)
         }
       },
       data(){
         return {
+          group_user:{
+            id: 1,
+            group_id: 1,
+            user_id: 1,
+            remark: 'xiaoxin',
+            type: 0,
+          },
           group:{
             id: 1,
             type: 'group',
             name: 'mv1',
-            logo: '/static/images/mv1.jpg'
+            logo: '/static/images/mv1.jpg',
+            info: '这是一个测试页面,这是一个测试页面,这是一个测试页面,这是一个测试页面,这是一个测试页面,这是一个测试页面,'
           },
           new_group_name: null,
           new_group_logo: null,
           edit_group_modal: false,
           del_group_modal: false,
+          del_group_title: null,
+          del_group_message: null,
+          add_user_id: null,
           data_list: [
             {'id': 1, 'name': 'testfdsafdsfsf', 'logo': '/static/images/test.jpg', 'type': 'group'},
             {'id': 2, 'name': 'test1', 'logo': '/static/images/mv1.jpg', 'type': 'group'},
@@ -94,10 +151,23 @@
         }
       },
       methods:{
-        // 修改群组名称
+        // 获取群组消息
+        async getGroup(group_id){
+          let json_data = {
+            group_id: group_id,
+          };
+          let resp = await getGroup(json_data);
+          if(resp.code === 200){
+            this.group = resp.data
+          }else{
+            this.$Message.error(resp.message)
+          }
+        },
+
+        // 修改群聊名称
         async editGroupName(){
           if(!this.new_group_name || !this.new_group_name.trim()){
-            this.$Message.warning('群组名不能为空！');
+            this.$Message.warning('群聊名不能为空！');
             return;
           }
           let json_data = {
@@ -113,10 +183,10 @@
           }
         },
 
-        // 修改群组头像
+        // 修改群聊头像
         async editGroupLogo(){
           if(!this.new_group_name || !this.new_group_name.trim()){
-            this.$Message.warning('群组名不能为空！');
+            this.$Message.warning('群聊名不能为空！');
             return;
           }
           let json_data = {
@@ -130,8 +200,17 @@
             this.$Message.error(resp.message);
           }
         },
-
-        // 删除群组
+        clickDeleteGroup(type){
+          if(type === 'quit'){
+            this.del_group_title = '退出群聊';
+            this.del_group_message = '您确定退出该群聊吗？'
+          }else{
+            this.del_group_title = '删除群聊';
+            this.del_group_message = '您确定删除该群聊吗？'
+          }
+          this.del_group_modal = true;
+        },
+        // 删除群聊
         async delGroup(){
           let json_data = {
             group_id: group.id
@@ -142,6 +221,25 @@
           }else{
             this.$Message.error(resp.message);
           }
+        },
+
+        // 添加成员
+        async addGroupUser(){
+          let json_data = {
+            group_id: this.group.id,
+            user_id: this.add_user_id
+          };
+          let resp = await addGroupUser(json_data);
+          if(resp.coce === 200){
+            this.$Message.success(resp.message)
+          }else{
+            this.$Message.error(resp.message)
+          }
+        },
+
+        // 删除成员
+        delGroupUser(){
+
         },
 
 
@@ -192,5 +290,88 @@
 </script>
 
 <style scoped>
+  /*   群组详情样式  */
+  .wap-group-info-title{
+    text-align: left;
+    height: 40px;
+    line-height: 40px;
+  }
+  .wap-group-info{
+    background: #fff;
+    padding: 5px;
+    text-align: left;
+  }
 
+  .wap-group-info-item{
+    display: inline-block;
+    width: 20%;
+    padding: 8px;
+    text-align: center;
+  }
+  .wap-group-info-logo{
+
+  }
+  .wap-group-info-logo>img{
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+  }
+  .wap-group-info-name{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+  .wap-group-info-info{
+    background: #fff;
+    margin: 8px 0;
+    border-top: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    text-align: left;
+    font-size: 14px;
+  }
+  .wap-group-info-info>div{
+    padding-left: 10px;
+  }
+  .wap-group-info-info>div:active, .wap-group-info-delete:active{
+    background:#dedede;
+  }
+  .wap-group-info-group-name, .wap-group-info-delete{
+    height: 46px;
+    line-height: 46px;
+    padding-left: 1px;
+  }
+  .wap-group-info-group-name>span{
+    float: right;
+    margin-right: 8px;
+    color: #898989;
+  }
+  .wap-group-info-group-info{
+    display: inline-block;
+    padding-top: 6px;
+    position: relative;
+    border-bottom: 1px solid #dedede;
+    border-top: 1px solid #dedede;
+    padding-left: 1px;
+  }
+  .wap-group-info-group-info>p{
+    padding: 5px 0 5px 10px;
+    color: #898989;
+    font-size: 12px;
+    width: 84%;
+    text-align:justify
+  }
+  .wap-group-info-group-info>span{
+    position: absolute;
+    right: 10px;
+    color: #898989;
+    top: 50%;
+    margin: -8px 0 0 0;
+  }
+  .wap-group-info-delete{
+    background: #fff;
+    border-top: 1px solid #dedede;
+    color: orangered;
+    font-size: 14px;
+    font-weight: bold;
+  }
 </style>
