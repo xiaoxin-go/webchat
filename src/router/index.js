@@ -13,6 +13,8 @@ export default new Router({
     {path:'/friend_info',component:()=>import('../components/FriendInfo.vue'),name:'FriendInfo'},
     {path:'/friend_add',component:()=>import('../components/FriendAdd.vue'),name:'FriendAdd'},
     {path:'/group_info/:id',component:()=>import('../components/GroupInfo.vue'),name:'GroupInfo'},
+    {path:'/group_user_add/:id',component:()=>import('../components/GroupUserAdd.vue'),name:'GroupUserAdd'},
+    {path:'/group_user_del/:id',component:()=>import('../components/GroupUserDel.vue'),name:'GroupUserDel'},
     {path:'/group_add',component:()=>import('../components/GroupAdd.vue'),name:'GroupAdd'},
     {path:'/login',component:()=>import('../components/Login.vue'),name:'Login'},
     {path:'/register',component:()=>import('../components/Register.vue'),name:'Register'},

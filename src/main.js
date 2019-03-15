@@ -10,11 +10,13 @@ import User from './config'
 import VueSocketio from 'vue-socket.io'
 import socketio from 'socket.io-client'
 
+let server_ip = 'http://127.0.0.1:5000';
+
 Vue.use(iView);
-Vue.use(VueSocketio, socketio('http://127.0.0.1:5000'));
+Vue.use(VueSocketio, socketio(server_ip));
 
 Vue.config.productionTip = false;
-Vue.prototype.$Server = 'http://127.0.0.1:5000';
+Vue.prototype.$Server = server_ip;
 Vue.prototype.$User = User;
 /* eslint-disable no-new */
 new Vue({

@@ -584,6 +584,10 @@ ul,li{
   height: 60px;
   line-height: 60px;
   padding: 0 6px;
+  background: #fff;
+  position: absolute;
+  width: 100%;
+  z-index: 10;
 }
 .wap-main-body-friend-title{
   padding: 12px 0;
@@ -643,7 +647,12 @@ ul,li{
 
 /*  好友界面好友列表样式  */
 .wap-main-body-friend-body{
-  padding-top: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: absolute;
+  padding-top: 70px;
+  width: 100%;
+  height: 100%;
 }
 .wap-main-body-friend-body .chat-item{
   height: 50px;
@@ -847,4 +856,108 @@ ul,li{
   height: 100%;
   background:#f4f4f4;
   z-index: 10;
+}
+
+
+/*   群组详情样式  */
+.wap-group-info-title{
+  text-align: left;
+  height: 40px;
+  line-height: 40px;
+  position: absolute;
+  background: #f4f4f4;
+  z-index: 10;
+  width: 100%;
+}
+.wap-group-info{
+  background: #fff;
+  padding: 5px;
+  text-align: left;
+}
+
+.wap-group-info-item{
+  display: inline-block;
+  width: 20%;
+  padding: 8px;
+  text-align: center;
+}
+.wap-group-info-logo{
+
+}
+.wap-group-info-logo>img{
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+}
+.wap-group-info-name{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.wap-group-info-info{
+  background: #fff;
+  margin: 8px 0;
+  border-top: 1px solid #dedede;
+  border-bottom: 1px solid #dedede;
+  text-align: left;
+  font-size: 14px;
+}
+.wap-group-info-info>div{
+  padding-left: 10px;
+}
+.wap-group-info-info>div:active, .wap-group-info-delete:active, .wap-group-info-group-logo:active{
+  background:#dedede;
+}
+.wap-group-info-group-name, .wap-group-info-delete, .wap-group-info-group-logo{
+  height: 46px;
+  line-height: 46px;
+  padding-left: 1px;
+}
+.wap-group-info-group-name>span, .wap-group-info-group-logo>span{
+  float: right;
+  margin-right: 8px;
+  color: #898989;
+}
+.wap-group-info-group-info{
+  display: inline-block;
+  padding-top: 6px;
+  position: relative;
+  border-bottom: 1px solid #dedede;
+  border-top: 1px solid #dedede;
+  padding-left: 1px;
+}
+.wap-group-info-group-info>p{
+  padding: 5px 0 5px 10px;
+  color: #898989;
+  font-size: 12px;
+  width: 84%;
+  text-align:justify
+}
+.wap-group-info-group-info>span{
+  position: absolute;
+  right: 10px;
+  color: #898989;
+  top: 50%;
+  margin: -8px 0 0 0;
+}
+.wap-group-info-delete{
+  background: #fff;
+  border-top: 1px solid #dedede;
+  border-bottom: 1px solid #dedede;
+  color: orangered;
+  font-size: 14px;
+  font-weight: bold;
+}
+.wap-group-info-group-logo{
+  border-bottom: 1px solid #dedede;
+}
+.ivu-checkbox-wrapper>span:last-child{
+  display: none;
+}
+
+.wap-main-group .wap-main-body-friend-search{
+  top: 40px;
+}
+.wap-main-group .wap-main-body-friend-body{
+  padding-top: 110px;
 }
