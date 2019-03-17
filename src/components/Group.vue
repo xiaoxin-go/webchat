@@ -85,7 +85,7 @@
       if(!this.$User.user){
         this.$router.push('/login')
       }else{
-        //this.getGroup()
+        this.getGroup()
       }
     },
     data() {
@@ -132,6 +132,7 @@
 
       // 进入聊天页面
       changeChat(group) {
+        group.chat_type = 2;
         this.$router.push({
           name: 'Chat',
           params:{

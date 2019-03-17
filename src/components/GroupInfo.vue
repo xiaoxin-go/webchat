@@ -63,7 +63,7 @@
             </div>
           </div>
           <div v-if="group_user.type<2">
-            <div class="wap-group-info-group-name" @click="">
+            <div class="wap-group-info-group-name" @click="$router.push(`/group_admin/${group.id}`)">
               群管理 <span><Icon type="ios-arrow-forward" size="16"/></span>
             </div>
           </div>
@@ -198,6 +198,7 @@
             group_id: group_id,
           };
           let resp = await getGroup(json_data);
+          console.log(resp);
           if(resp.code === 200){
             this.group = resp.data
           }else{
@@ -213,7 +214,7 @@
           }
           let json_data = {
             group_id: this.group.id,
-            group_name: this.new_group_name
+            name: this.new_group_name
           };
           let resp = await updateGroup(json_data);
           if(resp.code === 200){
@@ -228,7 +229,7 @@
         async editGroupLogo(){
           let json_data = {
             group_id: this.group.id,
-            group_name: this.new_group_logo
+            group_logo: this.new_group_logo
           };
           let resp = await updateGroup(json_data);
           if(resp.code === 200){

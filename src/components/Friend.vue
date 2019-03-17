@@ -19,18 +19,18 @@
         <!-----------------------   好友界面  --------------------->
         <div class="wap-main-body-friend">
           <div class="wap-main-body-friend-search">
-            <Input search placeholder="搜索" size="large"/>
+            <Input search v-model="search_name" placeholder="搜索"  size="large"/>
           </div>
 
           <!-- 好友 -->
           <div class="wap-main-body-friend-body">
-            <template v-for="(friend, index) in friend_list">
+            <template v-for="(friend, index) in friend_list" v-if="(friend.remark_name && friend.remark_name.startsWith(search_name)) || (friend.nickname && friend.nickname.startsWith(search_name))">
               <div class="chat-item" @click="clickFriend(index)">
                 <div class="chat-img">
                   <img :src="friend.logo">
                 </div>
                 <div class="chat-text">
-                  {{ friend.remark_name }}
+                  {{ friend.remark_name || friend.nickname }}
                 </div>
               </div>
             </template>
@@ -84,12 +84,13 @@
       if(!this.$User.user){
         this.$router.push('/login')
       }else{
-        //this.getFriend()
+        this.getFriend()
       }
     },
     data() {
       return {
         chatroom_active: false,
+        search_name: '',
         /* ------     好友相关属性    ------- */
         // 好友列表
         friend_list: [
@@ -100,22 +101,6 @@
             'type': 'friend',
             'nickname': 'xiaoxin1',
             'remark_name': 'xiaoxin2'
-          },
-          {
-            'id': 2,
-            'username': 'xiaoxin1',
-            'logo': '/static/images/mv2.png',
-            'type': 'friend',
-            'nickname': 'xiaoxin2',
-            'remark_name': 'xiaoxin3'
-          },
-          {
-            'id': 3,
-            'username': 'xiaoxin2',
-            'logo': '/static/images/mv3.jpg',
-            'type': 'friend',
-            'nickname': 'xiaoxin3',
-            'remark_name': 'xiaoxin3'
           },
         ],
       }

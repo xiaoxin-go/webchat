@@ -16,12 +16,12 @@
         <!--<Icon type="md-more" size="30"/>-->
         <!--</div>-->
       </div>
-      <div class="wap-main-body" @click="chatroom_active=false">
+      <div class="wap-main-body" @click="chatroom_active=chat_delete_modal=false">
 
         <!---------------------------  聊天界面  -------------------------->
         <div class="wap-main-body-message">
           <template v-for="chat in chat_list">
-            <div class="chat-item" @click="changeChat(chat.id)">
+            <div class="chat-item" @click="changeChat(chat.id)" @touchstart="touchStart(chat.id)" @touchend="touchEnd">
               <div class="chat-img">
                 <img :src="chat.logo">
               </div>
@@ -30,9 +30,11 @@
                   <span class="chat-text-name">{{chat.name}}</span>
                   <span class="chat-text-time">{{chat.update_time}}</span>
                 </div>
-                <div class="chat-text-message">
-                  {{chat.message}}
+                <div class="chat-text-message" v-html="chat.message">
                 </div>
+              </div>
+              <div class="chat-item-modal" v-if="chat_delete_modal === chat.id">
+                <p @click="delChat(chat)">删除该聊天</p>
               </div>
             </div>
           </template>
@@ -75,7 +77,7 @@
 </template>
 
 <script>
-  import {getChat, getUserInfo,} from '../api/index.js'
+  import {getChat, deleteChat} from '../api/index.js'
 
   export default {
     name: "Wap",
@@ -83,12 +85,15 @@
       if (!this.$User.user) {
         this.$router.push('/login')
       } else {
-        //this.getChat();
+        this.getChat();
+        this.in_chat_list();
       }
     },
     data() {
       return {
         chatroom_active: false,  // 点击最主面聊天室
+        chat_delete_modal: '',
+        Loop: null,
 
         // 聊天列表
         chat_list: [
@@ -124,30 +129,55 @@
         }
       },
 
+      touchStart(chat_id){
+        var self = this;
+        this.Loop=setTimeout(function(){
+          console.log('start.........', chat_id);
+          self.chat_delete_modal = chat_id;
+        },500);
+      },
+      touchEnd(){
+        clearTimeout(this.Loop);
+      },
+
+      // 删除聊天
+      async delChat(chat){
+        let json_data = {
+          chat_id: chat.id
+        };
+        let resp = await deleteChat(json_data);
+        if(resp.code === 200){
+          this.getChat();
+        }
+      },
+
       // 进入聊天页面
       changeChat(chat_id) {
         this.$router.push({path: '/chat/', query:{id: chat_id}})
       },
+      in_chat_list(){
+        this.$socket.emit('in_chat_list')
+      },
+      out_chat_list(){
+        this.$socket.emit('out_chat_list')
+      }
 
+    },
+    destroyed() {
+      this.out_chat_list()
     },
     sockets: {
       connect: function () {
         console.log('socket connected')
       },
-      message: function () {
-        console.log('返回' + val)
+      message: function (chat) {
+        console.log(chat);
+        let chat_item = this.chat_list.filter(item=>item.id === chat.id)[0];
+        this.chat_list.pop(chat_item);
+        this.chat_list.unshift(chat);
       }
     },
     filters: {},
-    watch: {
-      // message_data(){
-      //   this.$nextTick(() => {
-      //     console.log('....');
-      //     var container = this.$el.querySelector("chat-body");
-      //     container.scrollTop = container.scrollHeight;
-      // })
-      // }
-    }
   }
 </script>
 

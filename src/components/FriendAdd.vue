@@ -2,12 +2,12 @@
   <div>
     <!--  点击添加好友，搜索好友页面  -->
     <div class="wap-add-friend">
-      <div class="wap-add-friend-title">
+      <div class="wap-group-info-title">
         <span class="wap-main-chat-title-back" @click="$router.go(-1)">
           <Icon type="ios-arrow-back" size="18"/>
         </span>
         <span class="wap-main-chat-title-name">
-          添加朋友
+          添加好友
         </span>
       </div>
       <div class="wap-add-friend-body">
@@ -15,18 +15,14 @@
           <Input search placeholder="好友名称" size="large" v-model="search_name" @on-search="searchFriend"/>
         </div>
         <Divider style="font-size: 14px; font-weight: normal;">好友列表</Divider>
-        <div class="wap-add-friend-info">
-          <div v-for="friend in friend_list">
-            <div class="wap-main-friend-body">
-              <div class="wap-main-friend-logo">
+        <div class="wap-add-friend-info" v-if="friend.id">
+              <div class="wap-friend-add-logo">
                 <img :src="friend.logo" alt="">
               </div>
-              <div class="wap-main-friend-info">
-                <p class="wap-main-friend-nickname">昵称：{{friend.nickname}}</p>
-                <Button size="small" style="margin-top:12px ;" @click="addFriend(friend.id)">添加</Button>
+              <div class="wap-add-friend-info-info">
+                <p class="wap-add-friend-nickname">昵称：{{friend.nickname}}</p>
+                <Button size="small" style="margin-top:12px ;" @click="addFriend">添加</Button>
               </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -39,7 +35,7 @@
   export default {
     name: "Wap",
     mounted() {
-      if(!this.$User.name){
+      if(!this.$User.user){
         this.$router.push('/login')
       }
     },
@@ -47,7 +43,7 @@
       return {
         /*--------   添加好友属性   -------*/
         search_name: null,
-        friend_list: [
+        friend:
           {
             'id': 1,
             'username': 'xiaoxin',
@@ -56,15 +52,6 @@
             'nickname': 'xiaoxin1',
             'remark_name': 'xiaoxin2'
           },
-          {
-            'id': 2,
-            'username': 'xiaoxin1',
-            'logo': '/static/images/mv2.png',
-            'type': 'friend',
-            'nickname': 'xiaoxin2',
-            'remark_name': 'xiaoxin3'
-          },
-        ]
       }
     },
     methods: {
@@ -77,17 +64,18 @@
         let json_data = {
           username: this.search_name
         };
-        let resp = await getUser(data);
+        let resp = await getUser(json_data);
         if(resp.code === 200){
-          this.friend_list = resp.data
+          console.log(resp.data);
+          this.friend = resp.data
         }
       },
       // 添加好友
-      async addFriend(friend_id){
+      async addFriend(){
         let json_data = {
-          friend_id: friend_id
+          friend_id: this.friend.id
         };
-        let resp = await addFriend(data);
+        let resp = await addFriend(json_data);
         if(resp.code === 200){
           this.$Message.success('好友添加成功')
         }else{
@@ -115,15 +103,6 @@
         }
       }
     },
-    watch:{
-      // message_data(){
-      //   this.$nextTick(() => {
-      //     console.log('....');
-      //     var container = this.$el.querySelector("chat-body");
-      //     container.scrollTop = container.scrollHeight;
-      // })
-      // }
-    }
   }
 </script>
 

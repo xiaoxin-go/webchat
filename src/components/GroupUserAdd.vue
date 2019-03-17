@@ -20,7 +20,8 @@
         <!-- 好友 -->
         <div class="wap-main-body-friend-body">
           <CheckboxGroup v-model="member_list">
-            <template v-for="(friend, index) in friend_list" v-if="group_user_ids.indexOf(friend.id) < 0 & friend.remark_name.startsWith(search_name)">
+            <template v-for="(friend, index) in friend_list" v-if="group_user_ids.indexOf(friend.id) < 0 &
+            ((friend.remark_name && friend.remark_name.startsWith(search_name)) || friend.nickname.startsWith(search_name))">
               <div class="chat-item">
                 <div class="chat-img">
                   <img :src="friend.logo">

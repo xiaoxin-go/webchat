@@ -690,6 +690,7 @@ ul,li{
   height: 60px;
   background: #fff;
   padding-left: 5px;
+  position: relative;
 }
 .wap-main-body-message .chat-img{
   width: 60px;
@@ -727,6 +728,9 @@ ul,li{
   overflow: hidden;
   white-space: nowrap;
   width: 20em;
+}
+.chat-text-message>img{
+  height: 30px;
 }
 .wap-main-body-setting{
   background: #eeeeee;
@@ -873,6 +877,7 @@ ul,li{
   background: #fff;
   padding: 5px;
   text-align: left;
+  margin-top: 40px;
 }
 
 .wap-group-info-item{
@@ -925,6 +930,7 @@ ul,li{
   border-bottom: 1px solid #dedede;
   border-top: 1px solid #dedede;
   padding-left: 1px;
+  width: 100%;
 }
 .wap-group-info-group-info>p{
   padding: 5px 0 5px 10px;
@@ -960,4 +966,141 @@ ul,li{
 }
 .wap-main-group .wap-main-body-friend-body{
   padding-top: 110px;
+}
+
+/*   创建群聊  */
+.wap-group-body{
+  margin-top: 40px;
+  background: #fff;
+  padding: 20px;
+}
+.wap-group-add-btn{
+  margin-top: 20px;
+}
+.wap-group-add-btn>.btn-item{
+  margin: 10px 0;
+}
+
+/*  添加好友 */
+.wap-add-friend-body{
+  margin-top: 40px;
+  background: #fff;
+  padding-top: 10px;
+}
+.wap-add-friend-body-search{
+  padding: 0 2px;
+}
+.wap-add-friend-info{
+  height: 200px;
+}
+.wap-friend-add-logo{
+  height: 200px;
+  width: 200px;
+  float: left;
+}
+.wap-friend-add-logo>img{
+  height: 150px;
+  width: 150px;
+  border-radius: 5px;
+}
+.wap-add-friend-info-info{
+  text-align: left;
+}
+.wap-add-friend-nickname{
+  font-size: 20px;
+}
+
+/*   好友信息  */
+/*  好友资料页面样式 */
+.wap-main-friend-body{
+  background:#ffffff;
+  padding-top: 10px;
+  text-align: left;
+  padding-bottom: 30px;
+}
+
+.wap-main-friend-logo>img{
+  height: 80px;
+  width: 80px;
+  border-radius: 3px;
+}
+.wap-main-friend-logo{
+  margin: 0 15px;
+}
+.wap-main-friend-info, .wap-main-friend-logo{
+  display:inline-block;
+  vertical-align: top;
+}
+.wap-main-friend-remark{
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+}
+.wap-main-friend-nickname{
+  color: #888888;
+  margin-top: 5px;
+}
+.wap-main-friend-bottom{
+  background: #ffffff;
+  margin-top: 20px;
+}
+.wap-main-friend-bottom>div{
+  height: 40px;
+  line-height: 40px;
+}
+.wap-main-friend-update-remark,.wap-main-friend-sendmessage{
+  border-bottom: 1px solid #eeeeee;
+  width: 98%;
+  margin: auto;
+}
+.wap-main-friend-delete{
+  margin: 0 2px;
+}
+.wap-my-modal{
+  width: 300px!important;
+  margin: auto;
+}
+.wap-my-modal-text{
+  padding: 0 20px;
+  text-align: center;
+}
+.wap-my-modal-text>img{
+  width: 100px;
+  height: 100px;
+}
+.wap-add-friend-title{
+  height: 50px;
+  line-height: 50px;
+  text-align: left;
+  font-weight: bold;
+}
+.ivu-divider-inner-text{
+  color: #666;
+}
+.wap-add-friend-info .wap-main-friend-body{
+  padding-bottom: 0;
+}
+
+/*  用户修改密码  */
+.input-group{
+  margin: 10px 0;
+  padding-left: 4px;
+}
+
+.password-text{
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+}
+
+.chat-item-modal{
+  position: absolute;
+  -webkit-box-shadow: 0 0 10px #ddd;
+  box-shadow: 0 0 10px #ddd;
+  font-size: 16px;
+  z-index: 100;
+  background: #fff;
+  top: 38px;
+  left: 120px;
+  padding: 5px;
 }

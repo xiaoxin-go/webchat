@@ -1,16 +1,30 @@
 <template>
-  <div>
+  <div class="wap-main">
     <input type="file" id="send-image" style="display: none;" @change="uploadImage">
-    <!--  点击创建群组，创建群组模态框  -->
+    <!--  点击群聊，群聊资料页面  -->
+    <div class="wap-main-group">
+      <div class="wap-group-info-title">
+        <span class="wap-main-chat-title-back" @click="$router.go(-1)">
+          <Icon type="ios-arrow-back" size="18"/>
+        </span>
+        <span class="wap-main-chat-title-name">
+          创建群聊
+        </span>
+      </div>
+
+      <!--  点击创建群组，创建群组模态框  -->
       <div class="wap-group-body">
-        <Icon class="message-file" v-if="!new_group_logo" type="ios-add-circle-outline" size="100" @click="clickImage"/>
-        <img v-if="new_group_logo" :src="new_group_logo" alt="" @click="clickImage">
+        <div style="margin-bottom: 10px;">
+          <Icon class="message-file" v-if="!new_group_logo" type="ios-add-circle-outline" size="100" @click="clickImage"/>
+          <img style="height: 200px;width: 200px;border-radius: 50%;" v-if="new_group_logo" :src="new_group_logo" alt="" @click="clickImage">
+        </div>
         <Input placeholder="请输入群组名称" width=100 autofocus v-model="new_group_name"/>
       </div>
-      <div class="wap-group-btn">
-        <Button type="text" @click="modalCancel">取消</Button>
-        <Button type="primary" @click="createGroup">确定</Button>
+      <div class="wap-group-add-btn">
+        <div class="btn-item"><Button long type="primary" @click="createGroup">确定</Button></div>
+        <div class="btn-item"><Button long @click="$router.go(-1)">取消</Button></div>
       </div>
+    </div>
   </div>
 
 </template>
@@ -23,15 +37,12 @@
   export default {
     name: "Wap",
     mounted() {
-      if(!this.$User.name){
+      if(!this.$User.user){
         this.$router.push('/login')
       }
     },
     data() {
       return {
-        // 公共logo
-        common_logo: '',
-
         // 创建群组名称
         new_group_name: '',
         new_group_logo: '',
@@ -49,14 +60,13 @@
           return
         }
         let json_data = {
-          'group_name': this.new_group_name,
-          'group_logo': this.new_group_logo
+          group_name: this.new_group_name,
+          group_logo: this.new_group_logo
         };
         let resp = await addGroup(json_data);
         if (resp.code === 200){
           this.$Message.success('群组创建成功！');
-          this.create_group_modal = false;
-          this.getGroup();
+          this.$router.push('/group');
         }else{
           this.$Message.error(resp.message);
         }
@@ -75,10 +85,7 @@
         let resp = await uploadLogo(formData);
         console.log(resp);
         if (resp.code === 200){
-          this.common_logo = resp.data.url;        // 返回的是头像路径
-        }
-        if(this.create_group_modal){
-          this.new_group_logo =  this.$Server + this.common_logo;
+          this.new_group_logo = this.$Server +  resp.data.url;        // 返回的是头像路径
         }
       },
     },

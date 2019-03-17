@@ -6,6 +6,9 @@
         <span class="wap-main-friend-title-back" @click="$router.go(-1)">
           <Icon type="ios-arrow-back" size="18"/>
         </span>
+          <span class="wap-main-chat-title-name">
+          好友信息
+        </span>
         </div>
 
         <div class="wap-main-friend-body">
@@ -19,6 +22,7 @@
         </div>
         <div class="wap-main-friend-bottom">
           <div class="wap-main-friend-update-remark" @click="edit_remark_modal=true">修改备注</div>
+          <div class="wap-main-friend-update-remark" v-if="$User.user.type === 0 && friend.type === 2" @click="updateUser">设置为站长</div>
           <div class="wap-main-friend-sendmessage" @click="changeChat(friend)">发消息</div>
           <div class="wap-main-friend-delete"><Button long type="error" @click="del_friend_modal=true">删除好友</Button></div>
         </div>
@@ -59,7 +63,7 @@
 </template>
 
 <script>
-   import {updateFriend, deleteFriend} from "../api";
+  import {updateFriend, deleteFriend, updateUser} from "../api";
 
    export default {
         name: "FriendInfo",
@@ -100,7 +104,7 @@
           };
           let resp = await updateFriend(json_data);
           if(resp.code === 200){
-            friend.remark_name = this.remark_name;
+            this.friend.remark_name = this.remark_name;
             this.edit_remark_modal = false;
           }else{
             this.$Message.warning(resp.message);
@@ -121,8 +125,22 @@
           }
         },
 
+        // 设置为站长
+        async updateUser(){
+          let json_data = {
+            type: 1
+          };
+          let resp = await updateUser(json_data);
+          if(resp.state === 200){
+            this.$Message.success('设置成功');
+          }else{
+            this.$Message.warning(resp.message)
+          }
+        },
+
         // 进入聊天页面
         changeChat(friend) {
+          friend.chat_type = 1;
           this.$router.push({
             name: 'Chat',
             params:{
@@ -143,73 +161,5 @@
 </script>
 
 <style scoped>
-  /*  好友资料页面样式 */
-  .wap-main-friend-body{
-    background:#ffffff;
-    padding-top: 10px;
-    text-align: left;
-    padding-bottom: 30px;
-  }
 
-  .wap-main-friend-logo>img{
-    height: 60px;
-    width: 60px;
-    border-radius: 3px;
-  }
-  .wap-main-friend-logo{
-    margin: 0 15px;
-  }
-  .wap-main-friend-info, .wap-main-friend-logo{
-    display:inline-block;
-    vertical-align: top;
-  }
-  .wap-main-friend-remark{
-    font-size: 20px;
-    font-weight: bold;
-    color: #000;
-  }
-  .wap-main-friend-nickname{
-    color: #888888;
-    margin-top: 5px;
-  }
-  .wap-main-friend-bottom{
-    background: #ffffff;
-    margin-top: 20px;
-  }
-  .wap-main-friend-bottom>div{
-    height: 40px;
-    line-height: 40px;
-  }
-  .wap-main-friend-update-remark,.wap-main-friend-sendmessage{
-    border-bottom: 1px solid #eeeeee;
-    width: 98%;
-    margin: auto;
-  }
-  .wap-main-friend-delete{
-    margin: 0 2px;
-  }
-  .wap-my-modal{
-    width: 300px!important;
-    margin: auto;
-  }
-  .wap-my-modal-text{
-    padding: 0 20px;
-    text-align: center;
-  }
-  .wap-my-modal-text>img{
-    width: 100px;
-    height: 100px;
-  }
-  .wap-add-friend-title{
-    height: 50px;
-    line-height: 50px;
-    text-align: left;
-    font-weight: bold;
-  }
-  .ivu-divider-inner-text{
-    color: #666;
-  }
-  .wap-add-friend-info .wap-main-friend-body{
-    padding-bottom: 0;
-  }
 </style>

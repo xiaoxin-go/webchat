@@ -54,26 +54,32 @@
           username: this.username.trim(),
           password: this.password.trim()
         };
-        if (this.username === 'xiaoxin' && this.password === 'xiaoxin') {
-          this.$User.setUser({
-            logo: '/static/images/mv1.jpg',
-            nickname: 'xiaoxin',
-            username: 'xiaoxin',
-            type: 0
-          });
-          this.$router.push('/');
-          return
-        }
+        // if (this.username === 'xiaoxin' && this.password === 'xiaoxin') {
+        //   this.$User.setUser({
+        //     logo: '/static/images/mv1.jpg',
+        //     nickname: 'xiaoxin',
+        //     username: 'xiaoxin',
+        //     type: 0
+        //   });
+        //   this.send();
+        //   this.$router.push('/');
+        //   return
+        // }
         let resp = await Login(json_data);
         if (resp.code === 200) {
           // this.$Message.success('用户登录成功');
           this.$User.setUser(resp.data);
           this.$router.push('/')
-        } else if (resp.state === 2) {
-          this.$Message.warning('用户名或密码错误')
-        } else {
-          this.$Message.error('发生未知错误')
+        } else{
+          this.$Message.error(resp.message)
         }
+      },
+
+
+      /*------------------  socketio交互 -----------------*/
+      send() {
+        console.log('send.......');
+        this.$socket.emit('new_login')
       },
 
       // 跳转到注册页面

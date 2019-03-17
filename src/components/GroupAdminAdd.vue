@@ -55,7 +55,7 @@
           'id': 1,
           'username': 'xiaoxin',
           'logo': '/static/images/mv1.jpg',
-          'type': 'friend',
+          'type': 2,
           'nickname': 'xiaoxin1',
           'remark_name': 'xiaoxin1'
         },
@@ -63,7 +63,7 @@
             'id': 2,
             'username': 'xiaoxin1',
             'logo': '/static/images/mv2.png',
-            'type': 'friend',
+            'type': 2,
             'nickname': 'xiaoxin2',
             'remark_name': 'xiaoxin2'
           },
@@ -71,7 +71,7 @@
             'id': 3,
             'username': 'xiaoxin3',
             'logo': '/static/images/mv3.jpg',
-            'type': 'friend',
+            'type': 2,
             'nickname': 'xiaoxin3',
             'remark_name': 'xiaoxin3'
           },
@@ -79,7 +79,7 @@
             'id': 4,
             'username': 'xiaoxin4',
             'logo': '/static/images/mv4.jpg',
-            'type': 'friend',
+            'type': 2,
             'nickname': 'xiaoxin4',
             'remark_name': 'xiaoxin4'
           },
@@ -87,7 +87,7 @@
             'id': 5,
             'username': 'xiaoxin5',
             'logo': '/static/images/mv5.jpeg',
-            'type': 'friend',
+            'type': 2,
             'nickname': 'xiaoxin5',
             'remark_name': 'xiaoxin5'
           }

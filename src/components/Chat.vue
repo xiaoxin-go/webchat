@@ -8,16 +8,16 @@
           <Icon type="ios-arrow-back" size="18"/>
         </span>
         <span class="wap-main-chat-title-name">
-          {{ chat_data.name }}
+          {{ chat.name }}
         </span>
         <span class="wap-main-chat-title-more">
-          <Icon type="ios-more" size="20" @click="chatMore(chat_data)"/>
+          <Icon type="ios-more" size="20" @click="chatMore"/>
         </span>
       </div>
       <!--  聊天body  -->
       <div class="wap-main-chat-body" id="chat-body">
-        <template v-for="message in message_data[chat_id]">
-          <template v-if="message.name === $User.user.nickname">
+        <template v-for="message in message_data">
+          <template v-if="message.id === $User.user.id">
             <div class="message-item-self">
               <div class="wap-chat-text">
                 <span v-html="message.message" style="text-align: left;display: inline-block;"></span>
@@ -57,7 +57,7 @@
                v-html="send_message"></div>
         </div>
 
-        <Button @click="sendMessage" size="small" type="primary" style="float: left; left: 3px;">发送</Button>
+        <Button @click="send" size="small" type="primary" style="float: left; left: 3px;">发送</Button>
 
       </div>
       <div class="frame-btn" @click="active_frame=true">
@@ -79,12 +79,11 @@
 </template>
 
 <script>
-  import {addChat, uploadLogo} from "../api";
+  import {addChat, uploadLogo, getChat, getChatMessage} from "../api";
 
   export default {
     name: "WapChat",
     mounted() {
-      console.log('chat....');
       if (!this.$User.user) {
         this.$router.push('/login')
       } else {
@@ -93,20 +92,13 @@
         // 从群组跳转过来，需要添加到聊天页面，后面判断是否存在该聊天，若存在，则更新聊天时间
         // 并返回该聊天消息
         if (chat) {
-          //this.addChat(chat)
+          this.addChat(chat)
         } else {
           let chat_id = this.$route.query.id;
-          //this.getChat(chat_id);
-          //this.getChatMessage(chat_id);
-          this.chat = {
-            'id': 1,
-            'name': 'test',
-            'logo': '/static/images/admin.jpg',
-            'type': 'group',
-            'chat_obj_id': 1
-          };
-          this.chat_data = this.message_data[chat_id];
+          this.getChat(chat_id);
+          this.getChatMessage(chat_id);
         }
+        this.in_chat();
         this.scrollAuto();
       }
     },
@@ -120,7 +112,6 @@
           'type': 'group',
           'chat_obj_id': 1
         },
-        chat_data: {},
         send_message: '',               // 发送消息内容
         send_image: null,               // 选择发送图片
         emoji_active: false,            // 表情包
@@ -129,58 +120,7 @@
         active_frame: null,
 
         // 用户消息列表
-        message_data: {
-          1: [
-            {'name': 'test', 'logo': '/static/images/index.png', 'message': 'hello', 'add_time': '8:50'},
-            {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'message': 'hello', 'add_time': '8:51'},
-            {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello', 'add_time': '8:52'},
-            {'name': 'test3', 'logo': '/static/images/index.png', 'message': 'hello', 'add_time': '8:53'},
-          ],
-          2: [
-            {'id': 2, 'name': 'admin', 'logo': '/static/images/admin.jpg', 'message': 'hello', 'add_time': '8:50'},
-            {'id': 1, 'name': 'xiaoxin', 'logo': '/static/images/xiaoxin.jpg', 'message': 'hello', 'add_time': '8:51'},
-            {'id': 2, 'name': 'admin', 'logo': '/static/images/admin.jpg', 'message': 'hello', 'add_time': '8:52'},
-            {
-              'id': 1,
-              'name': 'xiaoxin',
-              'logo': '/static/images/xiaoxin.jpg',
-              'message': '你好，你知道我是谁吗？或许你并不知道，或许你刚认识我，或许你并不了解我，或许你自己都不了解自己',
-              'add_time': '8:53'
-            },
-            {'id': 2, 'name': 'admin', 'logo': '/static/images/admin.jpg', 'message': 'hello', 'add_time': '8:52'},
-            {
-              'id': 1,
-              'name': 'xiaoxin',
-              'logo': '/static/images/xiaoxin.jpg',
-              'message': '你好，你知道我是谁吗？或许你并不知道，或许你刚认识我，或许你并不了解我，或许你自己都不了解自己',
-              'add_time': '8:53'
-            },
-            {'id': 2, 'name': 'admin', 'logo': '/static/images/admin.jpg', 'message': 'hello', 'add_time': '8:52'},
-            {
-              'id': 1,
-              'name': 'xiaoxin',
-              'logo': '/static/images/xiaoxin.jpg',
-              'message': '你好，你知道我是谁吗？或许你并不知道，或许你刚认识我，或许你并不了解我，或许你自己都不了解自己',
-              'add_time': '8:53'
-            },
-            {'id': 2, 'name': 'admin', 'logo': '/static/images/admin.jpg', 'message': 'hello', 'add_time': '8:52'},
-            {
-              'id': 1,
-              'name': 'xiaoxin',
-              'logo': '/static/images/xiaoxin.jpg',
-              'message': '你好，你知道我是谁吗？或许你并不知道，或许你刚认识我，或许你并不了解我，或许你自己都不了解自己',
-              'add_time': '8:53'
-            },
-            {'id': 2, 'name': 'admin', 'logo': '/static/images/admin.jpg', 'message': 'hello', 'add_time': '8:52'},
-            {
-              'id': 1,
-              'name': 'xiaoxin',
-              'logo': '/static/images/xiaoxin.jpg',
-              'message': '你好，你知道我是谁吗？或许你并不知道，或许你刚认识我，或许你并不了解我，或许你自己都不了解自己',
-              'add_time': '8:53'
-            },
-          ]
-        },
+        message_data: [],
 
         // 表情包
         emoji_list: [
@@ -244,6 +184,34 @@
 
       },
 
+      // 获取聊天
+      async getChat(chat_id){
+        let json_data = {
+          chat_id: chat_id
+        };
+        let resp = await getChat(json_data);
+        console.log(resp);
+        if(resp.code === 200){
+          this.chat = resp.data;
+        }else{
+          this.$Message.error(resp.message);
+        }
+      },
+
+      // 获取聊天消息
+      async getChatMessage(chat_id){
+        let json_data = {
+          chat_id: chat_id
+        };
+        let resp = await getChatMessage(json_data);
+        console.log(resp);
+        if(resp.code === 200){
+          this.message_data = resp.data;
+        }else{
+          this.$Message.error(resp.message)
+        }
+      },
+
       // 发送消息
       sendMessage() {
         let data = {
@@ -263,7 +231,7 @@
         let resp = await addChat(chat_obj);
         console.log(resp);
         if (resp.code === 200) {
-          this.message_data = resp.data;
+          this.chat = resp.data;
         } else {
           this.$Message.warning(resp.message);
         }
@@ -271,8 +239,13 @@
 
       // 聊天更多信息
       chatMore() {
-        if (this.chat.type === 'group')
+        console.log(this.chat);
+        if (this.chat.type === 2 || this.chat.type === '2'){
           this.$router.push(`/group_info/${this.chat.chat_obj_id}`);
+        }else{
+          this.$router.push(`/friend_info/${this.chat.chat_obj_id}`)
+        }
+
       },
 
       // 点击表情
@@ -343,15 +316,36 @@
 
       /*------------------  socketio交互 -----------------*/
       send(data) {
-        console.log('send.......');
-        this.$socket.emit('message', 'data')
+        console.log(this.chat);
+        let message_data = {
+          chat_id: this.chat.id,
+          message: this.send_message,
+          user_data: this.$User.user
+        };
+        this.$socket.emit('message', message_data);
+        this.message_data.push({
+          ...this.$User.user, ...{message: this.send_message}
+        });
+        this.scrollAuto();
+      },
+      in_chat(){
+        this.$socket.emit('in_chat', this.chat.id)
+      },
+      out_chat(){
+        this.$socket.emit('out_chat', this.chat.id)
       }
+    },
+    destroyed() {
+      this.out_chat()
     },
     sockets: {
       connect: function () {
         console.log('socket connected')
       },
-      message: function () {
+      message: function (val) {
+        console.log(val.nickname);
+        this.message_data.push(val);
+        this.scrollAuto();
         console.log('返回' + val)
       }
     },

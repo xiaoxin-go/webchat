@@ -9,6 +9,9 @@
         <span class="wap-main-chat-title-name">
           管理员列表
         </span>
+        <span style="position: absolute; right: 10px;">
+          <Button @click="$router.push(`/group_admin_add/${group_id}`)" type="success" size="small">添加</Button>
+        </span>
       </div>
         <div class="wap-main-body-friend-search">
           <Input v-model="search_name" search placeholder="搜索" size="large"/>
@@ -23,10 +26,11 @@
                 </div>
                 <div class="chat-text">
                   {{ friend.remark_name }}
+                  <div style="display: inline-block; position: absolute; right: 10px;">
+                    <Icon type="ios-remove-circle-outline" size="20" @click="delAdmin(friend.id)" style="color: orangered;font-weight: bold;" />
+                  </div>
                 </div>
-                <div style="display: inline-block; position: absolute; right: 10px;">
-                  <Icon type="md-remove" @click="delAdmin(friend.id)" style="color: orangered;" />
-                </div>
+
               </div>
             </template>
         </div>
@@ -58,7 +62,7 @@
           'id': 1,
           'username': 'xiaoxin',
           'logo': '/static/images/mv1.jpg',
-          'type': 'friend',
+          'type': 0,
           'nickname': 'xiaoxin1',
           'remark_name': 'xiaoxin1'
         },
@@ -66,7 +70,7 @@
             'id': 2,
             'username': 'xiaoxin1',
             'logo': '/static/images/mv2.png',
-            'type': 'friend',
+            'type': 2,
             'nickname': 'xiaoxin2',
             'remark_name': 'xiaoxin2'
           },
@@ -74,7 +78,7 @@
             'id': 3,
             'username': 'xiaoxin3',
             'logo': '/static/images/mv3.jpg',
-            'type': 'friend',
+            'type': 1,
             'nickname': 'xiaoxin3',
             'remark_name': 'xiaoxin3'
           },
@@ -82,7 +86,7 @@
             'id': 4,
             'username': 'xiaoxin4',
             'logo': '/static/images/mv4.jpg',
-            'type': 'friend',
+            'type': 2,
             'nickname': 'xiaoxin4',
             'remark_name': 'xiaoxin4'
           },
@@ -90,7 +94,7 @@
             'id': 5,
             'username': 'xiaoxin5',
             'logo': '/static/images/mv5.jpeg',
-            'type': 'friend',
+            'type': 1,
             'nickname': 'xiaoxin5',
             'remark_name': 'xiaoxin5'
           }
