@@ -97,8 +97,6 @@
 
         // 聊天列表
         chat_list: [
-          {'id': 1, 'name': 'test', 'logo': '/static/images/admin.jpg', 'type': 'group', 'chat_obj_id': 1},
-          {'id': 2, 'name': 'xiaoxin', 'logo': '/static/images/xiaoxin.jpg', 'type': 'friend', 'chat_obj_id': 2},
         ],
 
       }
@@ -122,6 +120,7 @@
       // 获取聊天消息
       async getChat() {
         let resp = await getChat();
+        console.log(resp);
         if (resp.code === 200) {
           this.chat_list = resp.data;
         } else {
@@ -173,7 +172,8 @@
       message: function (chat) {
         console.log(chat);
         let chat_item = this.chat_list.filter(item=>item.id === chat.id)[0];
-        this.chat_list.pop(chat_item);
+        let chat_index = this.chat_list.indexOf(chat_item);
+        this.chat_list.splice(chat_index, 1);
         this.chat_list.unshift(chat);
       }
     },

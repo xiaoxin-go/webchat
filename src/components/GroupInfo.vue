@@ -179,16 +179,7 @@
           del_group_title: null,
           del_group_message: null,
           add_user_id: null,
-          data_list: [
-            {'id': 1, 'name': 'testfdsafdsfsf', 'logo': '/static/images/test.jpg', 'type': 'group'},
-            {'id': 2, 'name': 'test1', 'logo': '/static/images/mv1.jpg', 'type': 'group'},
-            {'id': 3, 'name': 'test2', 'logo': '/static/images/mv2.png', 'type': 'group'},
-            {'name': 'test3', 'logo': '/static/images/mv3.jpg', 'type': 'group'},
-            {'name': 'test4', 'logo': '/static/images/mv4.jpg', 'type': 'group'},
-            {'name': 'test5', 'logo': '/static/images/mv5.jpeg', 'type': 'group'},
-            {'name': 'test6', 'logo': '/static/images/mv2.png', 'type': 'group'},
-            {'name': 'test7', 'logo': '/static/images/mv1.jpg', 'type': 'group'},
-          ],
+          data_list: [],
         }
       },
       methods:{
@@ -261,20 +252,6 @@
           }
         },
 
-        // 发送消息
-        sendMessage(){
-          let data = {
-            'name': 'xiaoxin',
-            'logo': '/static/images/xiaoxin.jpg',
-            'message': this.send_message
-          };
-          this.message_data[this.chat_active_id].push(data);
-          this.send_message = '';
-          // let div = document.getElementById('chat-body');
-          // div.scrollTop = div.scrollHeight;
-          this.scrollAuto();
-        },
-
         // 选择图片
         clickImage(){
           document.getElementById('send-image').click();
@@ -292,14 +269,6 @@
             this.new_group_logo = this.$Server + resp.data.url;        // 返回的是头像路径
           }
         },
-      },
-      sockets:{
-        connect: function(){
-          console.log('socket connected')
-        },
-        message: function(){
-          console.log('返回' + val)
-        }
       },
     }
 </script>

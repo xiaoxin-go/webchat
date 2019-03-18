@@ -149,14 +149,6 @@
           })
         },
       },
-      sockets:{
-        connect: function(){
-          console.log('socket connected')
-        },
-        message: function(){
-          console.log('返回' + val)
-        }
-      },
     }
 </script>
 

@@ -132,29 +132,6 @@
           this.$Message.error(resp.message)
         }
       },
-
-
-      // 发送消息
-      sendMessage() {
-        let data = {
-          'name': 'xiaoxin',
-          'logo': '/static/images/xiaoxin.jpg',
-          'message': this.send_message
-        };
-        this.message_data[this.chat_active_id].push(data);
-        this.send_message = '';
-        // let div = document.getElementById('chat-body');
-        // div.scrollTop = div.scrollHeight;
-        this.scrollAuto();
-      },
-    },
-    sockets: {
-      connect: function () {
-        console.log('socket connected')
-      },
-      message: function () {
-        console.log('返回' + val)
-      }
     },
   }
 </script>

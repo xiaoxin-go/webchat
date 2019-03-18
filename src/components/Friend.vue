@@ -94,14 +94,6 @@
         /* ------     好友相关属性    ------- */
         // 好友列表
         friend_list: [
-          {
-            'id': 1,
-            'username': 'xiaoxin',
-            'logo': '/static/images/mv1.jpg',
-            'type': 'friend',
-            'nickname': 'xiaoxin1',
-            'remark_name': 'xiaoxin2'
-          },
         ],
       }
     },
@@ -143,25 +135,6 @@
         }
       },
     },
-    sockets:{
-      connect: function(){
-        console.log('socket connected')
-      },
-      message: function(){
-        console.log('返回' + val)
-      }
-    },
-    filters: {
-    },
-    watch:{
-      // message_data(){
-      //   this.$nextTick(() => {
-      //     console.log('....');
-      //     var container = this.$el.querySelector("chat-body");
-      //     container.scrollTop = container.scrollHeight;
-      // })
-      // }
-    }
   }
 </script>
 

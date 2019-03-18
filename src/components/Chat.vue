@@ -67,7 +67,7 @@
 
     <!--  第三方广告页面  -->
     <div v-if="active_frame" class="frame-div">
-      <div @click="active_frame=false" style="position: absolute; color: #57a3f3;top: 20px; left: 2px;">
+      <div @click="active_frame=false" style="position: absolute; color: #57a3f3;top: 34px; left: 2px;">
         <Icon type="ios-undo" size="20"/>
       </div>
       <!--<a href="http://www.51job.com"></a>-->
@@ -92,26 +92,18 @@
         // 从群组跳转过来，需要添加到聊天页面，后面判断是否存在该聊天，若存在，则更新聊天时间
         // 并返回该聊天消息
         if (chat) {
-          this.addChat(chat)
+          this.addChat(chat);
         } else {
           let chat_id = this.$route.query.id;
           this.getChat(chat_id);
           this.getChatMessage(chat_id);
         }
-        this.in_chat();
-        this.scrollAuto();
       }
     },
     data() {
       return {
         chat_id: null,
-        chat: {
-          'id': 1,
-          'name': 'test',
-          'logo': '/static/images/admin.jpg',
-          'type': 'group',
-          'chat_obj_id': 1
-        },
+        chat: {},
         send_message: '',               // 发送消息内容
         send_image: null,               // 选择发送图片
         emoji_active: false,            // 表情包
@@ -179,11 +171,6 @@
       }
     },
     methods: {
-      // 点击给好友发消息
-      clickSendMessage() {
-
-      },
-
       // 获取聊天
       async getChat(chat_id){
         let json_data = {
@@ -193,6 +180,7 @@
         console.log(resp);
         if(resp.code === 200){
           this.chat = resp.data;
+          this.in_chat(resp.data);
         }else{
           this.$Message.error(resp.message);
         }
@@ -210,20 +198,7 @@
         }else{
           this.$Message.error(resp.message)
         }
-      },
-
-      // 发送消息
-      sendMessage() {
-        let data = {
-          'name': 'xiaoxin',
-          'logo': '/static/images/xiaoxin.jpg',
-          'message': this.send_message
-        };
-        this.message_data[this.chat_id].push(data);
-        this.send_message = '';
-        // let div = document.getElementById('chat-body');
-        // div.scrollTop = div.scrollHeight;
-        this.scrollAuto();
+        this.scrollAuto()
       },
 
       // 聊天对象是群组或者单个用户
@@ -232,6 +207,8 @@
         console.log(resp);
         if (resp.code === 200) {
           this.chat = resp.data;
+          this.getChatMessage(this.chat.id);
+          this.in_chat(resp.data);
         } else {
           this.$Message.warning(resp.message);
         }
@@ -260,8 +237,6 @@
       // 输入消息
       changeMessage(e) {
         let obj = e.target;
-        console.log(obj.innerHTML);
-        console.log(obj);
         this.send_message = obj.innerHTML.trim();
         setTimeout(() => {
           this.keepLastIndex(obj)
@@ -326,13 +301,16 @@
         this.message_data.push({
           ...this.$User.user, ...{message: this.send_message}
         });
+        this.send_message = '';
         this.scrollAuto();
       },
       in_chat(){
-        this.$socket.emit('in_chat', this.chat.id)
+        console.log(this.chat);
+        this.$socket.emit('in_chat', this.chat)
       },
       out_chat(){
-        this.$socket.emit('out_chat', this.chat.id)
+        console.log(this.chat);
+        this.$socket.emit('out_chat', this.chat)
       }
     },
     destroyed() {

@@ -43,15 +43,7 @@
       return {
         /*--------   添加好友属性   -------*/
         search_name: null,
-        friend:
-          {
-            'id': 1,
-            'username': 'xiaoxin',
-            'logo': '/static/images/mv1.jpg',
-            'type': 'friend',
-            'nickname': 'xiaoxin1',
-            'remark_name': 'xiaoxin2'
-          },
+        friend: {},
       }
     },
     methods: {
@@ -82,14 +74,6 @@
           this.$Message.warning(resp.message)
         }
       },
-    },
-    sockets:{
-      connect: function(){
-        console.log('socket connected')
-      },
-      message: function(){
-        console.log('返回' + val)
-      }
     },
     filters: {
       getMessage(data) {

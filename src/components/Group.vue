@@ -92,16 +92,7 @@
       return {
         chatroom_active: false,
         // 群组列表
-        group_list: [
-          {'id': 1, 'name': 'test', 'logo': '/static/images/test.jpg', 'type': 'group'},
-          {'id': 2, 'name': 'test1', 'logo': '/static/images/mv1.jpg', 'type': 'group'},
-          {'id': 3, 'name': 'test2', 'logo': '/static/images/mv2.png', 'type': 'group'},
-          {'name': 'test3', 'logo': '/static/images/mv3.jpg', 'type': 'group'},
-          {'name': 'test4', 'logo': '/static/images/mv4.jpg', 'type': 'group'},
-          {'name': 'test5', 'logo': '/static/images/mv5.jpeg', 'type': 'group'},
-          {'name': 'test6', 'logo': '/static/images/mv2.png', 'type': 'group'},
-          {'name': 'test7', 'logo': '/static/images/mv1.jpg', 'type': 'group'},
-        ],
+        group_list: [],
       }
     },
     methods: {
@@ -140,29 +131,7 @@
           }
         })
       },
-
-
-
     },
-    sockets:{
-      connect: function(){
-        console.log('socket connected')
-      },
-      message: function(){
-        console.log('返回' + val)
-      }
-    },
-    filters: {
-    },
-    watch:{
-      // message_data(){
-      //   this.$nextTick(() => {
-      //     console.log('....');
-      //     var container = this.$el.querySelector("chat-body");
-      //     container.scrollTop = container.scrollHeight;
-      // })
-      // }
-    }
   }
 </script>
 
