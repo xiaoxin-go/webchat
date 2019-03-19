@@ -28,8 +28,8 @@ export let uploadLogo =(data) =>{
 };
 
 // 获取用户信息
-export let getUserInfo =()=>{
-  return axios.get(`${url_version}/user_info`)
+export let getUserInfo =(data)=>{
+  return axios.get(`${url_version}/user_info`, {'params': data})
 };
 
 // 根据用户名或ID查找用户

@@ -15,6 +15,7 @@ export default new Router({
     /*-------     好友管理      ------*/
     {path:'/friend',component:()=>import('../components/Friend.vue'),name:'Friend'},
     {path:'/friend_info',component:()=>import('../components/FriendInfo.vue'),name:'FriendInfo'},
+    {path:'/friend_info/:id',component:()=>import('../components/FriendInfo.vue'),name:'FriendInfoID'},
     {path:'/friend_add',component:()=>import('../components/FriendAdd.vue'),name:'FriendAdd'},
 
     /*-------     群组管理      ------*/

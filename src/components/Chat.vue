@@ -89,6 +89,7 @@
       } else {
         // 如果chat存在，则是从群组跳转过来，否则，是从message跳转过来
         let chat = this.$route.params.chat;
+        console.log(chat);
         // 从群组跳转过来，需要添加到聊天页面，后面判断是否存在该聊天，若存在，则更新聊天时间
         // 并返回该聊天消息
         if (chat) {

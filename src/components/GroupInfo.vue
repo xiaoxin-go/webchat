@@ -17,7 +17,7 @@
               <img :src="user.logo" alt="">
             </div>
             <div class="wap-group-info-name">
-              {{user.name}}
+              {{user.nickname}}
             </div>
           </div>
 
@@ -141,7 +141,7 @@
 </template>
 
 <script>
-  import {getGroup, updateGroup, deleteGroup, uploadLogo} from "../api";
+  import {getGroup, updateGroup, deleteGroup, uploadLogo, getGroupUser} from "../api";
 
   export default {
         name: "WapChat",
@@ -150,7 +150,8 @@
           this.$router.push('/login')
         }else{
           let group_id = this.$route.params.id;
-          this.getGroup(group_id)
+          this.getGroup(group_id);
+          this.getGroupUser(group_id);
         }
       },
       data(){
@@ -163,11 +164,6 @@
             type: 0,
           },
           group:{
-            id: 1,
-            type: 'group',
-            name: 'mv1',
-            logo: '/static/images/mv1.jpg',
-            info: '这是一个测试页面,这是一个测试页面,这是一个测试页面,这是一个测试页面,这是一个测试页面,这是一个测试页面,'
           },
           new_group_name: null,
           new_group_logo: null,
@@ -194,6 +190,20 @@
             this.group = resp.data
           }else{
             this.$Message.error(resp.message)
+          }
+        },
+
+        // 获取群组成员列表
+        async getGroupUser(group_id){
+          let json_data = {
+            group_id: group_id,
+          };
+          let resp = await getGroupUser(json_data);
+          console.log(resp);
+          if (resp.code === 200){
+            this.data_list = resp.data;
+          }else{
+            this.$Message.error(resp.message);
           }
         },
 

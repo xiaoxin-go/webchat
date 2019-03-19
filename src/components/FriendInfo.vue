@@ -63,7 +63,7 @@
 </template>
 
 <script>
-  import {updateFriend, deleteFriend, updateUser} from "../api";
+  import {updateFriend, deleteFriend, updateUser, getUserInfo} from "../api";
 
    export default {
         name: "FriendInfo",
@@ -71,7 +71,11 @@
         if(!this.$User.user){
           this.$router.push('/login')
         }else{
-          this.friend = this.$route.params.friend
+          let friend = this.$route.params.friend;
+          if(!friend){
+            let friend_id = this.$route.params.id;
+            this.getUserInfo(friend_id)
+          }
         }
       },
       created(){
@@ -108,6 +112,20 @@
             this.edit_remark_modal = false;
           }else{
             this.$Message.warning(resp.message);
+          }
+        },
+
+        // 获取好友信息
+        async getUserInfo(user_id){
+          let json_data = {
+            'user_id': user_id,
+          };
+          let resp = await getUserInfo(json_data);
+          console.log(resp);
+          if(resp.code === 200){
+            this.friend = resp.data
+          }else{
+            this.$Message.error(resp.message);
           }
         },
 

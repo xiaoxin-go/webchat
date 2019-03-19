@@ -3,7 +3,7 @@
       <div class="wap-main-title">
         <div class="text">
           在线聊天室
-          <Icon v-if="$User.user.type < 2" type="md-arrow-dropdown" @click="chatroom_active=!chatroom_active"
+          <Icon v-if="$User.user && $User.user.type < 2" type="md-arrow-dropdown" @click="chatroom_active=!chatroom_active"
                 size="24"/>
           <div class="wap-create-group-modal" v-show="chatroom_active">
             <ul>

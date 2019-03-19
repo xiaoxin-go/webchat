@@ -27,7 +27,7 @@
                   <img :src="friend.logo">
                 </div>
                 <div class="chat-text">
-                  {{ friend.remark_name }}
+                  {{ friend.remark_name || friend.nickname}}
                   <div style="display: inline-block; position: absolute; right: 10px;">
                     <Checkbox :label="friend.id"></Checkbox>
                   </div>
