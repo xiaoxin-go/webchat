@@ -31,13 +31,10 @@
 </template>
 
 <script>
-  import {addFriend,  getUser} from '../api/index.js'
+  import {addFriend,  getUser, checkLogin} from '../api/index.js'
   export default {
-    name: "Wap",
+    name: "FriendAdd",
     mounted() {
-      if(!this.$User.user){
-        this.$router.push('/login')
-      }
     },
     data() {
       return {

@@ -3,7 +3,7 @@
       <div class="wap-main-title">
         <div class="text">
           在线聊天室
-          <Icon v-if="$User.user.type < 2" type="md-arrow-dropdown" @click="chatroom_active=!chatroom_active" size="24"/>
+          <Icon v-if="user.type < 2" type="md-arrow-dropdown" @click="chatroom_active=!chatroom_active" size="24"/>
           <div class="wap-create-group-modal" v-show="chatroom_active">
             <ul>
               <li @click="$router.push('/group_add')">创建群组</li>
@@ -25,7 +25,7 @@
           <!-- 好友 -->
           <div class="wap-main-body-friend-body">
             <template v-for="(friend, index) in friend_list" v-if="(friend.remark_name && friend.remark_name.startsWith(search_name)) || (friend.nickname && friend.nickname.startsWith(search_name))">
-              <div class="chat-item" @click="clickFriend(index)">
+              <div class="chat-item" @click="clickFriend(friend.id)">
                 <div class="chat-img">
                   <img :src="friend.logo">
                 </div>
@@ -74,21 +74,16 @@
 </template>
 
 <script>
-  import {addFriend, addGroup, addGroupUser, getChat, getChatMessage, getFriend,
-    getGroup, getGroupUser, getUser, getUserInfo, deleteChat, deleteGroup,
-    deleteGroupUser, deleteUser ,delFriend, updateFriend, updateGroup,
-    updateGroupUser, updateUser, uploadLogo, Logout, addChat} from '../api/index.js'
+  import {checkLogin, getFriend,} from '../api/index.js'
   export default {
-    name: "Wap",
+    name: "Friend",
     mounted() {
-      if(!this.$User.user){
-        this.$router.push('/login')
-      }else{
-        this.getFriend()
-      }
+      this.checkLogin();
+      this.getFriend();
     },
     data() {
       return {
+        user: {},
         chatroom_active: false,
         search_name: '',
         /* ------     好友相关属性    ------- */
@@ -98,6 +93,13 @@
       }
     },
     methods: {
+      async checkLogin(){
+        let resp = await checkLogin();
+        if(resp.code === 200){
+          this.user = resp.data;
+        }
+      },
+
       // 跳转到消息页面
       toChat() {
         this.$router.push('/');
@@ -114,14 +116,8 @@
       },
 
       // 点击某个好友
-      clickFriend(index){
-        let friend = this.friend_list[index];
-        this.$router.push({
-          name: 'FriendInfo',
-          params:{
-            'friend': friend
-          }
-        })
+      clickFriend(friend_id){
+        this.$router.push(`/friend_info/${friend_id}`)
       },
 
       /*----------------     好友相关方法    ---------------*/

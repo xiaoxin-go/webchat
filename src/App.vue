@@ -6,7 +6,11 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    console.log('...............in_chat');
+    this.$socket.emit('in_chat')
+  },
 }
 </script>
 

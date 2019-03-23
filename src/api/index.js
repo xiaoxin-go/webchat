@@ -1,11 +1,17 @@
 import axios from 'axios';
 //axios.defaults.baseURL = 'http://127.0.0.1:5000';
-var url_version = '/api/v1.0';
+//var url_version = '/api/v1.04';
+var url_version = '';
 
 // 拦截器，返回对象的data
 axios.interceptors.response.use((res)=>{
   return res.data;
 });
+
+// 检查用户是否登录
+export let checkLogin =() =>{
+  return axios.get(`${url_version}/check_login`)
+};
 
 // 用户登录
 export let Login = (data) =>{
@@ -25,6 +31,11 @@ export let Logout =(data) =>{
 // 上传头像
 export let uploadLogo =(data) =>{
   return axios.post(`${url_version}/upload_logo`, data)
+};
+
+// 上传图片
+export let uploadImage =(data) =>{
+  return axios.post(`${url_version}/upload_image`, data)
 };
 
 // 获取用户信息

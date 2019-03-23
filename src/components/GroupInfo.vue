@@ -141,21 +141,18 @@
 </template>
 
 <script>
-  import {getGroup, updateGroup, deleteGroup, uploadLogo, getGroupUser} from "../api";
+  import {getGroup, updateGroup, deleteGroup, uploadLogo, getGroupUser, checkLogin} from "../api";
 
   export default {
-        name: "WapChat",
+        name: "GroupInfo",
       mounted() {
-        if(!this.$User.user){
-          this.$router.push('/login')
-        }else{
-          let group_id = this.$route.params.id;
-          this.getGroup(group_id);
-          this.getGroupUser(group_id);
-        }
+          this.group_id = this.$route.params.id;
+          this.getGroup();
+          this.getGroupUser();
       },
       data(){
         return {
+          group_id: null,
           group_user:{
             id: 1,
             group_id: 1,
@@ -179,10 +176,11 @@
         }
       },
       methods:{
+
         // 获取群组消息
-        async getGroup(group_id){
+        async getGroup(){
           let json_data = {
-            group_id: group_id,
+            group_id: this.group_id,
           };
           let resp = await getGroup(json_data);
           console.log(resp);
@@ -194,9 +192,9 @@
         },
 
         // 获取群组成员列表
-        async getGroupUser(group_id){
+        async getGroupUser(){
           let json_data = {
-            group_id: group_id,
+            group_id: this.group_id,
           };
           let resp = await getGroupUser(json_data);
           console.log(resp);

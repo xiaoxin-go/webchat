@@ -37,14 +37,10 @@
   import {getGroupUser,updateGroupUser} from "../api";
 
   export default {
-    name: "WapChat",
+    name: "GroupAdminAdd",
     mounted() {
-      if (!this.$User.user) {
-        this.$router.push('/login')
-      } else {
         this.group_id = this.$route.params.id;
         this.getGroupUser();
-      }
     },
     data() {
       return {
@@ -54,6 +50,7 @@
       }
     },
     methods: {
+
       // 获取群组消息
       async getGroupUser() {
         let json_data = {

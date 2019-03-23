@@ -3,7 +3,7 @@
       <div class="wap-main-title">
         <div class="text">
           在线聊天室
-          <Icon v-if="$User.user.type < 2" type="md-arrow-dropdown" @click="chatroom_active=!chatroom_active" size="24"/>
+          <Icon v-if="user.type < 2" type="md-arrow-dropdown" @click="chatroom_active=!chatroom_active" size="24"/>
           <div class="wap-create-group-modal" v-show="chatroom_active">
             <ul>
               <li @click="$router.push('/group_add')">创建群组</li>
@@ -75,27 +75,29 @@
 </template>
 
 <script>
-  import {addFriend, addGroup, addGroupUser, getChat, getChatMessage, getFriend,
-    getGroup, getGroupUser, getUser, getUserInfo, deleteChat, deleteGroup,
-    deleteGroupUser, deleteUser ,delFriend, updateFriend, updateGroup,
-    updateGroupUser, updateUser, uploadLogo, Logout, addChat} from '../api/index.js'
+  import {getGroup, addChat, checkLogin} from '../api/index.js'
   export default {
-    name: "Wap",
+    name: "Group",
     mounted() {
-      if(!this.$User.user){
-        this.$router.push('/login')
-      }else{
-        this.getGroup()
-      }
+      this.checkLogin();
+      this.getGroup();
     },
     data() {
       return {
+        user: {},
         chatroom_active: false,
         // 群组列表
         group_list: [],
       }
     },
     methods: {
+      async checkLogin(){
+        let resp = await checkLogin();
+        if(resp.code === 200){
+          this.user = resp.data;
+        }
+      },
+
       // 跳转到聊天页面
       toChat() {
         this.$router.push('/')
@@ -114,6 +116,7 @@
       // 获取群组列表
       async getGroup(){
         let resp = await getGroup();
+        console.log(resp);
         if(resp.code === 200){
           this.group_list = resp.data;
         }else{
@@ -122,14 +125,15 @@
       },
 
       // 进入聊天页面
-      changeChat(group) {
+      async changeChat(group) {
         group.chat_type = 2;
-        this.$router.push({
-          name: 'Chat',
-          params:{
-            chat: group
-          }
-        })
+        let resp = await addChat(group);
+        if(resp.code === 200){
+          let chat_id = resp.data;
+          this.$router.push(`/chat/${chat_id}`)
+        }else{
+          this.$Message.warning(resp.message)
+        }
       },
     },
   }

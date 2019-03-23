@@ -17,7 +17,7 @@
         <!-- 好友 -->
         <div class="wap-main-body-friend-body">
             <template v-for="(friend, index) in group_user_list">
-              <div @click="delGroupUser(friend.id)" class="chat-item" v-if="friend.nickname.startsWith(search_name) && friend.nickname !== $User.user.nickname">
+              <div @click="delGroupUser(friend.id)" class="chat-item" v-if="friend.nickname.startsWith(search_name) && friend.nickname !== user.nickname">
                 <div class="chat-img">
                   <img :src="friend.logo">
                 </div>
@@ -33,20 +33,17 @@
 </template>
 
 <script>
-  import {getGroupUser,deleteGroupUser} from "../api";
+  import {getGroupUser, deleteGroupUser, checkLogin} from "../api";
 
   export default {
-    name: "WapChat",
+    name: "GroupUserDel",
     mounted() {
-      if (!this.$User.user) {
-        this.$router.push('/login')
-      } else {
         this.group_id = this.$route.params.id;
         this.getGroupUser();
-      }
     },
     data() {
       return {
+        user: {},
         group_id: null,
         search_name: '',
         member_list: [],

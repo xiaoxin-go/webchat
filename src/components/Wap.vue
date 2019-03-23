@@ -3,7 +3,7 @@
       <div class="wap-main-title">
         <div class="text">
           在线聊天室
-          <Icon v-if="$User.user && $User.user.type < 2" type="md-arrow-dropdown" @click="chatroom_active=!chatroom_active"
+          <Icon v-if="user && user.type < 2" type="md-arrow-dropdown" @click="chatroom_active=!chatroom_active"
                 size="24"/>
           <div class="wap-create-group-modal" v-show="chatroom_active">
             <ul>
@@ -77,20 +77,16 @@
 </template>
 
 <script>
-  import {getChat, deleteChat} from '../api/index.js'
+  import {getChat, deleteChat, checkLogin} from '../api/index.js'
 
   export default {
     name: "Wap",
     mounted() {
-      if (!this.$User.user) {
-        this.$router.push('/login')
-      } else {
-        this.getChat();
-        this.in_chat_list();
-      }
+      this.checkLogin();
     },
     data() {
       return {
+        user: {},
         chatroom_active: false,  // 点击最主面聊天室
         chat_delete_modal: '',
         Loop: null,
@@ -102,6 +98,16 @@
       }
     },
     methods: {
+      async checkLogin(){
+        let resp = await checkLogin();
+        if(resp.code === 200){
+          this.user = resp.data;
+          this.getChat();
+        }else{
+          this.$router.push('/login')
+        }
+      },
+
       // 跳转到好友页面
       toFriend() {
         this.$router.push('/friend')
@@ -152,29 +158,20 @@
 
       // 进入聊天页面
       changeChat(chat_id) {
-        this.$router.push({path: '/chat/', query:{id: chat_id}})
+        this.$router.push(`/chat/${chat_id}`)
       },
-      in_chat_list(){
-        this.$socket.emit('in_chat_list')
-      },
-      out_chat_list(){
-        this.$socket.emit('out_chat_list')
-      }
-
-    },
-    destroyed() {
-      this.out_chat_list()
     },
     sockets: {
       connect: function () {
         console.log('socket connected')
       },
-      message: function (chat) {
-        console.log(chat);
-        let chat_item = this.chat_list.filter(item=>item.id === chat.id)[0];
+      response: function (chat) {
+        console.log(chat.chat_data);
+        let chat_data = chat.chat_data;
+        let chat_item = this.chat_list.filter(item=>item.id === chat_data.id)[0];
         let chat_index = this.chat_list.indexOf(chat_item);
         this.chat_list.splice(chat_index, 1);
-        this.chat_list.unshift(chat);
+        this.chat_list.unshift(chat_data);
       }
     },
     filters: {},

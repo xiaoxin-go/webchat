@@ -5,17 +5,17 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
-    {path:'/',component:()=>document.body.clientWidth>500?import('../components/Home.vue'):import('../components/Wap.vue'),name:'Home'},
+    {path:'/', redirect:'/wap'},
+    {path:'/wap',component:()=>document.body.clientWidth>500?import('../components/Home.vue'):import('../components/Wap.vue'),name:'Home'},
     /*-------     用户管理      ------*/
     {path:'/user',component:()=>import('../components/User.vue'),name:'User'},
     {path:'/user_password',component:()=>import('../components/UserPassword.vue'),name:'UserPassword'},
 
-    {path:'/chat',component:()=>import('../components/Chat.vue'),name:'Chat'},
+    {path:'/chat/:id',component:()=>import('../components/Chat.vue'),name:'Chat'},
 
     /*-------     好友管理      ------*/
     {path:'/friend',component:()=>import('../components/Friend.vue'),name:'Friend'},
-    {path:'/friend_info',component:()=>import('../components/FriendInfo.vue'),name:'FriendInfo'},
-    {path:'/friend_info/:id',component:()=>import('../components/FriendInfo.vue'),name:'FriendInfoID'},
+    {path:'/friend_info/:id',component:()=>import('../components/FriendInfo.vue'),name:'FriendInfo'},
     {path:'/friend_add',component:()=>import('../components/FriendAdd.vue'),name:'FriendAdd'},
 
     /*-------     群组管理      ------*/
@@ -29,7 +29,7 @@ export default new Router({
     {path:'/group_admin_add/:id',component:()=>import('../components/GroupAdminAdd.vue'),name:'GroupAdminAdd'},
 
 
-    {path:'/login',component:()=>import('../components/Login.vue'),name:'Login'},
-    {path:'/register',component:()=>import('../components/Register.vue'),name:'Register'},
+    // {path:'/login',component:()=>import('../components/Login.vue'),name:'Login'},
+    // {path:'/register',component:()=>import('../components/Register.vue'),name:'Register'},
   ]
 })

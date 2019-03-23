@@ -43,18 +43,14 @@
 </template>
 
 <script>
-  import {getGroupUser, getFriend, addGroupUser} from "../api";
+  import {getGroupUser, getFriend, addGroupUser, checkLogin} from "../api";
 
   export default {
-    name: "WapChat",
+    name: "GroupUserAdd",
     mounted() {
-      if (!this.$User.user) {
-        this.$router.push('/login')
-      } else {
         this.group_id = this.$route.params.id;
         this.getGroupUser();
         this.getFriend();
-      }
     },
     data() {
       return {
@@ -67,6 +63,7 @@
       }
     },
     methods: {
+
       // 获取群组消息
       async getGroupUser() {
         let json_data = {

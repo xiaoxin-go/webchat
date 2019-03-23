@@ -800,6 +800,7 @@ ul,li{
   top: 36px;
   bottom: 40px;
   overflow-y: auto;
+  padding-top: 8px;
 }
 .wap-main-chat .message-item,.wap-main-chat .message-item-self{
   padding: 4px;
@@ -811,23 +812,35 @@ ul,li{
 }
 .wap-main-chat .wap-chat-img{
   display: inline-block;
+  margin: 0 4px;
 }
 .wap-main-chat .wap-chat-text{
   display: inline-block;
   vertical-align: top;
   width: 20em;
-  padding-top: 1px;
+  padding-top: 2px;
+  font-size: 14px;
+  word-break: break-all;
 }
 .wap-main-chat .wap-chat-text>span{
   background: #ececec;
   border-radius: 2px;
-  padding: 3px;
+  padding: 6px;
   box-shadow: 0 2px 3px rgba(0,0,0,.2);
+  display: inline-block;
+}
+.wap-main-chat .wap-chat-text>span>img{
+  max-width: 100px;
+}
+
+.wap-main-chat .message-item-self .wap-chat-text>span{
+  background: #4DD52B;
 }
 
 .wap-main-chat .create-group-img>img,.wap-main-chat .wap-chat-img>img{
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
 }
 .wap-main-chat-bottom{
   position: absolute;

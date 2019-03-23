@@ -36,15 +36,10 @@
 
 <script>
   import {updateUser} from '../api/index.js'
+  import {checkLogin} from "../api";
   export default {
-    name: "Wap",
+    name: "UserPassword",
     mounted() {
-      if(!this.$User.user){
-        this.$router.push('/login')
-      }else{
-        //this.getInfo();
-        this.user = this.$User.user;
-      }
     },
     data() {
       return {

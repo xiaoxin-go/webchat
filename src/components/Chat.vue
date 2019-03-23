@@ -4,11 +4,11 @@
     <!---------------------  聊天窗口  ------------------->
     <div class="wap-main-chat">
       <div class="wap-main-chat-title">
-        <span class="wap-main-chat-title-back" @click="$router.push('/')">
+        <span class="wap-main-chat-title-back" @click="$router.push('/wap')">
           <Icon type="ios-arrow-back" size="18"/>
         </span>
         <span class="wap-main-chat-title-name">
-          {{ chat.name }}
+          {{ chat.nickname || chat.name }}
         </span>
         <span class="wap-main-chat-title-more">
           <Icon type="ios-more" size="20" @click="chatMore"/>
@@ -17,7 +17,7 @@
       <!--  聊天body  -->
       <div class="wap-main-chat-body" id="chat-body">
         <template v-for="message in message_data">
-          <template v-if="message.id === $User.user.id">
+          <template v-if="message.id === user.id">
             <div class="message-item-self">
               <div class="wap-chat-text">
                 <span v-html="message.message" style="text-align: left;display: inline-block;"></span>
@@ -61,14 +61,14 @@
 
       </div>
       <div class="frame-btn" @click="active_frame=true">
-        <Icon type="logo-vimeo" size="20"/>
+        <Icon type="logo-vimeo" size="28"/>
       </div>
     </div>
 
     <!--  第三方广告页面  -->
     <div v-if="active_frame" class="frame-div">
-      <div @click="active_frame=false" style="position: absolute; color: #57a3f3;top: 34px; left: 2px;">
-        <Icon type="ios-undo" size="20"/>
+      <div @click="active_frame=false" style="position: absolute; color: #57a3f3;top: 34px; left: 5px;">
+        <Icon type="ios-undo" size="28"/>
       </div>
       <!--<a href="http://www.51job.com"></a>-->
       <iframe src="http://www.baidu.com" frameborder="0"
@@ -79,30 +79,19 @@
 </template>
 
 <script>
-  import {addChat, uploadLogo, getChat, getChatMessage} from "../api";
+  import {checkLogin, uploadLogo, getChat, getChatMessage, uploadImage} from "../api";
 
   export default {
-    name: "WapChat",
+    name: "Chat",
     mounted() {
-      if (!this.$User.user) {
-        this.$router.push('/login')
-      } else {
-        // 如果chat存在，则是从群组跳转过来，否则，是从message跳转过来
-        let chat = this.$route.params.chat;
-        console.log(chat);
-        // 从群组跳转过来，需要添加到聊天页面，后面判断是否存在该聊天，若存在，则更新聊天时间
-        // 并返回该聊天消息
-        if (chat) {
-          this.addChat(chat);
-        } else {
-          let chat_id = this.$route.query.id;
-          this.getChat(chat_id);
-          this.getChatMessage(chat_id);
-        }
-      }
+      this.chat_id = this.$route.params.id;
+      this.checkLogin();
+      this.getChat();
+      this.getChatMessage();
     },
     data() {
       return {
+        user: {},
         chat_id: null,
         chat: {},
         send_message: '',               // 发送消息内容
@@ -172,25 +161,31 @@
       }
     },
     methods: {
+      async checkLogin(){
+        let resp = await checkLogin();
+        if(resp.code === 200){
+          this.user = resp.data;
+        }
+      },
+
       // 获取聊天
-      async getChat(chat_id){
+      async getChat(){
         let json_data = {
-          chat_id: chat_id
+          chat_id: this.chat_id
         };
         let resp = await getChat(json_data);
         console.log(resp);
         if(resp.code === 200){
           this.chat = resp.data;
-          this.in_chat(resp.data);
         }else{
           this.$Message.error(resp.message);
         }
       },
 
       // 获取聊天消息
-      async getChatMessage(chat_id){
+      async getChatMessage(){
         let json_data = {
-          chat_id: chat_id
+          chat_id: this.chat_id
         };
         let resp = await getChatMessage(json_data);
         console.log(resp);
@@ -200,19 +195,6 @@
           this.$Message.error(resp.message)
         }
         this.scrollAuto()
-      },
-
-      // 聊天对象是群组或者单个用户
-      async addChat(chat_obj) {
-        let resp = await addChat(chat_obj);
-        console.log(resp);
-        if (resp.code === 200) {
-          this.chat = resp.data;
-          this.getChatMessage(this.chat.id);
-          this.in_chat(resp.data);
-        } else {
-          this.$Message.warning(resp.message);
-        }
       },
 
       // 聊天更多信息
@@ -280,13 +262,13 @@
         let file = input.files[0];
         let formData = new FormData();
         formData.append('file', file);
-        let resp = await uploadLogo(formData);
+        let resp = await uploadImage(formData);
         console.log(resp);
         if (resp.code === 200) {
-          this.common_logo = resp.data.url;        // 返回的是头像路径
-        }
-        if (this.create_group_modal) {
-          this.new_group_logo = this.$Server + this.common_logo;
+          this.send_message += '<img src="' + resp.data.url + '">';
+          setTimeout(() => {
+            this.keepLastIndex(document.getElementById('send-message'))
+          }, 5)
         }
       },
 
@@ -294,36 +276,26 @@
       send(data) {
         console.log(this.chat);
         let message_data = {
-          chat_id: this.chat.id,
+          chat: this.chat,
           message: this.send_message,
-          user_data: this.$User.user
+          user_data: this.user
         };
         this.$socket.emit('message', message_data);
         this.message_data.push({
-          ...this.$User.user, ...{message: this.send_message}
+          ...this.user, ...{message: this.send_message}
         });
         this.send_message = '';
         this.scrollAuto();
       },
-      in_chat(){
-        console.log(this.chat);
-        this.$socket.emit('in_chat', this.chat)
-      },
-      out_chat(){
-        console.log(this.chat);
-        this.$socket.emit('out_chat', this.chat)
-      }
-    },
-    destroyed() {
-      this.out_chat()
     },
     sockets: {
       connect: function () {
         console.log('socket connected')
       },
-      message: function (val) {
-        console.log(val.nickname);
-        this.message_data.push(val);
+      response: function (val) {
+        console.log(val);
+        console.log(val.user_data);
+        this.message_data.push(val.user_data);
         this.scrollAuto();
         console.log('返回' + val)
       }

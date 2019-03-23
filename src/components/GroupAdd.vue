@@ -30,16 +30,10 @@
 </template>
 
 <script>
-  import {addFriend, addGroup, addGroupUser, getChat, getChatMessage, getFriend,
-    getGroup, getGroupUser, getUser, getUserInfo, deleteChat, deleteGroup,
-    deleteGroupUser, deleteUser ,delFriend, updateFriend, updateGroup,
-    updateGroupUser, updateUser, uploadLogo, Logout, addChat} from '../api/index.js'
+  import {checkLogin, addGroup,uploadLogo, } from '../api/index.js'
   export default {
-    name: "Wap",
+    name: "GroupAdd",
     mounted() {
-      if(!this.$User.user){
-        this.$router.push('/login')
-      }
     },
     data() {
       return {

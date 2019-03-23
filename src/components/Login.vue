@@ -66,6 +66,7 @@
         //   return
         // }
         let resp = await Login(json_data);
+        console.log(resp);
         if (resp.code === 200) {
           // this.$Message.success('用户登录成功');
           this.$User.setUser(resp.data);
@@ -77,10 +78,10 @@
 
 
       /*------------------  socketio交互 -----------------*/
-      send() {
-        console.log('send.......');
-        this.$socket.emit('new_login')
-      },
+      // send() {
+      //   console.log('send.......');
+      //   this.$socket.emit('new_login')
+      // },
 
       // 跳转到注册页面
       to_register () {

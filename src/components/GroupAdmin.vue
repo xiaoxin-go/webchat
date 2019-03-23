@@ -40,17 +40,13 @@
 </template>
 
 <script>
-  import {getGroupUser,updateGroupUser} from "../api";
+  import {getGroupUser,updateGroupUser, checkLogin} from "../api";
 
   export default {
-    name: "WapChat",
+    name: "GroupAdmin",
     mounted() {
-      if (!this.$User.user) {
-        this.$router.push('/login')
-      } else {
         this.group_id = this.$route.params.id;
         this.getGroupUser();
-      }
     },
     data() {
       return {

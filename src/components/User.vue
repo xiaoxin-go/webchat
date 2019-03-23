@@ -93,15 +93,11 @@
 
 <script>
   import {updateUser, uploadLogo, Logout} from '../api/index.js'
+  import {checkLogin} from "../api";
   export default {
-    name: "Wap",
+    name: "User",
     mounted() {
-      if(!this.$User.user){
-        this.$router.push('/login')
-      }else{
-        //this.getInfo();
-        this.user = this.$User.user;
-      }
+      this.checkLogin();
     },
     data() {
       return {
@@ -112,6 +108,14 @@
       }
     },
     methods: {
+      async checkLogin(){
+        let resp = await checkLogin();
+        console.log(resp);
+        if(resp.code === 200){
+          this.user = resp.data;
+        }
+      },
+
       // 跳转到消息页面
       toChat() {
         this.$router.push('/');
