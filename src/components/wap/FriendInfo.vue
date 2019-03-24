@@ -67,7 +67,7 @@
 </template>
 
 <script>
-  import {updateFriend, deleteFriend, updateUser, getUserInfo, addChat, checkLogin} from "../api";
+  import {updateFriend, deleteFriend, updateUser, getUserInfo, addChat, checkLogin} from "../../api/index";
 
   export default {
     name: "FriendInfo",

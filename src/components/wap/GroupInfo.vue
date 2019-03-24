@@ -25,7 +25,7 @@
           <template v-if="group_user.type < 2">
             <div class="wap-group-info-item" style="width: 19%;" @click="$router.push(`/group_user_add/${group.id}`)">
               <div class="wap-group-info-logo">
-                <img src="../../static/images/add.jpg" alt="">
+                <img src="../../../static/images/add.jpg" alt="">
               </div>
               <div class="wap-group-info-name">
                 <p>&nbsp;</p>
@@ -35,7 +35,7 @@
             <!--  群组删除成员  -->
             <div class="wap-group-info-item" style="width: 19%;" @click="$router.push(`/group_user_del/${group.id}`)">
               <div class="wap-group-info-logo">
-                <img src="../../static/images/sub.jpg" alt="">
+                <img src="../../../static/images/sub.jpg" alt="">
               </div>
               <div class="wap-group-info-name">
                 <p>&nbsp;</p>
@@ -141,7 +141,7 @@
 </template>
 
 <script>
-  import {getGroup, updateGroup, deleteGroup, uploadLogo, getGroupUser, checkLogin} from "../api";
+  import {getGroup, updateGroup, deleteGroup, uploadLogo, getGroupUser, checkLogin} from "../../api/index";
 
   export default {
         name: "GroupInfo",

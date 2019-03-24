@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import {addFriend,  getUser, checkLogin} from '../api/index.js'
+  import {addFriend,  getUser, checkLogin} from '../../api/index.js'
   export default {
     name: "FriendAdd",
     mounted() {

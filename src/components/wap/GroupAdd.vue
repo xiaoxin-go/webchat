@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import {checkLogin, addGroup,uploadLogo, } from '../api/index.js'
+  import {checkLogin, addGroup,uploadLogo, } from '../../api/index.js'
   export default {
     name: "GroupAdd",
     mounted() {

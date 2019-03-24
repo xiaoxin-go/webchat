@@ -92,8 +92,8 @@
 </template>
 
 <script>
-  import {updateUser, uploadLogo, Logout} from '../api/index.js'
-  import {checkLogin} from "../api";
+  import {updateUser, uploadLogo, Logout} from '../../api/index.js'
+  import {checkLogin} from "../../api/index";
   export default {
     name: "User",
     mounted() {

@@ -7,7 +7,7 @@
           <Icon type="ios-arrow-back" size="18"/>
         </span>
         <span class="wap-main-chat-title-name">
-          选择联系人
+          添加管理员
         </span>
       </div>
         <div class="wap-main-body-friend-search">
@@ -16,14 +16,15 @@
 
         <!-- 好友 -->
         <div class="wap-main-body-friend-body">
-            <template v-for="(friend, index) in group_user_list">
-              <div @click="delGroupUser(friend.id)" class="chat-item" v-if="friend.nickname.startsWith(search_name) && friend.nickname !== user.nickname">
+            <template v-for="(friend, index) in group_user_list" v-if="friend.type === 2 & friend.remark_name.startsWith(search_name)">
+              <div class="chat-item" @click="addAdmin(friend.id)">
                 <div class="chat-img">
                   <img :src="friend.logo">
                 </div>
                 <div class="chat-text">
-                  {{ friend.nickname }}
+                  {{ friend.remark_name }}
                 </div>
+
               </div>
             </template>
         </div>
@@ -33,32 +34,29 @@
 </template>
 
 <script>
-  import {getGroupUser, deleteGroupUser, checkLogin} from "../api";
+  import {getGroupUser,updateGroupUser} from "../../api/index";
 
   export default {
-    name: "GroupUserDel",
+    name: "GroupAdminAdd",
     mounted() {
         this.group_id = this.$route.params.id;
         this.getGroupUser();
     },
     data() {
       return {
-        user: {},
         group_id: null,
         search_name: '',
-        member_list: [],
-        group_user_list: [
-        ],
+        group_user_list: [],
       }
     },
     methods: {
+
       // 获取群组消息
       async getGroupUser() {
         let json_data = {
           group_id: this.group_id
         };
         let resp = await getGroupUser(json_data);
-        console.log(resp);
         if (resp.code === 200) {
           this.group_user_list = resp.data;
         } else {
@@ -68,17 +66,16 @@
 
 
       // 添加成员
-      async delGroupUser(user_id) {
+      async addAdmin(user_id){
         let json_data = {
           group_id: this.group_id,
-          to_user_id: user_id
+          to_user_id: user_id,
+          group_type: 1
         };
-        let resp = await deleteGroupUser(json_data);
-        console.log(resp);
-        if (resp.code === 200) {
-          this.$Message.success('用户删除成功');
-          this.$router.go(-1);
-        } else {
+        let resp = await updateGroupUser(json_data);
+        if (resp.code === 200){
+          this.$router.go(-1)
+        }else{
           this.$Message.error(resp.message)
         }
       },

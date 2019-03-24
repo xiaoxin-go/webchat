@@ -79,7 +79,7 @@
 </template>
 
 <script>
-  import {checkLogin, uploadLogo, getChat, getChatMessage, uploadImage} from "../api";
+  import {checkLogin, uploadLogo, getChat, getChatMessage, uploadImage} from "../../api/index";
 
   export default {
     name: "Chat",
@@ -210,7 +210,7 @@
 
       // 点击表情
       clickEmoji(emoji) {
-        this.send_message += '<img src="' + '/static/images/emoji/' + emoji.url + '">';
+        this.send_message += '' + '<img src="/static/images/emoji">' + emoji.url + '';
         this.emoji_active = false;
         setTimeout(() => {
           this.keepLastIndex(document.getElementById('send-message'))

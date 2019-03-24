@@ -77,7 +77,7 @@
 </template>
 
 <script>
-  import {getChat, deleteChat, checkLogin} from '../api/index.js'
+  import {getChat, deleteChat, checkLogin} from '../../api/index.js'
 
   export default {
     name: "Wap",

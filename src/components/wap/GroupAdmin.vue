@@ -7,7 +7,10 @@
           <Icon type="ios-arrow-back" size="18"/>
         </span>
         <span class="wap-main-chat-title-name">
-          添加管理员
+          管理员列表
+        </span>
+        <span style="position: absolute; right: 10px;">
+          <Button @click="$router.push(`/group_admin_add/${group_id}`)" type="success" size="small">添加</Button>
         </span>
       </div>
         <div class="wap-main-body-friend-search">
@@ -16,13 +19,16 @@
 
         <!-- 好友 -->
         <div class="wap-main-body-friend-body">
-            <template v-for="(friend, index) in group_user_list" v-if="friend.type === 2 & friend.remark_name.startsWith(search_name)">
-              <div class="chat-item" @click="addAdmin(friend.id)">
+            <template v-for="friend in group_user_list" v-if="friend.type === 1 & friend.remark_name.startsWith(search_name)">
+              <div class="chat-item">
                 <div class="chat-img">
                   <img :src="friend.logo">
                 </div>
                 <div class="chat-text">
                   {{ friend.remark_name }}
+                  <div style="display: inline-block; position: absolute; right: 10px;">
+                    <Icon type="ios-remove-circle-outline" size="20" @click="delAdmin(friend.id)" style="color: orangered;font-weight: bold;" />
+                  </div>
                 </div>
 
               </div>
@@ -34,10 +40,10 @@
 </template>
 
 <script>
-  import {getGroupUser,updateGroupUser} from "../api";
+  import {getGroupUser,updateGroupUser, checkLogin} from "../../api/index";
 
   export default {
-    name: "GroupAdminAdd",
+    name: "GroupAdmin",
     mounted() {
         this.group_id = this.$route.params.id;
         this.getGroupUser();
@@ -46,11 +52,11 @@
       return {
         group_id: null,
         search_name: '',
+        member_list: [],
         group_user_list: [],
       }
     },
     methods: {
-
       // 获取群组消息
       async getGroupUser() {
         let json_data = {
@@ -64,17 +70,16 @@
         }
       },
 
-
       // 添加成员
-      async addAdmin(user_id){
+      async delAdmin(user_id){
         let json_data = {
           group_id: this.group_id,
           to_user_id: user_id,
-          group_type: 1
+          group_type: 2
         };
         let resp = await updateGroupUser(json_data);
         if (resp.code === 200){
-          this.$router.go(-1)
+          this.getGroupUser()
         }else{
           this.$Message.error(resp.message)
         }

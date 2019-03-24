@@ -1,0 +1,159 @@
+<template>
+  <div id="left">
+    <div class="user" @mouseleave="user_info=false">
+      <img :src="logo" alt="" @click="changeLogo" @mouseover="user_info=true">
+      <div class="user-text">
+        {{nickname}}
+      </div>
+      <div class="user-info" v-if="user_info" @mouseleave="user_info=false">
+        <ul>
+          <li @click="change_nickname_modal=true">更改昵称</li>
+          <li @click="change_password_modal=true">更改密码</li>
+          <li @click="Logout">退出登录</li>
+        </ul>
+      </div>
+    </div>
+
+    <input type="file" id="send-image" style="display: none;" @change="uploadImage">
+
+    <!--  菜单按钮  -->
+    <ul>
+      <li :class="'menu-item '+(active==='message'?'active':'')" @click="$router.push('/pc/chat')">
+        <Tooltip content="消息" placement="right-start">
+          <div :style="'width: ' + (active==='message'?'76px':'80px')">
+            <Icon type="ios-chatbubbles" size="30"/>
+          </div>
+        </Tooltip>
+      </li>
+      <li :class="'menu-item '+(active==='chat'?'active':'')" @click="$router.push('/pc/group')">
+        <Tooltip content="群聊" placement="right-start">
+          <div :style="'width: ' + (active==='chat'?'76px':'80px')">
+            <Icon type="md-contacts" size="30"/>
+          </div>
+        </Tooltip>
+      </li>
+      <li :class="'menu-item '+(active==='friend'?'active':'')" @click="$router.push('/pc/friend')">
+        <Tooltip content="好友" placement="right-start">
+          <div :style="'width: ' + (active==='friend'?'76px':'80px')">
+            <Icon type="md-person" size="30"/>
+          </div>
+        </Tooltip>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+  import {checkLogin, Logout, updateUser, uploadLogo} from "../../api";
+
+    export default {
+        name: "Tab",
+      data(){
+          return{
+            user: {},
+            nickname: 'xiaoxin',
+            username: 'xiaoxin',
+            user_info: false,
+            logo: '/static/images/index.png',    // 默认logo
+            change_nickname_modal: false,   // 修改昵称模态框
+            change_password_modal: false,   // 修改密码模态框
+
+            // 新用户昵称
+            new_nickname: '',
+
+            /*---------  修改密码属性  ---------*/
+            old_password: '',
+            new_password: '',
+            new_password_re: '',
+
+            /*--------  用户消息相关属性  --------*/
+            send_image: null,               // 选择发送图片
+            setting_active: false,          // 用户设置框
+
+            chat_setting_show: null,       // 用户设置
+            del_friend_modal: false,       // 删除好友
+            edit_remark_modal: false,      // 修改备注
+            new_remark_name: '',            // 新备注名
+          }
+      },
+      methods:{
+
+        async checkLogin(){
+          let resp = await checkLogin();
+          console.log(resp);
+          if(resp.code === 200){
+            this.user = resp.data;
+          }
+        },
+        // 选择图片
+        clickImage(){
+          document.getElementById('send-image').click();
+        },
+
+        // 发送图片
+        async uploadImage(){
+          let input = document.getElementById('send-image');
+          let file = input.files[0];
+          let formData = new FormData();
+          formData.append('file', file);
+          let resp = await uploadLogo(formData);
+          console.log(resp);
+          if (resp.code === 200){
+
+            this.user.logo = this.$Server + resp.data.url;        // 返回的是头像路径
+            console.log('上传头像成功', this.user.logo);
+            this.updateUserLogo();
+          }else{
+            this.$Message.error(resp.message)
+          }
+        },
+
+        // 修改头像
+        async updateUserLogo(){
+          let json_data = {
+            logo: this.user.logo
+          };
+          let resp = await updateUser(json_data);
+          if(resp.code === 200){
+            console.log('更换头像成功', this.user);
+            this.$User.setUser(this.user);
+          }else{
+            this.$Message.error(resp.message);
+          }
+        },
+
+        // 修改昵称
+        async updateUserNickname(){
+          if(!this.new_nickname.trim()){this.$Message.warning('用户昵称不能为空'); return}
+          let json_data = {
+            nickname: this.new_nickname
+          };
+          let resp = await updateUser(json_data);
+          if(resp.code === 200){
+            this.user.nickname = this.new_nickname;
+            this.$User.setUser(this.user);
+            this.update_nickname_modal = false;
+          }else{
+            this.$Message.error(resp.message);
+          }
+        },
+
+        // 退出登录
+        async Logout(){
+          let resp = await Logout();
+          console.log(resp);
+          if(resp.code === 200){
+            this.$Message.success('用户退出登录成功');
+            this.$User.setUser(null);
+            this.$router.push('/login')
+          }else{
+            this.$Message.warning('用户退出登录异常');
+          }
+        },
+      }
+    }
+</script>
+
+<style scoped>
+
+</style>

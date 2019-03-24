@@ -35,8 +35,8 @@
 </template>
 
 <script>
-  import {updateUser} from '../api/index.js'
-  import {checkLogin} from "../api";
+  import {updateUser} from '../../api/index.js'
+  import {checkLogin} from "../../api/index";
   export default {
     name: "UserPassword",
     mounted() {

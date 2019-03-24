@@ -142,7 +142,7 @@
       </div>
     </div>
 
-    <!--  右侧消息框  -->
+      右侧消息框
     <div id="right">
       <div v-if="new_friend_active">
         <div class="right-title">
@@ -316,11 +316,15 @@
     <Modal
       v-model="change_password_modal"
       @on-cancel="modalCancel"
-      title="创建群组"
+      title="修改密码"
       class-name="my-modal" width="400px">
       <div class="my-modal-input">
         <input type="text" placeholder="请输入旧密码" v-model="old_password">
+      </div>
+      <div class="my-modal-input">
         <input type="text" placeholder="请输入新密码" v-model="new_password">
+      </div>
+      <div class="my-modal-input">
         <input type="text" placeholder="重复输入新密码" v-model="new_password_re">
       </div>
       <div slot="footer">
@@ -329,35 +333,35 @@
       </div>
     </Modal>
 
-    <!-- 接受好友申请 -->
-    <Modal
-      v-model="new_friend_accept_modal"
-      @on-cancel="modalCancel"
-      title="接受好友申请"
-      class-name="my-modal" width="400px">
-      <div class="my-modal-text">
-        <span>您确定拒绝 <span style="color: #cc99ff;">{{new_friend_current}}</span> 吗？</span>
-      </div>
-      <div slot="footer">
-        <Button type="text" size="large" @click="modalCancel">取消</Button>
-        <Button type="primary" size="large" @click="acceptFriend">确定</Button>
-      </div>
-    </Modal>
+    <!--&lt;!&ndash; 接受好友申请 &ndash;&gt;-->
+    <!--<Modal-->
+      <!--v-model="new_friend_accept_modal"-->
+      <!--@on-cancel="modalCancel"-->
+      <!--title="接受好友申请"-->
+      <!--class-name="my-modal" width="400px">-->
+      <!--<div class="my-modal-text">-->
+        <!--<span>您确定拒绝 <span style="color: #cc99ff;">{{new_friend_current}}</span> 吗？</span>-->
+      <!--</div>-->
+      <!--<div slot="footer">-->
+        <!--<Button type="text" size="large" @click="modalCancel">取消</Button>-->
+        <!--<Button type="primary" size="large" @click="acceptFriend">确定</Button>-->
+      <!--</div>-->
+    <!--</Modal>-->
 
-    <!-- 拒绝好友申请 -->
-    <Modal
-      v-model="new_friend_deny_modal"
-      @on-cancel="modalCancel"
-      title="拒绝好友申请"
-      class-name="my-modal" width="400px">
-      <div class="my-modal-text">
-        <span>您确定拒绝 <span style="color: #cc99ff;">{{new_friend_current}}</span> 吗？</span>
-      </div>
-      <div slot="footer">
-        <Button type="text" size="large" @click="modalCancel">取消</Button>
-        <Button type="primary" size="large" @click="denyFriend">确定</Button>
-      </div>
-    </Modal>
+    <!--&lt;!&ndash; 拒绝好友申请 &ndash;&gt;-->
+    <!--<Modal-->
+      <!--v-model="new_friend_deny_modal"-->
+      <!--@on-cancel="modalCancel"-->
+      <!--title="拒绝好友申请"-->
+      <!--class-name="my-modal" width="400px">-->
+      <!--<div class="my-modal-text">-->
+        <!--<span>您确定拒绝 <span style="color: #cc99ff;">{{new_friend_current}}</span> 吗？</span>-->
+      <!--</div>-->
+      <!--<div slot="footer">-->
+        <!--<Button type="text" size="large" @click="modalCancel">取消</Button>-->
+        <!--<Button type="primary" size="large" @click="denyFriend">确定</Button>-->
+      <!--</div>-->
+    <!--</Modal>-->
 
     <!-- 添加好友模态框 -->
     <Modal
@@ -441,12 +445,14 @@
 </template>
 
 <script>
-  import {uploadLogo, updateUser, addGroup, delFriend} from '../api/index.js';
-  import Edit from '../base/EditDiv.vue';
+  import {uploadLogo, updateUser, Logout, getGroup, getGroupUser, getUserInfo, getChat, getFriend} from '../../api/index.js';
+  import Edit from '../../base/EditDiv.vue';
+  import Friend from './Friend.vue';
+  import {deleteChat} from "../../api/index";
 
   export default {
     name: 'Home',
-    components:{Edit},
+    components:{Edit, Friend},
     data(){
       return {
         user_data: {},
@@ -483,15 +489,7 @@
         new_remark_name: '',            // 新备注名
 
         // 用户消息列表
-        message_data:{
-          test: [
-            {'name': 'test', 'logo': '/static/images/index.png', 'message': 'hello'},
-            {'name': 'xiaoxin', 'logo': '/static/images/index.png', 'message': 'hello'},
-            {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-            {'name': 'test3', 'logo': '/static/images/index.png', 'message': 'hello'},
-          ],
-          test1:[]
-        },
+        message_data:[],
 
         // 聊天列表
         chat_list:[
@@ -609,23 +607,6 @@
         // 当前选择好友
         new_friend_current: '',
 
-        // 新朋友列表
-        new_friend_list: [
-          {'name': 'test1', 'logo': '/static/images/test.jpg', 'message': '交个朋友'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-          {'name': 'test2', 'logo': '/static/images/index.png', 'message': 'hello'},
-        ],
-
-
         // 好友列表
         friend_list:[
           {'username': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
@@ -647,10 +628,6 @@
       this.getData();
     },
     mounted(){
-      console.log(this.$User);
-      if(!this.$User.name){
-        this.$router.push('/login')
-      }
     },
     /*****************************************    方法区    ******************************************/
     methods:{
@@ -665,7 +642,9 @@
       toChat(){
         this.active = 'chat';
         this.new_friend_active = false;
+        //this.getChat();
       },
+
 
       toFriend(){
         this.active = 'friend';
@@ -675,8 +654,33 @@
       async getData(){
         this.group_friend_filter_list = this.friend_list;
       },
+      /*--------------     chat相关方法      -----------------------*/
+      // 获取聊天消息
+      async getChat() {
+        let resp = await getChat();
+        console.log(resp);
+        if (resp.code === 200) {
+          this.chat_list = resp.data;
+        } else {
+          this.$Message.error(resp.message)
+        }
+      },
+      // 删除聊天
+      async delChat(chat){
+        let json_data = {
+          chat_id: chat.id
+        };
+        let resp = await deleteChat(json_data);
+        if(resp.code === 200){
+          this.getChat();
+        }
+      },
 
-      /*--------------     群组相关方法      -----------------------*/
+
+      /*--------------     friend相关方法      -----------------------*/
+
+
+      /*--------------     group相关方法      -----------------------*/
       // 搜索群组
       search(){
         this.$Message.info(this.search_value)
@@ -765,7 +769,7 @@
 
       // 点击表情
       clickEmoji(emoji){
-        this.send_message += '<img src="'+ '/static/images/emoji/' + emoji.url +'">';
+        this.send_message += ''+ '<img src="/static/images/emoji">' + emoji.url +'';
         this.emoji_active = false;
         setTimeout(()=>{
           this.keepLastIndex(document.getElementById('send-message'))
@@ -854,7 +858,7 @@
         let json_data = {
           friend_name: this.select_chat.username,
           new_remark_name: remark_name
-        }
+        };
         let resp = await updateRemarkName(json_data);
         if(resp.state === 1){
           let index = this.friend_list(this.select_chat);
@@ -886,27 +890,27 @@
 
       },
 
-      // 点击接受按钮
-      clickAccept(name){
-        this.new_friend_current = name;
-        this.new_friend_accept_modal = true;
-      },
+      // // 点击接受按钮
+      // clickAccept(name){
+      //   this.new_friend_current = name;
+      //   this.new_friend_accept_modal = true;
+      // },
+      //
+      // // 点击拒绝按钮
+      // clickDeny(name){
+      //   this.new_friend_current = name;
+      //   this.new_friend_deny_modal = true;
+      // },
 
-      // 点击拒绝按钮
-      clickDeny(name){
-        this.new_friend_current = name;
-        this.new_friend_deny_modal = true;
-      },
-
-      // 接受好友申请
-      async acceptFriend(){
-
-      },
-
-      // 拒绝好友申请
-      async denyFriend(){
-
-      },
+      // // 接受好友申请
+      // async acceptFriend(){
+      //
+      // },
+      //
+      // // 拒绝好友申请
+      // async denyFriend(){
+      //
+      // },
 
 
       /*------------------         公共方法               -------------------------*/
@@ -926,6 +930,21 @@
         this.new_password_re = '';
         this.new_friend_current = '';
         this.select_friend_list = [];
+      },
+
+      send(data) {
+        console.log(this.chat);
+        let message_data = {
+          chat: this.chat,
+          message: this.send_message,
+          user_data: this.user
+        };
+        this.$socket.emit('message', message_data);
+        this.message_data.push({
+          ...this.user, ...{message: this.send_message}
+        });
+        this.send_message = '';
+        this.scrollAuto();
       },
 
       /*------------------         用户相关方法        ----------------------*/
@@ -997,7 +1016,7 @@
         let json_data = {
           username: this.user_data.username,
           new_password: new_password
-        }
+        };
 
         let resp = await updateUser(json_data);
         if (resp.state === 1){
@@ -1007,7 +1026,23 @@
         }
         this.change_password_modal = false;
       }
-    }
+    },
+    sockets: {
+      connect: function () {
+        console.log('socket connected')
+      },
+      response: function (chat) {
+        console.log(chat.chat_data);
+        let chat_data = chat.chat_data;
+        let chat_item = this.chat_list.filter(item=>item.id === chat_data.id)[0];
+        let chat_index = this.chat_list.indexOf(chat_item);
+        this.chat_list.splice(chat_index, 1);
+        this.chat_list.unshift(chat_data);
+        console.log(val.user_data);
+        this.message_data.push(val.user_data);
+        this.scrollAuto();
+      }
+    },
   }
 </script>
 

@@ -16,27 +16,26 @@
         <!--</div>-->
       </div>
       <div class="wap-main-body" @click="chatroom_active=false">
-        <!-----------------------   群聊界面  ----------------------->
+        <!-----------------------   好友界面  --------------------->
         <div class="wap-main-body-friend">
           <div class="wap-main-body-friend-search">
-            <Input search placeholder="搜索" size="large"/>
+            <Input search v-model="search_name" placeholder="搜索"  size="large"/>
           </div>
 
-          <!-- 群组 -->
+          <!-- 好友 -->
           <div class="wap-main-body-friend-body">
-            <template v-for="group in group_list">
-              <div class="chat-item" @click="changeChat(group)">
+            <template v-for="(friend, index) in friend_list" v-if="(friend.remark_name && friend.remark_name.startsWith(search_name)) || (friend.nickname && friend.nickname.startsWith(search_name))">
+              <div class="chat-item" @click="clickFriend(friend.id)">
                 <div class="chat-img">
-                  <img :src="group.logo">
+                  <img :src="friend.logo">
                 </div>
                 <div class="chat-text">
-                  {{ group.name }}
+                  {{ friend.remark_name || friend.nickname }}
                 </div>
               </div>
             </template>
           </div>
         </div>
-
       </div>
       <div class="wap-main-bottom">
         <ul>
@@ -46,7 +45,7 @@
             </div>
             <p>聊天</p>
           </li>
-          <li @click="toFriend" style="width: 23%;">
+          <li class="active" style="width: 23%;">
             <div>
               <Icon type="md-contacts" size="32"/>
             </div>
@@ -54,7 +53,7 @@
               好友
             </p>
           </li>
-          <li class="active" style="width: 23%;">
+          <li @click="toGroup" style="width: 23%;">
             <div>
               <Icon type="ios-people" size="34"/>
             </div>
@@ -75,19 +74,22 @@
 </template>
 
 <script>
-  import {getGroup, addChat, checkLogin} from '../api/index.js'
+  import {checkLogin, getFriend,} from '../../api/index.js'
   export default {
-    name: "Group",
+    name: "Friend",
     mounted() {
       this.checkLogin();
-      this.getGroup();
+      this.getFriend();
     },
     data() {
       return {
         user: {},
         chatroom_active: false,
-        // 群组列表
-        group_list: [],
+        search_name: '',
+        /* ------     好友相关属性    ------- */
+        // 好友列表
+        friend_list: [
+        ],
       }
     },
     methods: {
@@ -98,41 +100,34 @@
         }
       },
 
-      // 跳转到聊天页面
+      // 跳转到消息页面
       toChat() {
-        this.$router.push('/')
+        this.$router.push('/');
       },
 
-      // 跳转到好友页面
-      toFriend() {
-        this.$router.push('/friend')
+      // 跳转到群组页面
+      toGroup() {
+        this.$router.push('/group')
       },
 
-      // 跳转到用户页面
-      toUser(){
+      // 跳转到个人设置
+      toUser() {
         this.$router.push('/user')
       },
 
-      // 获取群组列表
-      async getGroup(){
-        let resp = await getGroup();
-        console.log(resp);
-        if(resp.code === 200){
-          this.group_list = resp.data;
-        }else{
-          this.$Message.error(resp.message);
-        }
+      // 点击某个好友
+      clickFriend(friend_id){
+        this.$router.push(`/friend_info/${friend_id}`)
       },
 
-      // 进入聊天页面
-      async changeChat(group) {
-        group.chat_type = 2;
-        let resp = await addChat(group);
+      /*----------------     好友相关方法    ---------------*/
+      // 获取好友列表
+      async getFriend(){
+        let resp = await getFriend();
         if(resp.code === 200){
-          let chat_id = resp.data;
-          this.$router.push(`/chat/${chat_id}`)
+          this.friend_list = resp.data;
         }else{
-          this.$Message.warning(resp.message)
+          this.$Message.error(resp.message)
         }
       },
     },

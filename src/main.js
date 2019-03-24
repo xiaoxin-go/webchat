@@ -10,8 +10,8 @@ import User from './config'
 import VueSocketio from 'vue-socket.io'
 import socketio from 'socket.io-client'
 
-//let server_ip = 'http://127.0.0.1:5000';
-let server_ip = '';
+let server_ip = 'http://127.0.0.1:5000';
+//let server_ip = '';
 
 Vue.use(iView);
 Vue.use(VueSocketio, socketio(server_ip));
