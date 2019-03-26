@@ -1,7 +1,7 @@
 <template>
   <div id="left">
     <div class="user" @mouseleave="user_info=false">
-      <img :src="logo" alt="" @click="changeLogo" @mouseover="user_info=true">
+      <img :src="logo" alt="" @click="clickImage" @mouseover="user_info=true">
       <div class="user-text">
         {{nickname}}
       </div>
@@ -18,21 +18,21 @@
 
     <!--  菜单按钮  -->
     <ul>
-      <li :class="'menu-item '+(active==='message'?'active':'')" @click="$router.push('/pc/chat')">
+      <li :class="'menu-item '+(active==='chat'?'active':'')" @click="toMenu('chat')">
         <Tooltip content="消息" placement="right-start">
           <div :style="'width: ' + (active==='message'?'76px':'80px')">
             <Icon type="ios-chatbubbles" size="30"/>
           </div>
         </Tooltip>
       </li>
-      <li :class="'menu-item '+(active==='chat'?'active':'')" @click="$router.push('/pc/group')">
+      <li :class="'menu-item '+(active==='group'?'active':'')" @click="toMenu('group')">
         <Tooltip content="群聊" placement="right-start">
           <div :style="'width: ' + (active==='chat'?'76px':'80px')">
             <Icon type="md-contacts" size="30"/>
           </div>
         </Tooltip>
       </li>
-      <li :class="'menu-item '+(active==='friend'?'active':'')" @click="$router.push('/pc/friend')">
+      <li :class="'menu-item '+(active==='friend'?'active':'')" @click="toMenu('friend')">
         <Tooltip content="好友" placement="right-start">
           <div :style="'width: ' + (active==='friend'?'76px':'80px')">
             <Icon type="md-person" size="30"/>
@@ -50,6 +50,7 @@
         name: "Tab",
       data(){
           return{
+            active: 'chat',
             user: {},
             nickname: 'xiaoxin',
             username: 'xiaoxin',
@@ -77,6 +78,10 @@
           }
       },
       methods:{
+        toMenu(menu){
+          this.active = menu;
+          this.$router.push('/pc/' + menu)
+        },
 
         async checkLogin(){
           let resp = await checkLogin();

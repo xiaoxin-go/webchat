@@ -133,12 +133,158 @@
     },
     /*****************************************    方法区    ******************************************/
     methods:{
+
+      // 获取群组列表
+      async getGroup(){
+        let resp = await getGroup();
+        console.log(resp);
+        if(resp.code === 200){
+          this.group_list = resp.data;
+        }else{
+          this.$Message.error(resp.message);
+        }
+      },
+
       async getData(){
         this.group_friend_filter_list = this.friend_list;
       },
 
+      // 删除管理员
+      async delAdmin(user_id){
+        let json_data = {
+          group_id: this.group_id,
+          to_user_id: user_id,
+          group_type: 2
+        };
+        let resp = await updateGroupUser(json_data);
+        if (resp.code === 200){
+          this.getGroupUser()
+        }else{
+          this.$Message.error(resp.message)
+        }
+      },
 
-      /*--------------     group相关方法      -----------------------*/
+      // 添加管理员
+      async addAdmin(user_id){
+        let json_data = {
+          group_id: this.group_id,
+          to_user_id: user_id,
+          group_type: 1
+        };
+        let resp = await updateGroupUser(json_data);
+        if (resp.code === 200){
+          this.$router.go(-1)
+        }else{
+          this.$Message.error(resp.message)
+        }
+      },
+
+      // 添加成员
+      async addGroupUser() {
+        console.log(this.member_list);
+        let json_data = {
+          group_id: this.group_id,
+          member_list: this.member_list
+        };
+        let resp = await addGroupUser(json_data);
+        if (resp.code === 200) {
+          this.$router.go(-1)
+        } else {
+          this.$Message.error(resp.message)
+        }
+      },
+
+      // 获取群组成员列表
+      async getGroupUser(){
+        let json_data = {
+          group_id: this.group_id,
+        };
+        let resp = await getGroupUser(json_data);
+        console.log(resp);
+        if (resp.code === 200){
+          this.data_list = resp.data;
+        }else{
+          this.$Message.error(resp.message);
+        }
+      },
+
+      // 修改群聊名称
+      async editGroupName(){
+        if(!this.new_group_name || !this.new_group_name.trim()){
+          this.$Message.warning('群聊名不能为空！');
+          return;
+        }
+        let json_data = {
+          group_id: this.group.id,
+          name: this.new_group_name
+        };
+        let resp = await updateGroup(json_data);
+        if(resp.code === 200){
+          this.group.name = this.new_group_name;
+          this.edit_group_name = false;
+        }else{
+          this.$Message.error(resp.message);
+        }
+      },
+
+      // 修改群聊头像
+      async editGroupLogo(){
+        let json_data = {
+          group_id: this.group.id,
+          group_logo: this.new_group_logo
+        };
+        let resp = await updateGroup(json_data);
+        if(resp.code === 200){
+          this.group.logo = this.new_group_logo;
+        }else{
+          this.$Message.error(resp.message);
+        }
+      },
+
+      // 退出群聊
+      clickDeleteGroup(type){
+        if(type === 'quit'){
+          this.del_group_title = '退出群聊';
+          this.del_group_message = '您确定退出该群聊吗？'
+        }else{
+          this.del_group_title = '删除群聊';
+          this.del_group_message = '您确定删除该群聊吗？'
+        }
+        this.del_group_modal = true;
+      },
+
+      // 删除群聊
+      async delGroup(){
+        let json_data = {
+          group_id: this.group.id
+        };
+        let resp = await deleteGroup(json_data);
+        if (resp.code === 200){
+          this.$router.push('/group')
+        }else{
+          this.$Message.error(resp.message);
+        }
+      },
+
+      // 选择图片
+      clickImage(){
+        document.getElementById('send-image').click();
+      },
+
+      // 发送图片
+      async uploadImage(){
+        let input = document.getElementById('send-image');
+        let file = input.files[0];
+        let formData = new FormData();
+        formData.append('file', file);
+        let resp = await uploadLogo(formData);
+        console.log(resp);
+        if (resp.code === 200){
+          this.new_group_logo = this.$Server + resp.data.url;        // 返回的是头像路径
+        }
+      },
+
+
       // 搜索群组
       search(){
         this.$Message.info(this.search_value)

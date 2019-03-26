@@ -6,6 +6,7 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {path:'/', redirect: document.body.clientWidth>500?'/home':'/wap'},
+    {path:'/pc/chat',component:()=>import('../components/pc/Chat.vue'),name:'PcChat'},
     {path:'/home',component:()=>import('../components/pc/Home.vue'),name:'Home'},
     {path:'/wap',component:()=>import('../components/wap/Wap.vue'),name:'Wap'},
     /*-------     用户管理      ------*/

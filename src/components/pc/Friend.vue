@@ -10,7 +10,7 @@
       </div>
 
       <!------------------       好友列表     ----------------->
-      <div v-if="active==='friend'" class="center-body">
+      <div class="center-body">
         <div class="center-item">
           <div class="create-group" @click="add_friend_modal=true">
             <div class="create-group-img">
@@ -162,6 +162,7 @@
   import {getFriend, updateFriend, deleteFriend} from '../../api/index.js';
   import Edit from '../../base/EditDiv.vue';
   import {deleteChat} from "../../api/index";
+  import {addFriend, getUser, getUserInfo, updateUser} from "../../api";
 
   export default {
     name: 'Home',
@@ -173,10 +174,7 @@
         // 好友搜索
         group_add_search:'',
 
-
-
         /*-----------   好友相关属性  -------------*/
-
         // 当前选择好友
         friend_active: '',
         // 添加好友模态框
@@ -206,12 +204,108 @@
     },
     /*****************************************    方法区    ******************************************/
     methods:{
+      // 获取好友列表
+      async getFriend(){
+        let resp = await getFriend();
+        if(resp.code === 200){
+          this.friend_list = resp.data;
+        }else{
+          this.$Message.error(resp.message)
+        }
+      },
+
+      // 更新好友资料
+      async editRemark() {
+        if (!this.new_remark_name || !this.new_remark_name.trim()) {
+          this.$Message.warning('备注名不能为空！');
+          return
+        }
+        let json_data = {
+          friend_id: this.friend.id,
+          remark: this.new_remark_name
+        };
+        let resp = await updateFriend(json_data);
+        if (resp.code === 200) {
+          this.friend.remark_name = this.remark_name;
+          this.edit_remark_modal = false;
+        } else {
+          this.$Message.warning(resp.message);
+        }
+      },
+
+      // 获取好友信息
+      async getUserInfo() {
+        let json_data = {
+          'user_id': this.friend_id,
+        };
+        let resp = await getUserInfo(json_data);
+        console.log(resp);
+        if (resp.code === 200) {
+          this.friend = resp.data;
+        } else {
+          this.$Message.error(resp.message);
+        }
+      },
+
+      // 删除好友
+      async delFriend() {
+        let json_data = {
+          friend_id: this.friend.id
+        };
+        let resp = await deleteFriend(json_data);
+        if (resp.state === 200) {
+          this.$Message.success('好友删除成功');
+          this.$router.push('/friend');
+        } else {
+          this.$Message.error(resp.message)
+        }
+      },
+
+      // 设置为站长
+      async updateUser() {
+        let json_data = {
+          type: 1
+        };
+        let resp = await updateUser(json_data);
+        if (resp.state === 200) {
+          this.$Message.success('设置成功');
+        } else {
+          this.$Message.warning(resp.message)
+        }
+      },
 
       // 点击好友头像
       changeFriend(index){
         this.new_friend_active = false;
         this.friend_active = index;
         this.select_chat = this.friend_list[index]
+      },
+
+      async searchFriend(){
+        if(!this.search_name || !this.search_name.trim()){
+          this.$Message.warning('请输入好友名称！');
+          return
+        }
+        let json_data = {
+          username: this.search_name
+        };
+        let resp = await getUser(json_data);
+        if(resp.code === 200){
+          console.log(resp.data);
+          this.friend = resp.data
+        }
+      },
+      // 添加好友
+      async addFriend(){
+        let json_data = {
+          friend_id: this.friend.id
+        };
+        let resp = await addFriend(json_data);
+        if(resp.code === 200){
+          this.$Message.success('好友添加成功')
+        }else{
+          this.$Message.warning(resp.message)
+        }
       },
 
     },

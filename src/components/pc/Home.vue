@@ -142,7 +142,7 @@
       </div>
     </div>
 
-      右侧消息框
+      <!--右侧消息框-->
     <div id="right">
       <div v-if="new_friend_active">
         <div class="right-title">

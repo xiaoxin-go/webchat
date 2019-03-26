@@ -70,7 +70,7 @@
         }
       },
 
-      // 添加成员
+      // 删除管理员
       async delAdmin(user_id){
         let json_data = {
           group_id: this.group_id,

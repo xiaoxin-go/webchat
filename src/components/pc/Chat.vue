@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%;">
     <!--聊天列表-->
     <div id="center">
       <div class="search">
@@ -9,7 +9,7 @@
       </div>
 
       <!-- 消息列表 -->
-      <div v-if="active==='message'">
+      <div>
         <div class="chat-body">
           <template v-for="(chat, index) in chat_list">
             <div :class="'chat-item ' + (chat_active===index?'active':'')" @click="changeChat(index)">
@@ -25,7 +25,6 @@
       </div>
     </div>
 
-    右侧消息框
     <div id="right">
       <!--    用户聊天界面    -->
         <div class="right-title">
@@ -89,7 +88,7 @@
               </div>
               <!-- 发送消息按钮 -->
               <div class="send-button">
-                <Button @click="sendMessage" type="primary">发送</Button>
+                <Button @click="send" type="primary">发送</Button>
               </div>
 
             </div>
@@ -152,7 +151,10 @@
         chat_active: null,              //
         send_image: null,               // 选择发送图片
         emoji_active: false,            // 表情包
+        logo: '/static/images/xiaoxin.jpg',
 
+        search_value: '',
+        chat_setting_show: false,
         // 用户消息列表
         message_data:[],
 
@@ -219,7 +221,7 @@
       }
     },
     created(){
-      this.getData();
+      //this.getData();
     },
     mounted(){
     },

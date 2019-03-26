@@ -64,7 +64,7 @@
     },
     methods: {
 
-      // 获取群组消息
+      // 获取群组信息
       async getGroupUser() {
         let json_data = {
           group_id: this.group_id
@@ -77,7 +77,7 @@
         }
       },
 
-      // 获取好友消息
+      // 获取好友信息
       async getFriend() {
         let resp = await getFriend();
         if (resp.code === 200) {

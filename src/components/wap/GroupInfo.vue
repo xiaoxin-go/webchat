@@ -165,8 +165,8 @@
           new_group_name: null,
           new_group_logo: null,
           new_group_info: null,
-          edit_group_name: false,
-          edit_group_info: false,
+          edit_group_name: '',
+          edit_group_info: '',
           edit_logo_modal: false,
           del_group_modal: false,
           del_group_title: null,
@@ -177,7 +177,7 @@
       },
       methods:{
 
-        // 获取群组消息
+        // 获取群组信息
         async getGroup(){
           let json_data = {
             group_id: this.group_id,
@@ -237,6 +237,8 @@
             this.$Message.error(resp.message);
           }
         },
+
+        // 退出群聊
         clickDeleteGroup(type){
           if(type === 'quit'){
             this.del_group_title = '退出群聊';
@@ -247,6 +249,7 @@
           }
           this.del_group_modal = true;
         },
+
         // 删除群聊
         async delGroup(){
           let json_data = {

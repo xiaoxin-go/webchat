@@ -25,18 +25,24 @@ ul,li{
   margin-left: 380px;
 }
 
+#left, #center{
+  position: absolute;
+  height: 100%;
+  top: 0;
+}
+
 #left{
   width: 80px;
   background-color: black;
   border: none;
+  left: 0;
 }
 #center{
   width: 300px;
+  left: 80px;
 }
 #right{
-  width: 74%;
-  background: #eeeeff;
-  padding: 6px;
+  margin-left: 380px;
 }
 
 /* 菜单按钮样式 */
