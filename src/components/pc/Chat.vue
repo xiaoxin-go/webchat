@@ -30,15 +30,12 @@
         <div class="right-title">
           <span>{{select_chat.remark_name}}</span>
           <div class="right-title-settings">
-            <div v-if="select_chat.type==='group'" class="right-title-setting" @click="group_add_modal=true">
-              <Icon type="md-add" />
-            </div>
             <div v-if="select_chat.username" class="right-title-setting" @click="changeSettingShow">
               <Icon type="md-cog" />
             </div>
           </div>
         </div>
-        <div>
+        <div class="right-main-body">
           <div :class="chat_setting_show?'right-main-show':'right-main'">
             <div class="right-body">
               <template v-for="message in message_data[select_chat.name]">
@@ -94,44 +91,18 @@
             </div>
           </div>
           <!--  用户组设置栏 -->
-          <div v-show="chat_setting_show==='group'" class="settings-show">
-            <div class="settings-group">
-              <div class="group-pople">
-                <p>群成员</p>
-                <div class="group-logo">
-                  <img src="" alt="">
-                </div>
-                <p>所有成员</p>
-              </div>
-              <div>
-                群组名称
-              </div>
-              <div>
-                禁言
-              </div>
-              <div>
-                解散群
-              </div>
-            </div>
-          </div>
+          <template v-if="chat_setting_show==='group'">
+            <GroupInfo group_id="1"></GroupInfo>
+          </template>
 
           <!--  单聊设置栏  -->
-          <div v-show="chat_setting_show==='chat'" class="settings-show">
-            <div class="settings-chat">
-              <img :src="logo" alt="">
-              <p>{{select_chat.nickname}}</p>
-              <p class="username">ID: {{select_chat.username}}</p>
-            </div>
-            <div class="settings-chat-item" @click="edit_remark_modal=true">
-              <span>修改备注</span><span class="settings-chat-item-icon"><Icon type="ios-arrow-forward" size="22"/></span>
-            </div>
-            <div class="settings-chat-item" @click="del_friend_modal=true">
-              删除好友
-            </div>
-          </div>
+          <template v-if="chat_setting_show==='chat'">
+            <FriendInfo friend_id="1"></FriendInfo>
+          </template>
 
         </div>
     </div>
+
   </div>
 
 </template>
@@ -139,10 +110,12 @@
 <script>
   import {uploadLogo, updateUser,  getChat} from '../../api/index.js';
   import Edit from '../../base/EditDiv.vue';
+  import FriendInfo from './FriendInfo.vue';
+  import GroupInfo from './GroupInfo.vue';
 
   export default {
     name: 'Home',
-    components:{Edit},
+    components:{Edit, FriendInfo, GroupInfo},
     data(){
       return {
         /*--------  用户消息相关属性  --------*/
@@ -152,9 +125,10 @@
         send_image: null,               // 选择发送图片
         emoji_active: false,            // 表情包
         logo: '/static/images/xiaoxin.jpg',
+        select_friend_list: [],
 
         search_value: '',
-        chat_setting_show: false,
+        chat_setting_show: '',
         // 用户消息列表
         message_data:[],
 

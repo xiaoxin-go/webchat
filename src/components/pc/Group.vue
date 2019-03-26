@@ -41,17 +41,12 @@
       </div>
     </div>
 
-    右侧消息框
+    <!--右侧消息框-->
     <div id="right">
       <!--    用户聊天界面    -->
         <div class="right-title">
         </div>
-        <div>
-          <div :class="chat_setting_show?'right-main-show':'right-main'">
-            <div class="right-body">
-            </div>
-          </div>
-      </div>
+      <div class="right-main-body"></div>
     </div>
 
     <!--  创建群组模态框 -->
@@ -68,11 +63,6 @@
         <Button type="primary" size="large" @click="createGroup">确定</Button>
       </div>
     </Modal>
-
-
-
-
-
   </div>
 
 </template>
@@ -87,8 +77,6 @@
         search_value: '',     // 搜索框内容
 
         group_add_modal: false,         // 群组添加成员模态框
-
-
 
 
         /* ------     群组相关属性    ------- */
@@ -127,7 +115,6 @@
       }
     },
     created(){
-      this.getData();
     },
     mounted(){
     },
