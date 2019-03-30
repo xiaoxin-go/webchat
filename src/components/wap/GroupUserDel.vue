@@ -67,7 +67,7 @@
       },
 
 
-      // 添加成员
+      // 删除成员
       async delGroupUser(user_id) {
         let json_data = {
           group_id: this.group_id,

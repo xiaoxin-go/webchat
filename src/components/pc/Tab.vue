@@ -86,6 +86,12 @@
 
     export default {
         name: "Tab",
+      created(){
+        console.log(this.$route.path)
+      },
+      mounted(){
+        console.log(this.$route.path)
+      },
       data(){
           return{
             active: 'chat',
@@ -207,6 +213,14 @@
             this.$Message.warning('用户退出登录异常');
           }
         },
+      },
+      watch:{
+        // 监听URL状态改变
+        "$route"(){
+          let path = this.$route.path;
+          console.log('path:',path);
+          this.active = path.split('/')[path.split('/').length - 1]
+        }
       }
     }
 </script>

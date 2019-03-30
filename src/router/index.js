@@ -6,9 +6,9 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {path:'/', redirect: document.body.clientWidth>500?'/home':'/wap'},
-    {path:'/pc/chat',component:()=>import('../components/pc/Chat.vue'),name:'PcChat'},
-    {path:'/pc/group',component:()=>import('../components/pc/Group.vue'),name:'PcGroup'},
-    {path:'/pc/friend',component:()=>import('../components/pc/Friend.vue'),name:'PcFriend'},
+    {path:'/pc/chat',component:()=>import('../components/pc/Chat.vue'),name:'pcChat'},
+    {path:'/pc/group',component:()=>import('../components/pc/Group.vue'),name:'pcGroup'},
+    {path:'/pc/friend',component:()=>import('../components/pc/Friend.vue'),name:'pcFriend'},
     {path:'/home',component:()=>import('../components/pc/Home.vue'),name:'Home'},
     {path:'/wap',component:()=>import('../components/wap/Wap.vue'),name:'Wap'},
     /*-------     用户管理      ------*/

@@ -92,12 +92,12 @@
           </div>
           <!--  用户组设置栏 -->
           <template v-if="chat_setting_show==='group'">
-            <GroupInfo group_id="1"></GroupInfo>
+            <ChatGroupInfo group_id="1"></ChatGroupInfo>
           </template>
 
           <!--  单聊设置栏  -->
           <template v-if="chat_setting_show==='chat'">
-            <FriendInfo friend_id="1"></FriendInfo>
+            <ChatFriendInfo friend_id="1"></ChatFriendInfo>
           </template>
 
         </div>
@@ -110,12 +110,12 @@
 <script>
   import {uploadLogo, updateUser,  getChat} from '../../api/index.js';
   import Edit from '../../base/EditDiv.vue';
-  import FriendInfo from './FriendInfo.vue';
-  import GroupInfo from './GroupInfo.vue';
+  import ChatFriendInfo from './ChatFriendInfo.vue';
+  import ChatGroupInfo from './ChatGroupInfo.vue';
 
   export default {
     name: 'Home',
-    components:{Edit, FriendInfo, GroupInfo},
+    components:{Edit, ChatFriendInfo, ChatGroupInfo},
     data(){
       return {
         /*--------  用户消息相关属性  --------*/

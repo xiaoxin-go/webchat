@@ -20,9 +20,8 @@
               {{user.nickname}}
             </div>
           </div>
-
           <!--  群组添加成员按钮  -->
-          <template v-if="group_user.type < 2">
+          <template v-if="group_user_type < 2">
             <div class="wap-group-info-item" style="width: 19%;" @click="$router.push(`/group_user_add/${group.id}`)">
               <div class="wap-group-info-logo">
                 <img src="../../../static/images/add.jpg" alt="">
@@ -31,7 +30,6 @@
                 <p>&nbsp;</p>
               </div>
             </div>
-
             <!--  群组删除成员  -->
             <div class="wap-group-info-item" style="width: 19%;" @click="$router.push(`/group_user_del/${group.id}`)">
               <div class="wap-group-info-logo">
@@ -45,38 +43,36 @@
         </div>
         <div class="wap-group-info-info">
           <div>
-            <div class="wap-group-info-group-name" @click="group_user.type<2?edit_group_name=true:''">
+            <div class="wap-group-info-group-name" @click="group_user_type<2?edit_group_name=true:''">
               群聊名称 <span>{{group.name}}<Icon type="ios-arrow-forward" size="16"/></span>
             </div>
           </div>
           <div>
-            <div class="wap-group-info-group-info" @click="group_user.type<2?edit_group_info=true:''">
+            <div class="wap-group-info-group-info" @click="group_user_type<2?edit_group_info=true:''">
               群公告 <p>{{group.info}}</p>
               <span>
               <Icon type="ios-arrow-forward" size="16"/>
             </span>
             </div>
           </div>
-          <div v-if="group_user.type<2">
+          <div v-if="group_user_type<2">
             <div class="wap-group-info-group-logo" @click="edit_logo_modal=true">
               更换头像 <span><Icon type="ios-arrow-forward" size="16"/></span>
             </div>
           </div>
-          <div v-if="group_user.type<2">
+          <div v-if="group_user_type<2">
             <div class="wap-group-info-group-name" @click="$router.push(`/group_admin/${group.id}`)">
               群管理 <span><Icon type="ios-arrow-forward" size="16"/></span>
             </div>
           </div>
         </div>
-        <div class="wap-group-info-delete" @click="clickDeleteGroup('delete')" v-if="group_user.type === 0">
+        <div class="wap-group-info-delete" @click="clickDeleteGroup('delete')" v-if="group_user_type === 0">
           删除群聊
         </div>
         <div class="wap-group-info-delete" @click="clickDeleteGroup('quit')" v-else>
           退出群聊
         </div>
       </div>
-
-
       <!-- 退出群聊，模态框 -->
       <!--  删除好友模态框 -->
       <Modal
@@ -92,7 +88,6 @@
           <Button type="primary" @click="delGroup">确定</Button>
         </div>
       </Modal>
-
       <!--  修改群名模态框 -->
       <Modal
         v-model="edit_group_name"
@@ -107,7 +102,6 @@
           <Button type="primary" @click="editGroupName">确定</Button>
         </div>
       </Modal>
-
       <!--  修改公告模态框 -->
       <Modal
         v-model="edit_group_info"
@@ -122,7 +116,6 @@
           <Button type="primary" @click="editGroupName">确定</Button>
         </div>
       </Modal>
-
       <!--  修改头像模态框 -->
       <Modal
         v-model="edit_logo_modal"
@@ -135,33 +128,25 @@
           <Button type="primary" @click="editGroupLogo">确定</Button>
         </div>
       </Modal>
-
     </div>
-
 </template>
-
 <script>
   import {getGroup, updateGroup, deleteGroup, uploadLogo, getGroupUser, checkLogin} from "../../api/index";
-
   export default {
         name: "GroupInfo",
-      mounted() {
+      created() {
           this.group_id = this.$route.params.id;
+          this.checkLogin();
           this.getGroup();
           this.getGroupUser();
       },
       data(){
         return {
+          user: {},
           group_id: null,
-          group_user:{
-            id: 1,
-            group_id: 1,
-            user_id: 1,
-            remark: 'xiaoxin',
-            type: 0,
-          },
-          group:{
-          },
+          group_user:{},
+          group_user_type: null,
+          group:{},
           new_group_name: null,
           new_group_logo: null,
           new_group_info: null,
@@ -176,7 +161,12 @@
         }
       },
       methods:{
-
+        async checkLogin(){
+          let resp = await checkLogin();
+          if(resp.code === 200){
+            this.user = resp.data;
+          }
+        },
         // 获取群组信息
         async getGroup(){
           let json_data = {
@@ -190,7 +180,6 @@
             this.$Message.error(resp.message)
           }
         },
-
         // 获取群组成员列表
         async getGroupUser(){
           let json_data = {
@@ -199,12 +188,12 @@
           let resp = await getGroupUser(json_data);
           console.log(resp);
           if (resp.code === 200){
-            this.data_list = resp.data;
+            this.data_list = resp.data.data_list;
+            this.group_user_type = resp.data.group_type;
           }else{
             this.$Message.error(resp.message);
           }
         },
-
         // 修改群聊名称
         async editGroupName(){
           if(!this.new_group_name || !this.new_group_name.trim()){
@@ -223,7 +212,6 @@
             this.$Message.error(resp.message);
           }
         },
-
         // 修改群聊头像
         async editGroupLogo(){
           let json_data = {
@@ -237,7 +225,6 @@
             this.$Message.error(resp.message);
           }
         },
-
         // 退出群聊
         clickDeleteGroup(type){
           if(type === 'quit'){
@@ -249,7 +236,6 @@
           }
           this.del_group_modal = true;
         },
-
         // 删除群聊
         async delGroup(){
           let json_data = {
@@ -262,12 +248,10 @@
             this.$Message.error(resp.message);
           }
         },
-
         // 选择图片
         clickImage(){
           document.getElementById('send-image').click();
         },
-
         // 发送图片
         async uploadImage(){
           let input = document.getElementById('send-image');

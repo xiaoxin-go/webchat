@@ -1,5 +1,5 @@
 import axios from 'axios';
-//axios.defaults.baseURL = 'http://127.0.0.1:5000';
+axios.defaults.baseURL = 'http://127.0.0.1:5000';
 //var url_version = '/api/v1.04';
 var url_version = '';
 
@@ -142,4 +142,9 @@ export let deleteChat =(data)=>{
 // 获取好友消息
 export let getChatMessage =(data) =>{
   return axios.get(`${url_version}/chat_message`, {'params':data})
+};
+
+// 获取网页内容
+export let getHtml = () =>{
+  return axios.get(`${url_version}/get_html`)
 };
