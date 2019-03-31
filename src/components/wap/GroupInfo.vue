@@ -74,7 +74,6 @@
         </div>
       </div>
       <!-- 退出群聊，模态框 -->
-      <!--  删除好友模态框 -->
       <Modal
         v-model="del_group_modal"
         @on-cancel="del_group_modal=false"
@@ -113,7 +112,7 @@
         </div>
         <div slot="footer">
           <Button type="text" @click="edit_group_info=false">取消</Button>
-          <Button type="primary" @click="editGroupName">确定</Button>
+          <Button type="primary" @click="editGroupInfo">确定</Button>
         </div>
       </Modal>
       <!--  修改头像模态框 -->
@@ -212,6 +211,21 @@
             this.$Message.error(resp.message);
           }
         },
+        // 修改群聊公告
+        async editGroupInfo(){
+          let json_data = {
+            group_id: this.group_id,
+            info: this.new_group_info
+          };
+          let resp = await updateGroup(json_data);
+          if(resp.code === 200){
+            this.group.info = this.new_group_info;
+            this.edit_group_info = false;
+          }else{
+            this.$Message.error(resp.message);
+          }
+        },
+
         // 修改群聊头像
         async editGroupLogo(){
           let json_data = {

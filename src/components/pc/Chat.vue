@@ -3,7 +3,7 @@
     <!--聊天列表-->
     <div id="center">
       <div class="search">
-        <Input type="text" @keyup.enter.native="search" v-model="search_value">
+        <Input type="text" v-model="search_value">
           <Icon type="ios-search" slot="prefix" />
         </Input>
       </div>
@@ -12,12 +12,13 @@
       <div>
         <div class="chat-body">
           <template v-for="(chat, index) in chat_list">
-            <div :class="'chat-item ' + (chat_active===index?'active':'')" @click="changeChat(index)">
+            <div :class="'chat-item ' + (chat_active===index?'active':'')" @click="changeChat(index)"
+                 v-if="((chat.remark && chat.remark.startsWith(search_value)) || chat.name.startsWith(search_value))">
               <div class="chat-img">
                 <img :src="chat.logo">
               </div>
               <div class="chat-text">
-                {{ chat.remark_name }}
+                {{ chat.remark || chat.name }}
               </div>
             </div>
           </template>
@@ -76,7 +77,7 @@
                   </template>
                 </div>
                 <Icon class="message-file" type="md-images" size="24" @click="clickImage"/>
-                <input type="file" id="send-image" style="display: none;" @change="sendImage">
+                <input type="file" id="send-image" style="display: none;" @change="uploadImage">
               </div>
               <!-- 消息输入框 -->
               <div style="padding: 3px 0 0 20px;">
@@ -91,13 +92,13 @@
             </div>
           </div>
           <!--  用户组设置栏 -->
-          <template v-if="chat_setting_show==='group'">
-            <ChatGroupInfo group_id="1"></ChatGroupInfo>
+          <template v-if="chat_setting_show===1">
+            <ChatGroupInfo :group_id="select_chat.chat_obj_id"></ChatGroupInfo>
           </template>
 
           <!--  单聊设置栏  -->
-          <template v-if="chat_setting_show==='chat'">
-            <ChatFriendInfo friend_id="1"></ChatFriendInfo>
+          <template v-if="chat_setting_show===2">
+            <ChatFriendInfo :friend_id="select_chat.chat_obj_id"></ChatFriendInfo>
           </template>
 
         </div>
@@ -112,6 +113,7 @@
   import Edit from '../../base/EditDiv.vue';
   import ChatFriendInfo from './ChatFriendInfo.vue';
   import ChatGroupInfo from './ChatGroupInfo.vue';
+  import {getChatMessage, uploadImage} from "../../api";
 
   export default {
     name: 'Home',
@@ -134,8 +136,8 @@
 
         // 聊天列表
         chat_list:[
-          {'username': 'test', 'logo': '/static/images/index.png', 'type': 'group', 'remark_name': 'test'},
-          {'username': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 'chat', 'remark_name': 'xiaoxin'},
+          {id:1, 'name': 'test', 'logo': '/static/images/index.png', 'type': 2, 'remark': 'test', chat_obj_id: 1,},
+          {id :1,'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 1, 'remark': 'xiaoxin', chat_obj_id: 1},
         ],
 
         // 表情包
@@ -195,23 +197,43 @@
       }
     },
     created(){
-      //this.getData();
+      this.getChat();
     },
     mounted(){
     },
     /*****************************************    方法区    ******************************************/
     methods:{
       /*--------------     chat相关方法      -----------------------*/
-      // 获取聊天消息
+      // 获取聊天列表
       async getChat() {
         let resp = await getChat();
         console.log(resp);
         if (resp.code === 200) {
           this.chat_list = resp.data;
+          let chat_id = this.$route.query.chat_id;
+          if(chat_id){
+            this.select_chat = this.chat_list.filter(item=>item.id === chat_id)[0];
+            this.getChatMessage(chat_id);
+          }
         } else {
           this.$Message.error(resp.message)
         }
       },
+      // 获取聊天消息
+      async getChatMessage(chat_id){
+        let json_data = {
+          chat_id: chat_id
+        };
+        let resp = await getChatMessage(json_data);
+        console.log(resp);
+        if(resp.code === 200){
+          this.message_data = resp.data;
+        }else{
+          this.$Message.error(resp.message)
+        }
+        this.scrollAuto()
+      },
+
       // 删除聊天
       async delChat(chat){
         let json_data = {
@@ -230,18 +252,18 @@
       },
 
       // 发送图片
-      async sendImage(){
-        this.$Message.warning('......');
+      async uploadImage() {
         let input = document.getElementById('send-image');
         let file = input.files[0];
-        console.log(file.type);
-        return;
         let formData = new FormData();
         formData.append('file', file);
-        let resp = await uploadLogo(formData);
+        let resp = await uploadImage(formData);
         console.log(resp);
-        if (resp.state === 1){
-          this.logo = resp.logo;        // 返回的是头像路径
+        if (resp.code === 200) {
+          this.send_message += '<img src="' + resp.data.url + '">';
+          setTimeout(() => {
+            this.keepLastIndex(document.getElementById('send-message'))
+          }, 5)
         }
       },
 
@@ -249,6 +271,8 @@
       changeChat(index){
         this.chat_active = index;
         this.select_chat = this.chat_list[index];
+        this.getChatMessage(this.select_chat.id);
+        this.chat_setting_show = false
       },
 
       // 点击表情
@@ -267,24 +291,6 @@
         setTimeout(()=>{
           this.keepLastIndex(obj)
         },5)
-      },
-
-      // 判断好友是否被选中
-      isSelectFriend(friend){
-        let index = this.select_friend_list.indexOf(friend);
-        if(index >= 0){
-          return true
-        }
-      },
-
-      // 点击好友添加到选中好友列表
-      selectFriend(friend){
-        let index = this.select_friend_list.indexOf(friend);
-        if(index >=0 ){
-          this.select_friend_list.splice(index,1);
-        }else{
-          this.select_friend_list.push(friend);
-        }
       },
 
       // 解决输入框焦点问题
@@ -307,7 +313,7 @@
 
       // 点击设置和添加按钮
       changeSettingShow(){
-        this.chat_setting_show = this.chat_setting_show===this.select_chat.type?null:this.select_chat.type
+        this.chat_setting_show = this.chat_setting_show?null:this.select_chat.type
       },
 
       /*------------------         公共方法               -------------------------*/

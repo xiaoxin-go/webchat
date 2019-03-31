@@ -11,7 +11,7 @@
 
       <!------------------       好友列表     ----------------->
       <div class="center-body">
-        <div class="center-item">
+        <div class="center-item" v-if="$User.user.type < 2">
           <div class="create-group" @click="friend_add_active=true">
             <div class="create-group-img">
               <img src="/static/images/search_add_friend.png">

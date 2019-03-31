@@ -144,7 +144,6 @@
         let resp = await uploadLogo(formData);
         console.log(resp);
         if (resp.code === 200){
-
           this.user.logo = this.$Server + resp.data.url;        // 返回的是头像路径
           console.log('上传头像成功', this.user.logo);
           this.updateUserLogo();

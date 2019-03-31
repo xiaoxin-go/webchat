@@ -12,10 +12,10 @@
             <div class="wap-group-info-logo" @mouseover="hoverUser(user)" @mouseout="hover_active_id=null">
               <img :src="user.logo" alt="">
               <div class="pc-group-user-item-card" v-if="hover_active_id===user.id" @mouseout="hover_active_id=null">
-                <p @click="delGroupUser">删除成员</p>
-                <p @click="addFriend">添加好友</p>
-                <p @click="addAdmin">设置管理员</p>
-                <p @click="delAdmin">取消管理员</p>
+                <p @click="delGroupUser" v-if="$User.user.type === 0 || group_user_type === 0">删除成员</p>
+                <p @click="addFriend" v-if="group_user_type < 2">添加好友</p>
+                <p @click="addAdmin" v-if="group_user_type === 0 && user.type === 2">设置管理员</p>
+                <p @click="delAdmin" v-if="group_user_type === 0 && user.type === 1">取消管理员</p>
               </div>
             </div>
             <div class="wap-group-info-name">
@@ -36,8 +36,8 @@
         </div>
       </div>
       <div class="pc-group-btn">
-        <button>发消息</button>
-        <button class="del-group">解散群聊</button>
+        <button @click="changeChat">发消息</button>
+        <button class="del-group" @click="del_group_modal=true" v-if="$User.user.type === 0 || group_user_type === 0">解散群聊</button>
       </div>
     </div>
     <Modal
@@ -48,11 +48,12 @@
       <!-- 当前好友列表 -->
       <div class="friend-list">
         <div class="group-add-search">
-          <Input type="text" @on-change="groupAddSearch" v-model="group_add_search">
+          <Input type="text" v-model="search_name">
             <Icon type="ios-search" slot="prefix" />
           </Input>
         </div>
-        <div v-for="friend in friend_list" class="group-add-item" @click="selectFriend(friend)">
+        <div v-for="friend in friend_list" class="group-add-item" @click="selectFriend(friend)"
+             v-if="((friend.remark && friend.remark.startsWith(search_name)) || friend.nickname.startsWith(search_name))">
           <div class="chat-img">
             <img :src="friend.logo">
           </div>
@@ -86,6 +87,19 @@
         <Button type="text" size="large" @click="group_add_modal=false">取消</Button>
       </div>
     </Modal>
+    <!-- 退出群聊，模态框 -->
+    <Modal
+      v-model="del_group_modal"
+      @on-cancel="del_group_modal=false"
+      title="解散群聊" width="400px">
+      <div class="wap-my-modal-text">
+        <span>您确定解散该群吗？</span>
+      </div>
+      <div slot="footer">
+        <Button type="text" @click="del_group_modal=false">取消</Button>
+        <Button type="primary" @click="delGroup">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -110,44 +124,44 @@
             hover_active_id: null,
             active_user: {},
             group_add_modal:false,
-            group_add_search: '',
-            group_friend_filter_list: [],
+            del_group_modal:false,
+            search_name: '',
             group_user_ids:[],
             select_friend_list: [],
             friend_id_list: [],
             friend_list: [
-              {id:1,'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+              {id:1,'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin1', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin2', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin3', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin4', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin5', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin6', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
             ],
             data_list: [
-              {id: 1, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 2, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 3, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 4, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 5, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 6, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 7, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 8, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 9, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 10, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 11, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 12, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 13, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 14, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 15, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
+              {id: 1, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 2, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 3, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 4, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 5, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 6, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 7, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 8, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 9, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 10, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 11, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 12, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 13, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 14, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
+              {id: 15, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
             ],
           }
       },
@@ -285,11 +299,6 @@
           } else {
             this.$Message.error(resp.message)
           }
-        },
-
-        // 群组添加好友过滤
-        groupAddSearch(){
-          this.group_friend_filter_list =  this.friend_list.filter(item=>item.name.indexOf(this.group_add_search)>=0)
         },
 
         // 进入聊天页面，先请求添加聊天接口，返回聊天ID

@@ -1,5 +1,5 @@
 import axios from 'axios';
-axios.defaults.baseURL = 'http://127.0.0.1:5000';
+//axios.defaults.baseURL = 'http://127.0.0.1:5000';
 //var url_version = '/api/v1.04';
 var url_version = '';
 
@@ -59,6 +59,11 @@ export let deleteUser =(data) =>{
 };
 
 /*---------  好友管理接口 ---------*/
+// 获取好友信息
+export let getFriendInfo =(data)=>{
+  return axios.get(`${url_version}/friend_info`, {'params': data})
+};
+
 // 获取好友列表
 export let getFriend = () =>{
   return axios.get(`${url_version}/friend`)
@@ -98,6 +103,11 @@ export let updateGroup =(data)=>{
 // 删除群组
 export let deleteGroup =(data) =>{
   return axios.delete(`${url_version}/group`, {'params':data})
+};
+
+// 删除群组
+export let quitGroup =(data) =>{
+  return axios.delete(`${url_version}/quit_group`, {'params':data})
 };
 
 /*-----------------  群组成员管理接口 ------------------*/

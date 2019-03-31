@@ -230,6 +230,10 @@ ul,li{
 .pc-friend-remark{
   cursor: pointer;
 }
+.pc-group-logo:hover{
+  cursor: pointer;
+}
+
 #update-remark{
   width: 70px;
   border: none;

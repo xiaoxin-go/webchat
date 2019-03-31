@@ -24,8 +24,8 @@
       <div class="pc-friend-btn" style="height: 120px;">
         <button @click="changeChat">发消息</button>
         <button class="del-group" @click="del_friend_modal=true">删除好友</button>
-        <button class="set-admin" @click="setAdmin">设为站长</button>
-        <button class="set-admin" @click="cancelAdmin">取消站长</button>
+        <button class="set-admin" @click="setAdmin" v-if="$User.user.type === 0 && friend.type === 2">设为站长</button>
+        <button class="set-admin" @click="cancelAdmin" v-if="$User.user.type === 0 && friend.type === 1">取消站长</button>
       </div>
       </template>
     </div>

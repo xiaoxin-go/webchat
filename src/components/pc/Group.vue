@@ -28,7 +28,7 @@
         <!-- 群组 -->
         <div class="group-body">
           <template v-for="(group, index) in group_list">
-            <div :class="'chat-item ' + (group_active===index?'active':'')" @click="select_group=group">
+            <div :class="'chat-item ' + (select_group===group?'active':'')" @click="select_group=group">
               <div class="chat-img">
                 <img :src="group.logo">
               </div>

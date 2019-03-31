@@ -2,8 +2,8 @@
   <div class="settings-show">
     <div class="settings-chat">
       <img :src="friend.logo" alt="">
-      <p>{{friend.nickname}}</p>
-      <p class="username">ID: {{friend.username}}</p>
+      <p style="font-size: 20px;">{{friend.nickname}}</p>
+      <p class="username">备注: {{friend.remark}}</p>
     </div>
     <div class="settings-chat-item" @click="edit_remark_modal=true">
       <span>修改备注</span><span class="settings-chat-item-icon"><Icon type="ios-arrow-forward" size="22"/></span>
@@ -18,7 +18,7 @@
       @on-cancel="del_friend_modal=false"
       title="删除好友" width="400px">
       <div class="wap-my-modal-text">
-        <span>您确定删除好友 <span style="color: #cc99ff;">{{friend.remark_name}}</span> 吗？</span>
+        <span>您确定删除好友 <span style="color: #cc99ff;">{{friend.remark || friend.nickname}}</span> 吗？</span>
       </div>
       <div slot="footer">
         <Button type="text" @click="del_friend_modal=false">取消</Button>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import {deleteFriend, getUserInfo, updateFriend, updateUser} from "../../api";
+  import {deleteFriend, getFriendInfo, getUserInfo, updateFriend, updateUser} from "../../api";
 
     export default {
         name: "FriendInfo",
@@ -56,7 +56,7 @@
           }
         },
       mounted() {
-        this.getUserInfo();
+        this.getFriendInfo();
       },
       props:['friend_id'],
       methods:{
@@ -67,12 +67,12 @@
             return
           }
           let json_data = {
-            friend_id: this.friend.id,
+            friend_id: this.friend_id,
             remark: this.new_remark_name
           };
           let resp = await updateFriend(json_data);
           if (resp.code === 200) {
-            this.friend.remark_name = this.remark_name;
+            this.friend.remark = this.new_remark_name;
             this.edit_remark_modal = false;
           } else {
             this.$Message.warning(resp.message);
@@ -80,13 +80,13 @@
         },
 
         // 获取好友信息
-        async getUserInfo() {
+        async getFriendInfo() {
           console.log(this.friend_id);
           let json_data = {
-            'user_id': this.friend_id,
+            'friend_id': this.friend_id,
           };
-          this.friend = {'username': 'test', 'logo': '/static/images/index.png', 'type': 'group', 'remark_name': 'test'};
-          let resp = await getUserInfo(json_data);
+          this.friend = {'nickname': 'test', 'logo': '/static/images/mv1.jpg', 'type': 2, 'remark': 'test1'};
+          let resp = await getFriendInfo(json_data);
           console.log(resp);
           if (resp.code === 200) {
             this.friend = resp.data;
@@ -103,7 +103,7 @@
           let resp = await deleteFriend(json_data);
           if (resp.state === 200) {
             this.$Message.success('好友删除成功');
-            this.$router.push('/friend');
+            this.$router.push('/pc/chat');
           } else {
             this.$Message.error(resp.message)
           }
