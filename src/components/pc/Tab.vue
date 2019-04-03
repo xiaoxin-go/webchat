@@ -1,9 +1,9 @@
 <template>
   <div id="left">
     <div class="user" @mouseleave="user_info=false">
-      <img :src="logo" alt="" @click="clickImage" @mouseover="user_info=true">
+      <img :src="user.logo" alt="" @click="clickImage" @mouseover="user_info=true">
       <div class="user-text">
-        {{nickname}}
+        {{user.nickname}}
       </div>
       <div class="user-info" v-if="user_info" @mouseleave="user_info=false">
         <ul>
@@ -87,19 +87,18 @@
     export default {
         name: "Tab",
       created(){
-        console.log(this.$route.path)
+        this.checkLogin();
       },
       mounted(){
-        console.log(this.$route.path)
+        // this.$nextTick(() => {
+        //   this.checkLogin();
+        // })
       },
       data(){
           return{
             active: 'chat',
             user: {},
-            nickname: 'xiaoxin',
-            username: 'xiaoxin',
             user_info: false,
-            logo: '/static/images/index.png',    // 默认logo
             change_nickname_modal: false,   // 修改昵称模态框
             change_password_modal: false,   // 修改密码模态框
 
@@ -130,8 +129,13 @@
           let resp = await checkLogin();
           console.log(resp);
           if(resp.code === 200){
+            this.$User.setUser(resp.data);
             this.user = resp.data;
+            this.$socket.emit('in_chat');
+          }else{
+            this.$Message.warning(resp.message);
           }
+
         },
         // 选择图片
         clickImage(){
@@ -208,7 +212,7 @@
           console.log(resp);
           if(resp.code === 200){
             this.$Message.success('用户退出登录成功');
-            this.$router.push('/')
+            this.$router.go(0)
           }else{
             this.$Message.warning('用户退出登录异常');
           }

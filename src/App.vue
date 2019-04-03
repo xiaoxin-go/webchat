@@ -12,6 +12,7 @@
 <script>
   import Tab from './components/pc/Tab.vue'
   import MyFrame from './base/Frame.vue'
+  import {checkLogin} from "./api";
 export default {
   name: 'App',
   data(){
@@ -20,20 +21,28 @@ export default {
       frame_show: false,
     }
   },
-  mounted() {
-    this.$User.setUser({
-      id: 1,
-      type: 0,
-      username: 'xiaoxin',
-      logo: '/static/images/mv1.jpeg',
-      nickname: '小新'
-    });
+  created(){
+    this.in_chat();
     if (document.body.clientWidth>500){
       this.show = 'pc'
     }else{
       this.show = 'wap'
     }
-    this.$socket.emit('in_chat')
+  },
+  methods:{
+    in_chat(){
+      this.$socket.emit('in_chat')
+    },
+    out_chat(){
+      this.$socket.emit('out_chat')
+    }
+  },
+  mounted() {
+
+  },
+  destroyed(){
+    console.log('exit.........');
+    this.out_chat();
   },
   components:{Tab, MyFrame}
 }
@@ -52,5 +61,5 @@ export default {
    #pc{
      display: none;
    }
- } 
+ }
 </style>

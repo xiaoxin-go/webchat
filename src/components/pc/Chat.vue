@@ -38,7 +38,7 @@
         </div>
         <div class="right-main-body">
           <div :class="chat_setting_show?'right-main-show':'right-main'">
-            <div class="right-body">
+            <div class="right-body" id="chat-body">
               <template v-for="message in message_data[select_chat.name]">
                 <template v-if="message.name === nickname">
                   <div class="message-item-self">
@@ -197,6 +197,7 @@
       }
     },
     created(){
+      this.$socket.emit('in_chat');
       this.getChat();
     },
     mounted(){
@@ -319,6 +320,14 @@
       /*------------------         公共方法               -------------------------*/
       // 取消模态框
       modalCancel(){
+      },
+
+      // 聊天滚动条在最底部
+      scrollAuto() {
+        this.$nextTick(() => {
+          let div = document.getElementById('chat-body');
+          div.scrollTop = div.scrollHeight;
+        })
       },
 
       send(data) {
