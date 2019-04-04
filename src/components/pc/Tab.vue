@@ -131,7 +131,7 @@
           if(resp.code === 200){
             this.$User.setUser(resp.data);
             this.user = resp.data;
-            this.$socket.emit('in_chat');
+            // this.$socket.emit('in_chat');
           }else{
             this.$Message.warning(resp.message);
           }

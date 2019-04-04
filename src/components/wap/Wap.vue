@@ -82,6 +82,7 @@
   export default {
     name: "Wap",
     mounted() {
+      // this.in_chat();
       this.checkLogin();
     },
     data() {
@@ -160,6 +161,13 @@
       changeChat(chat_id) {
         this.$router.push(`/chat/${chat_id}`)
       },
+
+      in_chat(){
+        this.$socket.emit('in_chat')
+      },
+      out_chat(){
+        this.$socket.emit('out_chat')
+      }
     },
     sockets: {
       connect: function () {

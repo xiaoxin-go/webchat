@@ -60,9 +60,9 @@
         <Button @click="send" size="small" type="primary" style="float: left; left: 3px;">发送</Button>
 
       </div>
-      <div class="frame-btn" @click="active_frame=true">
-        <Icon type="logo-vimeo" size="28"/>
-      </div>
+      <!--<div class="frame-btn" @click="active_frame=true">-->
+        <!--<Icon type="logo-vimeo" size="28"/>-->
+      <!--</div>-->
     </div>
 
     <!--  第三方广告页面  -->
@@ -210,7 +210,7 @@
 
       // 点击表情
       clickEmoji(emoji) {
-        this.send_message += '' + '<img src="/static/images/emoji">' + emoji.url + '';
+        this.send_message += '<img src="' + '/static/images/emoji/' + emoji.url + '">';
         this.emoji_active = false;
         setTimeout(() => {
           this.keepLastIndex(document.getElementById('send-message'))

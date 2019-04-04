@@ -39,27 +39,25 @@
         <div class="right-main-body">
           <div :class="chat_setting_show?'right-main-show':'right-main'">
             <div class="right-body" id="chat-body">
-              <template v-for="message in message_data[select_chat.name]">
-                <template v-if="message.name === nickname">
+              <template v-for="message in message_data">
+                <template v-if="message.id === $User.user.id">
                   <div class="message-item-self">
-                <span style="display: inline-block;">
-                  <div class="chat-text" v-html="message.message">
-                    <!--{{ message.message }}-->
-                  </div>
-                  <div class="chat-img">
-                    <img :src="message.logo">
-                  </div>
-                </span>
+                    <div class="wap-chat-text">
+                      <span v-html="message.message" style="text-align: left;display: inline-block;"></span>
+                    </div>
+                    <div class="wap-chat-img">
+                      <img :src="message.logo">
+                    </div>
                   </div>
 
                 </template>
                 <template v-else>
                   <div class="message-item">
-                    <div class="chat-img">
+                    <div class="wap-chat-img">
                       <img :src="message.logo">
                     </div>
-                    <div class="chat-text" v-html="message.message">
-                      <!--{{ message.message }}-->
+                    <div class="wap-chat-text">
+                      <span v-html="message.message"></span>
                     </div>
                   </div>
                 </template>
@@ -113,7 +111,7 @@
   import Edit from '../../base/EditDiv.vue';
   import ChatFriendInfo from './ChatFriendInfo.vue';
   import ChatGroupInfo from './ChatGroupInfo.vue';
-  import {getChatMessage, uploadImage} from "../../api";
+  import {deleteChat, getChatMessage, uploadImage} from "../../api";
 
   export default {
     name: 'Home',
@@ -197,7 +195,6 @@
       }
     },
     created(){
-      this.$socket.emit('in_chat');
       this.getChat();
     },
     mounted(){
@@ -278,7 +275,7 @@
 
       // 点击表情
       clickEmoji(emoji){
-        this.send_message += ''+ '<img src="/static/images/emoji">' + emoji.url +'';
+        this.send_message += '<img src="' + '/static/images/emoji/' + emoji.url + '">';
         this.emoji_active = false;
         setTimeout(()=>{
           this.keepLastIndex(document.getElementById('send-message'))
@@ -330,16 +327,23 @@
         })
       },
 
+      in_chat(){
+        this.$socket.emit('in_chat')
+      },
+      out_chat(){
+        this.$socket.emit('out_chat')
+      },
+
       send(data) {
-        console.log(this.chat);
+        console.log(this.select_chat);
         let message_data = {
-          chat: this.chat,
+          chat: this.select_chat,
           message: this.send_message,
-          user_data: this.user
+          user_data: this.$User.user
         };
         this.$socket.emit('message', message_data);
         this.message_data.push({
-          ...this.user, ...{message: this.send_message}
+          ...this.$User.user, ...{message: this.send_message}
         });
         this.send_message = '';
         this.scrollAuto();
@@ -356,8 +360,8 @@
         let chat_index = this.chat_list.indexOf(chat_item);
         this.chat_list.splice(chat_index, 1);
         this.chat_list.unshift(chat_data);
-        console.log(val.user_data);
-        this.message_data.push(val.user_data);
+        console.log(chat.user_data);
+        this.message_data.push(chat.user_data);
         this.scrollAuto();
       }
     },
