@@ -73,23 +73,7 @@
         del_friend_modal: false,
 
         // 好友列表
-        friend_list:[
-          {id: 1, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 2, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 3, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 4, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 5, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 6, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 7, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 8, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 9, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 10, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 11, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 12, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 13, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 14, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-          {id: 15, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'},
-        ]
+        friend_list:[]
       }
     },
     created(){

@@ -35,7 +35,7 @@ export default {
   methods:{
   },
   mounted() {
-
+    window.addEventListener( 'beforeunload', e => this.$socket.emit('out_chat') );
   },
   destroyed(){
     console.log('exit.........');

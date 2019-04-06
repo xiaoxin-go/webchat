@@ -87,18 +87,7 @@
         new_group_logo: '',
 
         // 群组列表
-        group_list:[
-          {'name': 'test', 'logo': '/static/images/test.jpg', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-          {'name': 'test1', 'logo': '/static/images/index.png', 'type': 'group'},
-        ],
+        group_list:[],
       }
     },
     created(){

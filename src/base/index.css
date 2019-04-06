@@ -1042,7 +1042,7 @@ iframe html{
   max-width: 100px;
 }
 
-.wap-main-chat .message-item-self .wap-chat-text>span{
+.message-item-self .wap-chat-text>span{
   background: #4DD52B;
 }
 

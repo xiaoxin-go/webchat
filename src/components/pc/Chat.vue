@@ -29,9 +29,9 @@
     <div id="right">
       <!--    用户聊天界面    -->
         <div class="right-title">
-          <span>{{select_chat.remark_name}}</span>
+          <span>{{select_chat.nickname}}</span>
           <div class="right-title-settings">
-            <div v-if="select_chat.username" class="right-title-setting" @click="changeSettingShow">
+            <div v-if="chat_active" class="right-title-setting" @click="changeSettingShow">
               <Icon type="md-cog" />
             </div>
           </div>
@@ -90,12 +90,12 @@
             </div>
           </div>
           <!--  用户组设置栏 -->
-          <template v-if="chat_setting_show===1">
+          <template v-if="chat_setting_show==1">
             <ChatGroupInfo :group_id="select_chat.chat_obj_id"></ChatGroupInfo>
           </template>
 
           <!--  单聊设置栏  -->
-          <template v-if="chat_setting_show===2">
+          <template v-if="chat_setting_show==2">
             <ChatFriendInfo :friend_id="select_chat.chat_obj_id"></ChatFriendInfo>
           </template>
 

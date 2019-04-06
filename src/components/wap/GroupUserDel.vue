@@ -17,7 +17,7 @@
         <!-- 好友 -->
         <div class="wap-main-body-friend-body">
             <template v-for="(friend, index) in group_user_list">
-              <div @click="delGroupUser(friend.id)" class="chat-item" v-if="friend.nickname.startsWith(search_name) && friend.nickname !== user.nickname">
+              <div @click="delGroupUser(friend.id)" class="chat-item" v-if="friend.nickname && friend.nickname.startsWith(search_name) && friend.nickname !== user.nickname">
                 <div class="chat-img">
                   <img :src="friend.logo">
                 </div>
@@ -60,7 +60,7 @@
         let resp = await getGroupUser(json_data);
         console.log(resp);
         if (resp.code === 200) {
-          this.group_user_list = resp.data;
+          this.group_user_list = resp.data.data_list;
         } else {
           this.$Message.error(resp.message);
         }

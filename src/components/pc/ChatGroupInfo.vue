@@ -79,12 +79,7 @@
         name: "FriendInfo",
         data(){
           return{
-            group: {
-              name: '测试群',
-              logo: '/static/images/mv2.png',
-              id: 1,
-              info: '这是一个测试群,这是一个测试群这是一个测试群这是一个测试群这是一个测试群这是一个测试群'
-            },
+            group: {},
             group_user_type: null,
             search_name: '',
             edit_remark_modal: false,
@@ -94,23 +89,7 @@
             new_group_info: null,
             edit_group_info: false,
             del_group_modal: false,
-            data_list: [
-              {id: 1, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 2, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 3, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 4, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 5, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 6, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 7, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 8, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 9, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 10, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 11, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 12, 'username': 'xiaoxin1', 'logo': '/static/images/mv2.png', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 13, 'username': 'xiaoxin2', 'logo': '/static/images/mv3.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 14, 'username': 'xiaoxin3', 'logo': '/static/images/mv4.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-              {id: 15, 'username': 'xiaoxin4', 'logo': '/static/images/mv5.jpeg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark_name': 'xiaoxin'},
-            ],
+            data_list: [],
           }
         },
       mounted() {
