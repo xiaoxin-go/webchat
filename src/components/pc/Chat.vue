@@ -31,7 +31,7 @@
         <div class="right-title">
           <span>{{select_chat.nickname}}</span>
           <div class="right-title-settings">
-            <div v-if="chat_active" class="right-title-setting" @click="changeSettingShow">
+            <div v-if="chat_active!==null" class="right-title-setting" @click="changeSettingShow">
               <Icon type="md-cog" />
             </div>
           </div>
@@ -90,12 +90,12 @@
             </div>
           </div>
           <!--  用户组设置栏 -->
-          <template v-if="chat_setting_show==1">
+          <template v-if="chat_setting_show==2">
             <ChatGroupInfo :group_id="select_chat.chat_obj_id"></ChatGroupInfo>
           </template>
 
           <!--  单聊设置栏  -->
-          <template v-if="chat_setting_show==2">
+          <template v-if="chat_setting_show==1">
             <ChatFriendInfo :friend_id="select_chat.chat_obj_id"></ChatFriendInfo>
           </template>
 
@@ -124,7 +124,6 @@
         chat_active: null,              //
         send_image: null,               // 选择发送图片
         emoji_active: false,            // 表情包
-        logo: '/static/images/xiaoxin.jpg',
         select_friend_list: [],
 
         search_value: '',
@@ -134,8 +133,6 @@
 
         // 聊天列表
         chat_list:[
-          {id:1, 'name': 'test', 'logo': '/static/images/index.png', 'type': 2, 'remark': 'test', chat_obj_id: 1,},
-          {id :1,'name': 'xiaoxin', 'logo': '/static/images/index.png', 'type': 1, 'remark': 'xiaoxin', chat_obj_id: 1},
         ],
 
         // 表情包

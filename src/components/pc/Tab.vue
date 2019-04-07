@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <input type="file" id="send-image" style="display: none;" @change="uploadImage">
+    <input type="file" id="update-logo-image" style="display: none;" @change="uploadImage">
 
     <!--  菜单按钮  -->
     <ul>
@@ -139,19 +139,18 @@
         },
         // 选择图片
         clickImage(){
-          document.getElementById('send-image').click();
+          document.getElementById('update-logo-image').click();
         },
 
         // 发送图片
         async uploadImage(){
-          let input = document.getElementById('send-image');
+          let input = document.getElementById('update-logo-image');
           let file = input.files[0];
           let formData = new FormData();
           formData.append('file', file);
           let resp = await uploadLogo(formData);
           console.log(resp);
           if (resp.code === 200){
-
             this.user.logo = this.$Server + resp.data.url;        // 返回的是头像路径
             console.log('上传头像成功', this.user.logo);
             this.updateUserLogo();
@@ -182,8 +181,8 @@
           let resp = await updateUser(json_data);
           if(resp.code === 200){
             this.user.nickname = this.new_nickname;
+            this.change_nickname_modal=false;
             this.$User.setUser(this.user);
-            this.update_nickname_modal = false;
           }else{
             this.$Message.error(resp.message);
           }
@@ -192,7 +191,7 @@
         // 修改密码
         async updateUserPassword(){
           if(!this.new_password.trim()){this.$Message.warning('密码不能为空'); return}
-          if(this.new_password.trim() !== this.re_new_password.trim()){this.$Message.warning('两次密码不一致'); return}
+          if(this.new_password.trim() !== this.new_password_re.trim()){this.$Message.warning('两次密码不一致'); return}
 
           let json_data = {
             password: this.new_password
@@ -200,6 +199,7 @@
           let resp = await updateUser(json_data);
           if(resp.code === 200){
             this.$Message.success('密码修改成功');
+            this.change_password_modal = false;
             this.$router.go(-1);
           }else{
             this.$Message.error(resp.message);

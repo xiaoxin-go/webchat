@@ -71,9 +71,11 @@
             remark: this.new_remark_name
           };
           let resp = await updateFriend(json_data);
+          console.log(resp);
           if (resp.code === 200) {
             this.friend.remark = this.new_remark_name;
             this.edit_remark_modal = false;
+            this.$router.push('/pc/chat');
           } else {
             this.$Message.warning(resp.message);
           }
@@ -85,7 +87,6 @@
           let json_data = {
             'friend_id': this.friend_id,
           };
-          this.friend = {'nickname': 'test', 'logo': '/static/images/mv1.jpg', 'type': 2, 'remark': 'test1'};
           let resp = await getFriendInfo(json_data);
           console.log(resp);
           if (resp.code === 200) {
@@ -101,7 +102,9 @@
             friend_id: this.friend.id
           };
           let resp = await deleteFriend(json_data);
-          if (resp.state === 200) {
+          console.log(resp);
+          if (resp.code === 200) {
+            this.del_friend_modal = false;
             this.$Message.success('好友删除成功');
             this.$router.push('/pc/chat');
           } else {
@@ -115,7 +118,7 @@
             type: 1
           };
           let resp = await updateUser(json_data);
-          if (resp.state === 200) {
+          if (resp.code === 200) {
             this.$Message.success('设置成功');
           } else {
             this.$Message.warning(resp.message)

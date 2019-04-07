@@ -10,7 +10,7 @@
           管理员列表
         </span>
         <span style="position: absolute; right: 10px;">
-          <Button @click="$router.push(`/group_admin_add/${group_id}`)" type="success" size="small">添加</Button>
+          <Button @click="addAdmin" type="success" size="small">添加</Button>
         </span>
       </div>
         <div class="wap-main-body-friend-search">
@@ -51,6 +51,7 @@
     data() {
       return {
         group_id: null,
+        group_type: null,
         search_name: '',
         member_list: [],
         group_user_list: [],
@@ -64,10 +65,24 @@
         };
         let resp = await getGroupUser(json_data);
         if (resp.code === 200) {
-          this.group_user_list = resp.data;
+          this.group_user_list = resp.data.data_list;
+          this.group_type = resp.data.group_type;
+          if(this.group_type != 0){
+            this.$router.push('/')
+          }
         } else {
           this.$Message.error(resp.message);
         }
+      },
+
+      // 添加管理员
+      addAdmin(){
+        this.$router.push({
+          name: 'GroupAdminAdd',
+          params: {
+            group_id: this.group_id
+          }
+        });
       },
 
       // 删除管理员

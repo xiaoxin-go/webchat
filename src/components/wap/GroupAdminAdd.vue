@@ -39,7 +39,7 @@
   export default {
     name: "GroupAdminAdd",
     mounted() {
-        this.group_id = this.$route.params.id;
+        this.group_id = this.$route.query.group_id;
         this.getGroupUser();
     },
     data() {
@@ -58,7 +58,10 @@
         };
         let resp = await getGroupUser(json_data);
         if (resp.code === 200) {
-          this.group_user_list = resp.data;
+          this.group_user_list = resp.data.data_list;
+          if(resp.data.group_type != 0){
+            this.$router.push('/')
+          }
         } else {
           this.$Message.error(resp.message);
         }

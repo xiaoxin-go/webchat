@@ -76,7 +76,7 @@
   } from "../../api";
 
     export default {
-        name: "FriendInfo",
+        name: "GroupInfo",
         data(){
           return{
             group: {},
@@ -151,6 +151,7 @@
             info: this.new_group_info
           };
           let resp = await updateGroup(json_data);
+          console.log(resp);
           if(resp.code === 200){
             this.group.info = this.new_group_info;
             this.edit_group_info = false;
@@ -166,6 +167,7 @@
             group_logo: this.new_group_logo
           };
           let resp = await updateGroup(json_data);
+          console.log(resp);
           if(resp.code === 200){
             this.group.logo = this.new_group_logo;
           }else{
@@ -178,6 +180,7 @@
             group_id: this.group_id
           };
           let resp = await quitGroup(json_data);
+          console.log(resp);
           if(resp.code === 200){
             this.$Message.success('群聊退出成功');
             this.$router.push('/pc/chat');

@@ -16,7 +16,7 @@
             <div class="wap-group-info-logo">
               <img :src="user.logo" alt="">
             </div>
-            <div class="wap-group-info-name">
+            <div class="wap-group-info-name" style="{{'color:'user.type==0?'brown':(user.type==1?'blue':'black')}}">
               {{user.nickname}}
             </div>
           </div>
@@ -215,7 +215,7 @@
         async editGroupInfo(){
           let json_data = {
             group_id: this.group_id,
-            info: this.new_group_info
+            group_info: this.new_group_info
           };
           let resp = await updateGroup(json_data);
           if(resp.code === 200){
@@ -235,6 +235,7 @@
           let resp = await updateGroup(json_data);
           if(resp.code === 200){
             this.group.logo = this.new_group_logo;
+            this.edit_logo_modal = false
           }else{
             this.$Message.error(resp.message);
           }

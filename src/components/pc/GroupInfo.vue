@@ -3,42 +3,45 @@
   <div id="right">
     <!--    用户聊天界面    -->
     <div class="right-title">
+      <template v-if="group.name"></template>
       <p>{{group.name}} ({{data_list.length}})</p>
     </div>
     <div class="right-main-body" style="padding-top: 80px;">
-      <div class="pc-group-info-body">
-        <div class="pc-group-info">
-          <div class="wap-group-info-item" v-for="(user, index) in data_list">
-            <div class="wap-group-info-logo" @mouseover="hoverUser(user)" @mouseout="hover_active_id=null">
-              <img :src="user.logo" alt="">
-              <div class="pc-group-user-item-card" v-if="hover_active_id===user.id" @mouseout="hover_active_id=null">
-                <p @click="delGroupUser" v-if="$User.user.type === 0 || group_user_type === 0">删除成员</p>
-                <p @click="addFriend" v-if="group_user_type < 2">添加好友</p>
-                <p @click="addAdmin" v-if="group_user_type === 0 && user.type === 2">设置管理员</p>
-                <p @click="delAdmin" v-if="group_user_type === 0 && user.type === 1">取消管理员</p>
-              </div>
-            </div>
-            <div class="wap-group-info-name">
-              {{user.nickname}}
-            </div>
-          </div>
-          <!--  群组添加成员按钮  -->
-          <template>
-            <div class="wap-group-info-item" @click="clickGroupUserAdd">
-              <div class="wap-group-info-logo">
-                <img src="../../../static/images/add.jpg" alt="">
+      <template v-if="group.name">
+        <div class="pc-group-info-body">
+          <div class="pc-group-info">
+            <div class="wap-group-info-item" v-for="(user, index) in data_list">
+              <div class="wap-group-info-logo" @mouseover="hoverUser(user)" @mouseout="hover_active_id=null">
+                <img :src="user.logo" alt="">
+                <div class="pc-group-user-item-card" v-if="hover_active_id===user.id" @mouseout="hover_active_id=null">
+                  <p @click="delGroupUser" v-if="$User.user.type === 0 || group_user_type === 0">删除成员</p>
+                  <p @click="addFriend" v-if="group_user_type < 2">添加好友</p>
+                  <p @click="addAdmin" v-if="group_user_type === 0 && user.type === 2">设置管理员</p>
+                  <p @click="delAdmin" v-if="group_user_type === 0 && user.type === 1">取消管理员</p>
+                </div>
               </div>
               <div class="wap-group-info-name">
-                <p>&nbsp;</p>
+                {{user.nickname}}
               </div>
             </div>
-          </template>
+            <!--  群组添加成员按钮  -->
+            <template>
+              <div class="wap-group-info-item" @click="clickGroupUserAdd">
+                <div class="wap-group-info-logo">
+                  <img src="../../../static/images/add.jpg" alt="">
+                </div>
+                <div class="wap-group-info-name">
+                  <p>&nbsp;</p>
+                </div>
+              </div>
+            </template>
+          </div>
         </div>
-      </div>
-      <div class="pc-group-btn">
-        <button @click="changeChat">发消息</button>
-        <button class="del-group" @click="del_group_modal=true" v-if="$User.user.type === 0 || group_user_type === 0">解散群聊</button>
-      </div>
+        <div class="pc-group-btn">
+          <button @click="changeChat">发消息</button>
+          <button class="del-group" @click="del_group_modal=true" v-if="$User.user.type === 0 || group_user_type === 0">解散群聊</button>
+        </div>
+      </template>
     </div>
     <Modal
       v-model="group_add_modal"
@@ -57,8 +60,8 @@
           <div class="chat-img">
             <img :src="friend.logo">
           </div>
-          <div class="chat-text">
-            {{friend.username}}
+          <div class="chat-text" style="{{'color:'user.type==0?'brown':(user.type==1?'blue':'black')}}">
+            {{friend.remark || friend.nickname}}
           </div>
           <div :class="'friend-list-input ' + (isSelectFriend(friend)?'select':'')">
             <Icon type="ios-checkmark" size="26"/>
@@ -75,7 +78,7 @@
             <img :src="friend.logo">
           </div>
           <div class="chat-text">
-            {{friend.username}}
+            {{friend.remark || friend.nickname}}
           </div>
           <div class="friend-list-input">
             <Icon type="ios-close" size="22"/>

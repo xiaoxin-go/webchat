@@ -29,7 +29,7 @@ export default new Router({
     {path:'/group_user_add/:id',component:()=>import('../components/wap/GroupUserAdd.vue'),name:'GroupUserAdd'},
     {path:'/group_user_del/:id',component:()=>import('../components/wap/GroupUserDel.vue'),name:'GroupUserDel'},
     {path:'/group_admin/:id',component:()=>import('../components/wap/GroupAdmin.vue'),name:'GroupAdmin'},
-    {path:'/group_admin_add/:id',component:()=>import('../components/wap/GroupAdminAdd.vue'),name:'GroupAdminAdd'},
+    {path:'/group_admin_add',component:()=>import('../components/wap/GroupAdminAdd.vue'),name:'GroupAdminAdd'},
 
 
     // {path:'/login',component:()=>import('../components/Login.vue'),name:'Login'},

@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%;">
-
+    <input type="file" id="send-image" style="display: none;" @change="uploadImage">
     <!--聊天列表-->
     <div id="center">
       <div class="search">
@@ -40,7 +40,6 @@
         </div>
       </div>
     </div>
-
     <GroupInfo :group="select_group"></GroupInfo>
     <!--右侧消息框-->
 
@@ -91,6 +90,7 @@
       }
     },
     created(){
+      this.getGroup();
     },
     /*****************************************    方法区    ******************************************/
     methods:{
@@ -149,6 +149,12 @@
         }
       },
     },
+    watch:{
+      // 监听URL状态改变
+      "$User.user"(){
+        console.log(this.$User.user)
+      }
+    }
   }
 </script>
 

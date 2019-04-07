@@ -89,7 +89,8 @@
             friend_id: this.friend.id
           };
           let resp = await deleteFriend(json_data);
-          if (resp.state === 200) {
+          console.log(resp);
+          if (resp.code === 200) {
             this.$Message.success('好友删除成功');
             this.$router.push('/friend');
           } else {

@@ -9,7 +9,7 @@
         <Input placeholder="请输入用户昵称" v-model="search_name" style="width: 160px;"/>
         <Button type="primary" style="margin-left: 10px;" @click="searchFriend">搜索</Button>
       </div>
-      
+
       <template v-if="friend.id">
         <div class="pc-friend-info">
           <div class="wap-main-friend-logo" style="margin-left: 0;">
@@ -20,7 +20,8 @@
           </div>
         </div  >
         <div class="pc-friend-btn" style="height: 120px;">
-          <button @click="addFriend">添加好友</button>
+          <button @click="addFriend" v-if="friend.is_friend == 0">添加好友</button>
+          <button @click="addFriend" disabled="disabled" v-else>已添加</button>
         </div>
       </template>
     </div>
@@ -42,7 +43,6 @@
       methods:{
         // 查找好友
         async searchFriend(){
-          //this.friend = {id: 1, 'username': 'xiaoxin', 'logo': '/static/images/mv1.jpg', 'type': 'chat', 'nickname': 'xiaoxin', 'remark': 'xiaoxin'};
           if(!this.search_name || !this.search_name.trim()){
             this.$Message.warning('请输入好友名称！');
             return
@@ -57,6 +57,8 @@
               this.$Message.info('用户不存在')
             }
             this.friend = resp.data
+          }else{
+            this.$Message.error(resp.message)
           }
         },
         // 添加好友

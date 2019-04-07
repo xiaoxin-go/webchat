@@ -71,7 +71,7 @@
         };
         let resp = await getGroupUser(json_data);
         if (resp.code === 200) {
-          this.group_user_ids = resp.data.map(item=>item.id);
+          this.group_user_ids = resp.data.data_list.map(item=>item.id);
         } else {
           this.$Message.error(resp.message);
         }

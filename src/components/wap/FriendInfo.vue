@@ -22,7 +22,7 @@
       </div>
       <div class="wap-main-friend-bottom">
         <div class="wap-main-friend-update-remark" @click="edit_remark_modal=true">修改备注</div>
-        <div class="wap-main-friend-update-remark" v-if="user.type === 0 && friend.type === 2" @click="updateUser">
+        <div class="wap-main-friend-update-remark" v-if="$User.user.type === 0 && friend.type === 2" @click="updateUser">
           设置为站长
         </div>
         <div class="wap-main-friend-sendmessage" @click="changeChat(friend)">发消息</div>
@@ -68,12 +68,12 @@
 
 <script>
   import {updateFriend, deleteFriend, updateUser, getUserInfo, addChat, checkLogin} from "../../api/index";
+  import {getFriendInfo} from "../../api";
 
   export default {
     name: "FriendInfo",
     mounted() {
       this.friend_id = this.$route.params.id;
-      this.checkLogin();
       this.getUserInfo();
     },
     created() {
@@ -87,7 +87,6 @@
     },
     data() {
       return {
-        user: {},
         friend: {},
         friend_id: '',
         del_friend_modal: null,
@@ -96,13 +95,6 @@
       }
     },
     methods: {
-      async checkLogin() {
-        let resp = await checkLogin();
-        if (resp.code === 200) {
-          this.user = resp.data;
-        }
-      },
-
       // 更新好友资料
       async editRemark() {
         if (!this.new_remark_name || !this.new_remark_name.trim()) {
@@ -125,9 +117,9 @@
       // 获取好友信息
       async getUserInfo() {
         let json_data = {
-          'user_id': this.friend_id,
+          'friend_id': this.friend_id,
         };
-        let resp = await getUserInfo(json_data);
+        let resp = await getFriendInfo(json_data);
         console.log(resp);
         if (resp.code === 200) {
           this.friend = resp.data;
@@ -142,7 +134,8 @@
           friend_id: this.friend.id
         };
         let resp = await deleteFriend(json_data);
-        if (resp.state === 200) {
+        console.log(resp);
+        if (resp.code === 200) {
           this.$Message.success('好友删除成功');
           this.$router.push('/friend');
         } else {

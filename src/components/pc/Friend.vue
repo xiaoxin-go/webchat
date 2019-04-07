@@ -77,7 +77,7 @@
       }
     },
     created(){
-
+      this.getFriend();
     },
     mounted(){
     },
@@ -126,8 +126,13 @@
           this.$Message.warning(resp.message)
         }
       },
-
     },
+    watch:{
+      // 监听URL状态改变
+      "$User.user"(){
+        console.log(this.$User.user)
+      }
+    }
   }
 </script>
 
